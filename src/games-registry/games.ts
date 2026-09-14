@@ -28,6 +28,22 @@ export const games: GameMeta[] = [
     status: "prototype",
   },
   {
+    slug: "orbit-sling",
+    title: "Orbit Sling",
+    description:
+      "惑星の重力でコメットの軌道を曲げるスリングショット・ゴルフ。パッドから引っ張って発射し、漂うリングを次々通過してコンボを稼げ。",
+    tags: ["arcade", "physics", "gravity", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-09-14",
+    controls: {
+      mouse: "ドラッグして引っ張り、離すと逆方向へ発射",
+      touch: "ドラッグして引っ張り、離すと逆方向へ発射",
+      keyboard: "←→: 角度調整 / ↑↓: パワー調整 / Enter: 発射 / Space: 一時停止",
+    },
+    status: "prototype",
+  },
+  {
     slug: "gravity-herd",
     title: "Gravity Herd",
     description:
