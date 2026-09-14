@@ -139,4 +139,20 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "ferro-bloom",
+    title: "Ferro Bloom",
+    description:
+      "砂鉄状の粒子を磁石で操るリアルタイム造形パズル。ドラッグで引き寄せ、タップで斥力に切り替えて押し広げ、粒子をリングの中に集めて満たし続けよう。",
+    tags: ["arcade", "puzzle", "physics", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-09-14",
+    controls: {
+      mouse: "ドラッグ/長押しで磁石を移動、タップで引力⇔斥力を切替",
+      touch: "ドラッグ/長押しで磁石を移動、タップで引力⇔斥力を切替",
+      keyboard: "矢印キー/WASD: 磁石を移動 / 1: 引力 / 2: 斥力 / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
