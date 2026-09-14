@@ -1,0 +1,137 @@
+@use "../../../shared/styles/variables" as v;
+@use "../../../shared/styles/mixins" as m;
+
+.stageInner {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, #1a1410 0%, #241a12 55%, #140f0b 100%);
+  @include m.touch-safe;
+}
+
+.canvasHost {
+  position: absolute;
+  inset: 0;
+
+  canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.hud {
+  position: absolute;
+  top: v.$space-3;
+  right: v.$space-3;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: v.$space-1;
+  pointer-events: none;
+}
+
+.round {
+  font-family: v.$font-family-mono;
+  font-size: 0.85rem;
+  padding: v.$space-1 v.$space-3;
+  border-radius: v.$radius-sm;
+  background: rgb(0 0 0 / 40%);
+  color: v.$color-text;
+  letter-spacing: 0.05em;
+}
+
+.moistureLabel {
+  font-family: v.$font-family-mono;
+  font-size: 0.75rem;
+  color: v.$color-text-muted;
+}
+
+.moistureTrack {
+  width: 140px;
+  height: 8px;
+  border-radius: v.$radius-sm;
+  background: rgb(0 0 0 / 40%);
+  overflow: hidden;
+}
+
+.moistureFill {
+  height: 100%;
+  background: v.$color-accent;
+  transition: width 0.1s linear;
+}
+
+.finishButton {
+  position: absolute;
+  left: 50%;
+  bottom: v.$space-5;
+  transform: translateX(-50%);
+  padding: v.$space-2 v.$space-6;
+  border-radius: v.$radius-md;
+  border: 1px solid v.$color-accent-strong;
+  background: rgb(20 22 15 / 75%);
+  color: v.$color-text;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+
+  &:hover {
+    background: v.$color-accent-strong;
+    color: #05060a;
+  }
+
+  @include m.mobile {
+    bottom: v.$space-4;
+    padding: v.$space-2 v.$space-5;
+    font-size: 0.9rem;
+  }
+}
+
+.hint {
+  position: absolute;
+  left: v.$space-3;
+  bottom: v.$space-3;
+  font-size: 0.75rem;
+  color: v.$color-text-muted;
+  background: rgb(0 0 0 / 40%);
+  padding: v.$space-1 v.$space-2;
+  border-radius: v.$radius-sm;
+  pointer-events: none;
+  max-width: min(420px, 76vw);
+  line-height: 1.5;
+
+  @include m.mobile {
+    font-size: 0.68rem;
+    max-width: 88vw;
+  }
+}
+
+.result {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: v.$space-1;
+  background: rgb(10 8 6 / 82%);
+  border: 1px solid v.$color-accent-strong;
+  border-radius: v.$radius-lg;
+  padding: v.$space-4 v.$space-6;
+  pointer-events: none;
+  text-align: center;
+}
+
+.resultTitle {
+  font-size: 1.3rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  color: v.$color-accent-strong;
+}
+
+.resultScore {
+  font-family: v.$font-family-mono;
+  font-size: 1.1rem;
+  color: v.$color-text;
+}

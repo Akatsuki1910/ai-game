@@ -235,4 +235,21 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "wheel-throw",
+    title: "Wheel Throw",
+    description:
+      "回転するろくろの上で粘土を挽くリアルタイム陶芸パズル。水色の点線のお手本に壁の太さを近づけ、水分が尽きるか自分で仕上げて採点しよう。中心まで押し込みすぎると壁が崩れて0点になる。",
+    tags: ["arcade", "puzzle", "craft", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-09-14",
+    controls: {
+      mouse: "ドラッグで壁の太さを狙った位置へ押し出す、ボタンクリックで仕上げる",
+      touch: "ドラッグで壁の太さを狙った位置へ押し出す、タップで仕上げる",
+      keyboard:
+        "矢印キー/WASD: 高さ選択+押し引き / Enter: 仕上げる / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
