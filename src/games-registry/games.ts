@@ -219,4 +219,20 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "pulse-lock",
+    title: "Pulse Lock",
+    description:
+      "回転する複数のタンブラーを、指針がターゲットゾーンに重なった瞬間にタップして解錠するリアルタイム・ロックピッキング。外すとライフが減り、解錠しきるたびにロックは増えて速く狭くなっていく。",
+    tags: ["arcade", "timing", "precision", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-09-14",
+    controls: {
+      mouse: "クリックで、狙ったリングのターゲットゾーンに指針が重なった瞬間に解錠",
+      touch: "タップで、狙ったリングのターゲットゾーンに指針が重なった瞬間に解錠",
+      keyboard: "Enter: 解錠を試みる / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
