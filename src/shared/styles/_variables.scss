@@ -1,0 +1,33 @@
+// 全ゲーム / 全ページで共有するデザイントークン。
+// 新しい色やサイズが必要になったらここに追加し、各所で直接値を書かない。
+
+$color-bg: #0b0c10;
+$color-bg-elevated: #14161d;
+$color-surface: #1b1e27;
+$color-border: #2b2f3a;
+$color-text: #f2f3f5;
+$color-text-muted: #9aa0ac;
+$color-accent: #6ee7ff;
+$color-accent-strong: #7cf5c4;
+$color-warning: #ffb454;
+$color-danger: #ff6b6b;
+
+$font-family-base:
+  "Hiragino Sans", "Segoe UI", system-ui, -apple-system, sans-serif;
+$font-family-mono: "SFMono-Regular", Consolas, monospace;
+
+$radius-sm: 6px;
+$radius-md: 12px;
+$radius-lg: 20px;
+
+$space-1: 4px;
+$space-2: 8px;
+$space-3: 12px;
+$space-4: 16px;
+$space-5: 24px;
+$space-6: 32px;
+
+$breakpoint-mobile: 640px;
+$breakpoint-tablet: 1024px;
+
+$header-height: 56px;

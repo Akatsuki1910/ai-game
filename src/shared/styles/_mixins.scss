@@ -1,0 +1,22 @@
+@use "variables" as v;
+
+// スマホ幅（v.$breakpoint-mobile 以下）向けのスタイルを書くためのミキシン。
+@mixin mobile {
+  @media (max-width: v.$breakpoint-mobile) {
+    @content;
+  }
+}
+
+@mixin tablet-down {
+  @media (max-width: v.$breakpoint-tablet) {
+    @content;
+  }
+}
+
+// タッチデバイスでの誤操作・選択・スクロール引っ張りを防ぐための定番セット。
+@mixin touch-safe {
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}

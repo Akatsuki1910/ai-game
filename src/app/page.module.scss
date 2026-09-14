@@ -1,0 +1,125 @@
+@use "../shared/styles/variables" as v;
+@use "../shared/styles/mixins" as m;
+
+.page {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: v.$space-6 v.$space-4 v.$space-6;
+
+  @include m.mobile {
+    padding: v.$space-5 v.$space-3;
+  }
+}
+
+.container {
+  width: 100%;
+  max-width: 1080px;
+  display: flex;
+  flex-direction: column;
+  gap: v.$space-5;
+}
+
+.hero {
+  display: flex;
+  flex-direction: column;
+  gap: v.$space-2;
+}
+
+.heroTitle {
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+
+  @include m.mobile {
+    font-size: 1.5rem;
+  }
+}
+
+.heroSubtitle {
+  color: v.$color-text-muted;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  max-width: 640px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: v.$space-4;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: v.$space-2;
+  padding: v.$space-4;
+  border-radius: v.$radius-lg;
+  background: v.$color-surface;
+  border: 1px solid v.$color-border;
+  transition:
+    transform 0.15s ease,
+    border-color 0.15s ease;
+
+  &:hover {
+    border-color: v.$color-accent;
+    transform: translateY(-2px);
+  }
+}
+
+.cardTopRow {
+  display: flex;
+  align-items: center;
+  gap: v.$space-2;
+}
+
+.dimensionBadge {
+  font-family: v.$font-family-mono;
+  font-size: 0.7rem;
+  padding: 2px v.$space-2;
+  border-radius: v.$radius-sm;
+  background: v.$color-bg-elevated;
+  color: v.$color-accent;
+  letter-spacing: 0.05em;
+}
+
+.cardDate {
+  margin-left: auto;
+  font-size: 0.7rem;
+  color: v.$color-text-muted;
+  font-family: v.$font-family-mono;
+}
+
+.cardTitle {
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.cardDescription {
+  font-size: 0.85rem;
+  color: v.$color-text-muted;
+  line-height: 1.55;
+  flex: 1;
+}
+
+.tagRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: v.$space-1;
+}
+
+.tag {
+  font-size: 0.7rem;
+  color: v.$color-text-muted;
+  background: v.$color-bg-elevated;
+  border-radius: 999px;
+  padding: 2px v.$space-2;
+}
+
+.emptyState {
+  color: v.$color-text-muted;
+  font-size: 0.9rem;
+  padding: v.$space-5 0;
+  text-align: center;
+}

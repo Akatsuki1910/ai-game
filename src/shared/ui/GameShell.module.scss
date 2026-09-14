@@ -1,0 +1,100 @@
+@use "../styles/variables" as v;
+@use "../styles/mixins" as m;
+
+.shell {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 100dvh;
+  background: v.$color-bg;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: v.$space-3;
+  height: v.$header-height;
+  padding: 0 v.$space-4;
+  border-bottom: 1px solid v.$color-border;
+  background: v.$color-bg-elevated;
+  flex-wrap: wrap;
+
+  @include m.mobile {
+    height: auto;
+    padding: v.$space-2 v.$space-3;
+  }
+}
+
+.back {
+  font-size: 0.85rem;
+  color: v.$color-text-muted;
+  white-space: nowrap;
+
+  &:hover {
+    color: v.$color-text;
+  }
+}
+
+.title {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-right: auto;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.score {
+  font-family: v.$font-family-mono;
+  font-size: 0.9rem;
+  color: v.$color-accent;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+.pauseButton {
+  border: 1px solid v.$color-border;
+  background: v.$color-surface;
+  color: v.$color-text;
+  border-radius: v.$radius-sm;
+  padding: v.$space-1 v.$space-3;
+  font-size: 0.85rem;
+  cursor: pointer;
+
+  &:hover {
+    border-color: v.$color-accent;
+  }
+}
+
+.stage {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.pauseOverlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: v.$space-3;
+  background: rgb(11 12 16 / 78%);
+  color: v.$color-text;
+  z-index: 10;
+  text-align: center;
+  padding: v.$space-4;
+}
+
+.pauseOverlayTitle {
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+.pauseOverlayHint {
+  font-size: 0.85rem;
+  color: v.$color-text-muted;
+}
