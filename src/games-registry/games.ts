@@ -75,4 +75,20 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "echo-diver",
+    title: "Echo Diver",
+    description:
+      "漆黒の海底洞窟をソナーだけを頼りに進む潜水艇サバイバル。ピンッと発信すれば岩・真珠・怪物レビヤタンが一瞬見えるが、その音は怪物をその場所へ引き寄せてしまう。",
+    tags: ["arcade", "survival", "stealth", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-09-14",
+    controls: {
+      mouse: "ドラッグ/長押しした方向へ推進、クリック（タップ判定）でソナー発信",
+      touch: "ドラッグ/長押しした方向へ推進、タップでソナー発信",
+      keyboard: "矢印キー/WASD: 移動 / E・Enter: ソナー発信 / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
