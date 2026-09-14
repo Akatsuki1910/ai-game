@@ -294,9 +294,19 @@ export class EchoDiverWorld {
     return Math.min(1, vis);
   }
 
-  private spawnPearlPosition(): Pearl {
+  /**
+   * excludePearl を渡すと、その真珠自身は「避けるべき他の真珠」から除外する
+   * (再湧き対象の真珠は移動前なのでまだ this.pearls に残っている)。
+   * これを避けないと、真珠同士が重なって湧き、1回の接触で複数個
+   * 同時に回収されてしまうことがある。
+   */
+  private spawnPearlPosition(excludePearl?: Pearl): Pearl {
     const avoid = this.rocks.map((r) => ({ x: r.x, y: r.y, r: r.r }));
     avoid.push({ x: this.sub.x, y: this.sub.y, r: this.safeZoneRadius * 0.6 });
+    for (const other of this.pearls) {
+      if (other === excludePearl) continue;
+      avoid.push({ x: other.x, y: other.y, r: this.pearlRadius * 2 });
+    }
     const spot = findOpenSpot(this.arenaSize, this.pearlRadius * 2, avoid);
     return { x: spot.x, y: spot.y };
   }
@@ -375,7 +385,7 @@ export class EchoDiverWorld {
         this.pearlsCollected++;
         this.score += PEARL_SCORE;
         this.onPearlCollected?.({ x: pearl.x, y: pearl.y, points: PEARL_SCORE });
-        const next = this.spawnPearlPosition();
+        const next = this.spawnPearlPosition(pearl);
         pearl.x = next.x;
         pearl.y = next.y;
       }

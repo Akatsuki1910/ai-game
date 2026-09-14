@@ -252,4 +252,20 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "loom-weave",
+    title: "Loom Weave",
+    description:
+      "刻々と示される糸色をリングが閉じきる前に選び続ける、リアルタイム機織りリズムパズル。外すたびに生地が傷んで耐久が減り、テンポは織るほど速くなる。目標の段数まで織り切れるか。",
+    tags: ["arcade", "rhythm", "puzzle", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-09-14",
+    controls: {
+      mouse: "クリックで指示された色のボタンを選ぶ",
+      touch: "タップで指示された色のボタンを選ぶ",
+      keyboard: "1: 藍 / 2: 金 / 3: 緋 / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
