@@ -123,4 +123,20 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "grapple-arc",
+    title: "Grapple Arc",
+    description:
+      "ロープにつかまって振り子の勢いだけで進み続ける、リアルタイム・グラップリングアクション。長押しでアンカーに掴まり、放して飛び、次のアンカーへ着地できるかは自分のタイミング次第。谷底に落ちたら終わり。",
+    tags: ["arcade", "physics", "action", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-09-14",
+    controls: {
+      mouse: "長押しでロープに掴まる、離すと放たれる",
+      touch: "長押しでロープに掴まる、離すと放たれる",
+      keyboard: "↑ / W: 長押しで掴まる / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
