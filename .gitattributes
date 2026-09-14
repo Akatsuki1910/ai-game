@@ -1,0 +1,3 @@
+# Windows で checkout しても改行が CRLF に化けないようにする。
+# （化けると Biome の format チェックが全ファイルで落ちる）
+* text=auto eol=lf

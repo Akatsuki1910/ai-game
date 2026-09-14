@@ -1,4 +1,4 @@
-import { add, distanceToSegment, normalize, reflect, scale, sub, type Vec2 } from "./vec2";
+import { add, distanceToSegment, normalize, reflect, scale, sub, type Vec2 } from "./vec2.ts";
 
 export type PrismType = "mirror" | "splitter";
 
@@ -19,7 +19,7 @@ export interface Target {
   radius: number;
   charge: number;
   /** このフレームでビームに当たっているか。描画側の演出に使う。 */
-  illuminated: boolean;
+  isIlluminated: boolean;
 }
 
 export interface BeamSegment {
@@ -46,7 +46,7 @@ const MAX_SEGMENTS = 20;
 const EPSILON = 0.5;
 const TARGET_RADIUS = 22;
 const PRISM_RADIUS = 26;
-const ROUND_SECONDS = 90;
+export const ROUND_SECONDS = 90;
 
 let nextId = 1;
 
@@ -157,7 +157,7 @@ export class PrismDriftWorld {
       vy: Math.sin(angle) * speed,
       radius: TARGET_RADIUS,
       charge: 0,
-      illuminated: false,
+      isIlluminated: false,
     };
   }
 
@@ -250,17 +250,17 @@ export class PrismDriftWorld {
     this.lastSegments = segments;
     for (const target of this.targets) {
       const center = { x: target.x, y: target.y };
-      target.illuminated = segments.some(
+      target.isIlluminated = segments.some(
         (seg) =>
           distanceToSegment(center, { x: seg.x1, y: seg.y1 }, { x: seg.x2, y: seg.y2 }) <=
           target.radius,
       );
     }
 
-    const illuminatedCount = this.targets.filter((t) => t.illuminated).length;
+    const illuminatedCount = this.targets.filter((t) => t.isIlluminated).length;
 
     for (const target of this.targets) {
-      if (target.illuminated) {
+      if (target.isIlluminated) {
         target.charge = Math.min(100, target.charge + CHARGE_RATE * deltaSeconds);
       } else {
         target.charge = Math.max(0, target.charge - DECAY_RATE * deltaSeconds);
@@ -279,7 +279,7 @@ export class PrismDriftWorld {
         target.vx = respawned.vx;
         target.vy = respawned.vy;
         target.charge = 0;
-        target.illuminated = false;
+        target.isIlluminated = false;
       }
     }
   }

@@ -33,25 +33,32 @@ export function GameShell({
   return (
     <div className={styles.shell}>
       <header className={styles.header}>
-        <Link href="/" className={styles.back}>
+        <Link href="/" className={styles.back} data-testid="game-shell-back">
           ← 一覧へ
         </Link>
-        <h1 className={styles.title}>{title}</h1>
+        <h1 className={styles.title} data-testid="game-shell-title">
+          {title}
+        </h1>
         {typeof score === "number" && (
-          <div className={styles.score}>
+          <div className={styles.score} data-testid="game-shell-score">
             {scoreLabel} {Math.floor(score).toLocaleString("ja-JP")}
           </div>
         )}
         {onTogglePause && (
-          <button type="button" className={styles.pauseButton} onClick={onTogglePause}>
+          <button
+            type="button"
+            className={styles.pauseButton}
+            onClick={onTogglePause}
+            data-testid="game-shell-pause"
+          >
             {isPaused ? "再開" : "一時停止"}
           </button>
         )}
       </header>
-      <div className={styles.stage}>
+      <div className={styles.stage} data-testid="game-shell-stage">
         {children}
         {isPaused && (
-          <div className={styles.pauseOverlay}>
+          <div className={styles.pauseOverlay} data-testid="game-shell-pause-overlay">
             <div className={styles.pauseOverlayTitle}>一時停止中</div>
             <div className={styles.pauseOverlayHint}>{pauseHint}</div>
           </div>

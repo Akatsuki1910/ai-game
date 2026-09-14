@@ -1,17 +1,17 @@
 "use client";
 
 import { Application, Container, Graphics, Text } from "pixi.js";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { GameLoop, InputManager, useElementSize } from "@/shared/engine";
 import { GameShell } from "@/shared/ui";
 import { createBackgroundFilter } from "./engine/backgroundFilter";
-import { type Prism, PrismDriftWorld } from "./engine/world";
+import { type Prism, PrismDriftWorld, ROUND_SECONDS } from "./engine/world";
 import styles from "./PrismDriftGame.module.scss";
 
-const PRISM_COLORS: Record<Prism["type"], number> = {
+const PRISM_COLORS = {
   mirror: 0x6ee7ff,
   splitter: 0x7cf5c4,
-};
+} as const satisfies Record<Prism["type"], number>;
 
 interface FloatingScore {
   text: Text;
@@ -22,17 +22,30 @@ const POPUP_LIFETIME = 0.9;
 
 export function PrismDriftGame() {
   const { ref: stageRef, size } = useElementSize<HTMLDivElement>();
-  const canvasHostRef = useRef<HTMLDivElement | null>(null);
+  const [score, setScore] = useState(0);
+  const [timeRemaining, setTimeRemaining] = useState(ROUND_SECONDS);
+  const [isPaused, setIsPaused] = useState(false);
+  const [isOver, setIsOver] = useState(false);
 
+  const canvasHostRef = useRef<HTMLDivElement | null>(null);
   const worldRef = useRef<PrismDriftWorld | null>(null);
   const appRef = useRef<Application | null>(null);
   const loopRef = useRef<GameLoop | null>(null);
   const inputRef = useRef<InputManager | null>(null);
 
-  const [score, setScore] = useState(0);
-  const [timeRemaining, setTimeRemaining] = useState(90);
-  const [isPaused, setIsPaused] = useState(false);
-  const [isOver, setIsOver] = useState(false);
+  const handleTogglePause = useCallback(() => {
+    if (!loopRef.current) return;
+    setIsPaused(loopRef.current.togglePause());
+  }, []);
+
+  const handleRestart = useCallback(() => {
+    worldRef.current?.reset();
+    setIsOver(false);
+    if (loopRef.current?.isPaused) {
+      loopRef.current.resume();
+      setIsPaused(false);
+    }
+  }, []);
 
   useEffect(() => {
     const host = canvasHostRef.current;
@@ -140,7 +153,7 @@ export function PrismDriftGame() {
             .stroke({ width: 3, color: 0xffffff, alpha: 0.15 + t * 0.5 });
           targetGraphics
             .circle(target.x, target.y, target.radius * (0.5 + t * 0.5))
-            .fill({ color: target.illuminated ? 0xffe066 : 0xff6b6b, alpha: 0.9 });
+            .fill({ color: target.isIlluminated ? 0xffe066 : 0xff6b6b, alpha: 0.9 });
         }
 
         emitterGraphics.clear();
@@ -207,20 +220,6 @@ export function PrismDriftGame() {
     worldRef.current?.resize(size.width, size.height);
   }, [size.width, size.height]);
 
-  const handleTogglePause = () => {
-    if (!loopRef.current) return;
-    setIsPaused(loopRef.current.togglePause());
-  };
-
-  const handleRestart = () => {
-    worldRef.current?.reset();
-    setIsOver(false);
-    if (loopRef.current?.isPaused) {
-      loopRef.current.resume();
-      setIsPaused(false);
-    }
-  };
-
   return (
     <GameShell
       title="Prism Drift"
@@ -228,20 +227,27 @@ export function PrismDriftGame() {
       isPaused={isPaused}
       onTogglePause={handleTogglePause}
     >
-      <div ref={stageRef} className={styles.stageInner}>
-        <div ref={canvasHostRef} className={styles.canvasHost} />
+      <div ref={stageRef} className={styles.stageInner} data-testid="prism-drift-stage">
+        <div ref={canvasHostRef} className={styles.canvasHost} data-testid="prism-drift-canvas" />
         <div className={styles.hud}>
-          <span className={styles.timer}>⏱ {timeRemaining}s</span>
+          <span className={styles.timer} data-testid="prism-drift-timer">
+            ⏱ {timeRemaining}s
+          </span>
         </div>
         <div className={styles.hint}>
           プリズムをドラッグして移動、タップで種類を切り替え（水色=ミラー /
           緑=分岐）。揺れ動く的にレーザーを当て続けてチャージしよう。
         </div>
         {isOver && (
-          <div className={styles.gameOver}>
+          <div className={styles.gameOver} data-testid="prism-drift-gameover">
             <div className={styles.gameOverTitle}>ラウンド終了</div>
             <div className={styles.gameOverScore}>SCORE {score.toLocaleString("ja-JP")}</div>
-            <button type="button" className={styles.restartButton} onClick={handleRestart}>
+            <button
+              type="button"
+              className={styles.restartButton}
+              onClick={handleRestart}
+              data-testid="prism-drift-restart"
+            >
               もう一度あそぶ
             </button>
           </div>

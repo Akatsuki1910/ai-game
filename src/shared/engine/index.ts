@@ -1,6 +1,6 @@
-export type { GameLoopCallback } from "./GameLoop";
-export { GameLoop } from "./GameLoop";
-export type { InputListener, PointerState } from "./input/InputManager";
-export { InputManager } from "./input/InputManager";
+export type { GameLoopCallback } from "./gameLoop";
+export { GameLoop } from "./gameLoop";
+export type { InputListener, PointerState } from "./input/inputManager";
+export { InputManager } from "./input/inputManager";
 export type { ElementSize } from "./useElementSize";
 export { useElementSize } from "./useElementSize";

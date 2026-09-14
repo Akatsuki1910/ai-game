@@ -25,7 +25,12 @@ export default function Home() {
         ) : (
           <div className={styles.grid}>
             {games.map((game) => (
-              <Link key={game.slug} href={`/games/${game.slug}`} className={styles.card}>
+              <Link
+                key={game.slug}
+                href={`/games/${game.slug}`}
+                className={styles.card}
+                data-testid={`game-card-${game.slug}`}
+              >
                 <div className={styles.cardTopRow}>
                   <span className={styles.dimensionBadge}>{DIMENSION_LABEL[game.dimension]}</span>
                   <span className={styles.cardDate}>{game.createdAt}</span>

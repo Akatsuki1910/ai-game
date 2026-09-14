@@ -39,6 +39,12 @@ yarn-error.log*
 # Claude Code local session settings (machine/session-specific)
 .claude/settings.local.json
 
+# playwright (story tests)
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
