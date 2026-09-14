@@ -107,4 +107,20 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "close-hauled",
+    title: "Close Hauled",
+    description:
+      "風上のブイを目指すリアルタイム帆走レース。真正面(ノーゴーゾーン)には進めないヨットを、ジグザグ(タック)で操って刻々と揺れる風を読みながら得点を稼げ。",
+    tags: ["arcade", "sailing", "physics", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-09-14",
+    controls: {
+      mouse: "タップ/ドラッグで進みたい方角を指す",
+      touch: "タップ/ドラッグで進みたい方角を指す",
+      keyboard: "←→・A/D: 舵を切る / Space: 一時停止 / R: ラウンドをリセット",
+    },
+    status: "prototype",
+  },
 ];
