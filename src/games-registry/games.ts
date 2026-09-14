@@ -27,4 +27,20 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "gravity-herd",
+    title: "Gravity Herd",
+    description:
+      "重力の井戸を操って漂う彗星を中央のリングへ誘導する3Dアークシミュレーター。太陽の重力で軌道を回る彗星を、ドラッグで生む引力で丁寧に手なずけよう。アステロイドに当てるとコンボが切れる。",
+    tags: ["arcade", "physics", "3d", "space"],
+    dimension: "3d",
+    engine: "three",
+    createdAt: "2026-09-14",
+    controls: {
+      mouse: "ドラッグ（クリック押しっぱなし）で重力の井戸を移動",
+      touch: "指でドラッグして重力の井戸を移動",
+      keyboard: "Space: 一時停止 / R: ラウンドをリセット",
+    },
+    status: "prototype",
+  },
 ];
