@@ -165,3 +165,8 @@ src/
 自動実行エージェント）が変わっても迷わないよう、この AGENTS.md を常に最新に保つこと。
 実際のスケジューリング（cron等での定期起動設定）は本ドキュメントの範囲外で、別途設定する。
 
+リモートリポジトリは `https://github.com/Akatsuki1910/ai-game`（Public, `origin`, デフォルトブランチ
+`master`）に設定済み。**ゲームを1本追加してコミットしたら、そのままリモートにも `git push` すること**
+（`git push` または `git push origin master`）。定期実行のたびにpushまで完了させる運用のため、
+コミットだけで止めない。force pushは行わない。
+
