@@ -155,4 +155,20 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "high-wire",
+    title: "High Wire",
+    description:
+      "風にあおられながら綱の上を渡り続けるリアルタイム・バランスアクション。傾いた方向と逆に体重をかけて踏みとどまり、道中のジェムを拾いながらどこまで渡り切れるか勝負しろ。風は時間とともに強くなる。",
+    tags: ["arcade", "balance", "physics", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-09-14",
+    controls: {
+      mouse: "画面の左右どちらかを長押しして体重をかける",
+      touch: "画面の左右どちらかを長押しして体重をかける",
+      keyboard: "←→・A/D: 長押しで体重をかける / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
