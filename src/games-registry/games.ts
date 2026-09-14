@@ -91,4 +91,20 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "chroma-well",
+    title: "Chroma Well",
+    description:
+      "3色のピグメントを混ぜてお題の色を再現する、リアルタイム調色パズル。井戸にインクを盛って混色し、蒸発する前にお題の色を維持し続けて調色を完成させろ。",
+    tags: ["arcade", "puzzle", "color", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-09-14",
+    controls: {
+      mouse: "ドラッグ/クリックで選択中のピグメントを盛る、パレットクリックで色を切替",
+      touch: "ドラッグ/タップで選択中のピグメントを盛る、パレットタップで色を切替",
+      keyboard: "1/2/3: 色を切替 / Space: 一時停止 / R: ラウンドをリセット",
+    },
+    status: "prototype",
+  },
 ];
