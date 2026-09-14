@@ -171,4 +171,20 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "rotor-drop",
+    title: "Rotor Drop",
+    description:
+      "回転する釘のリングでマーブルを弾く、リアルタイム・ロータリーピンボール。左右長押しでリングを回してギャップを狙い定め、落ちてくるマーブルを中央のゴールへ導け。連続成功でコンボボーナス。",
+    tags: ["arcade", "physics", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-09-14",
+    controls: {
+      mouse: "画面の左右どちらかを長押ししてリングを回転",
+      touch: "画面の左右どちらかを長押ししてリングを回転",
+      keyboard: "←→・A/D: 長押しでリングを回転 / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
