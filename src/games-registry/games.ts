@@ -187,4 +187,20 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "tide-keep",
+    title: "Tide Keep",
+    description:
+      "満ちてくる潮から中央の砦を守り続けるリアルタイム築城サバイバル。ドラッグ/長押しで浜に砂を盛り、押し寄せる波が来る前に砦を要求高さまで保て。潮は徐々に満ち、波は次第に速く高くなる。",
+    tags: ["arcade", "survival", "physics", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-09-14",
+    controls: {
+      mouse: "ドラッグ/長押しで狙った場所に砂を盛る",
+      touch: "ドラッグ/長押しで狙った場所に砂を盛る",
+      keyboard: "←→・A/D: 長押しでショベルを移動しながら盛る / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
