@@ -59,4 +59,20 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "grid-breach",
+    title: "Grid Breach",
+    description:
+      "回路基板を陣取るテリトリー・アクション。自陣から軌跡を伸ばして外周を囲み、パトロールするセキュリティ・スパークに触れられる前に自陣へ戻って制圧せよ。75%制圧でクリア。",
+    tags: ["arcade", "territory", "action", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-09-14",
+    controls: {
+      mouse: "ドラッグした方向へ進路を変更",
+      touch: "ドラッグした方向へ進路を変更",
+      keyboard: "矢印キー/WASD: 進路変更 / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
