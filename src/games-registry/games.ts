@@ -203,4 +203,20 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "powder-rush",
+    title: "Powder Rush",
+    description:
+      "雪山を転がり落ちながら育つスノーボールのリアルタイム3Dサバイバル。新雪を巻き込んで大きくなり、小岩は十分育てば押しつぶせるが、木には必ずぶつかると縮む。何もしなくても陽射しで少しずつ縮み、縮みきると終了。",
+    tags: ["arcade", "survival", "physics", "3d", "realtime"],
+    dimension: "3d",
+    engine: "three",
+    createdAt: "2026-09-14",
+    controls: {
+      mouse: "ドラッグ/クリックした位置へスノーボールを移動",
+      touch: "ドラッグした位置へスノーボールを移動",
+      keyboard: "←→・A/D: 左右移動 / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
