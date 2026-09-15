@@ -495,4 +495,20 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "dandelion-gale",
+    title: "Dandelion Gale",
+    description:
+      "綿毛の種を風で操るリアルタイム・サバイバルパズル。ドラッグ/長押しした位置から吹く風で種を反対側へ押し、点在する花畑へ届け続けよう。降ってくる雨粒に当たるとライフが減り、コンボが増えるほど雨は激しくなる。",
+    tags: ["arcade", "survival", "physics", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-09-15",
+    controls: {
+      mouse: "ドラッグ/長押しした位置から風を送り、種を反対側へ押し出す",
+      touch: "ドラッグ/長押しした位置から風を送り、種を反対側へ押し出す",
+      keyboard: "矢印キー/WASD: 押し出す方向を指定 / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
