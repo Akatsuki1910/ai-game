@@ -269,6 +269,22 @@ export const games: GameMeta[] = [
     status: "prototype",
   },
   {
+    slug: "firefly-sync",
+    title: "Firefly Sync",
+    description:
+      "暮れゆく草原でホタルの明滅を仲間の合唱へ導くリアルタイム同期パズル。タップで放つ光のパルスが群れの合意位相へ個体を引き寄せ、秩序変数を押し上げる。合唱計が満ちる前に日が沈むと夜が終わる。",
+    tags: ["arcade", "puzzle", "sync", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-09-14",
+    controls: {
+      mouse: "クリックで画面内にパルスを送る(エネルギーが必要)",
+      touch: "タップで画面内にパルスを送る(エネルギーが必要)",
+      keyboard: "Enter: 中央にパルスを送る / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
+  {
     slug: "kite-duel",
     title: "Kite Duel",
     description:

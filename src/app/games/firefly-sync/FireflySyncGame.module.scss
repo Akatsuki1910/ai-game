@@ -1,0 +1,162 @@
+@use "../../../shared/styles/variables" as v;
+@use "../../../shared/styles/mixins" as m;
+
+.stageInner {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 30%, #131a2c 0%, #05070d 75%);
+  @include m.touch-safe;
+}
+
+.canvasHost {
+  position: absolute;
+  inset: 0;
+
+  canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.hud {
+  position: absolute;
+  top: v.$space-3;
+  right: v.$space-3;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: v.$space-2;
+  pointer-events: none;
+}
+
+.night,
+.timer {
+  font-family: v.$font-family-mono;
+  font-size: 0.85rem;
+  padding: v.$space-1 v.$space-3;
+  border-radius: v.$radius-sm;
+  background: rgb(0 0 0 / 40%);
+  color: v.$color-text;
+  letter-spacing: 0.05em;
+}
+
+.meters {
+  position: absolute;
+  left: v.$space-3;
+  top: v.$space-3;
+  display: flex;
+  flex-direction: column;
+  gap: v.$space-1;
+  background: rgb(0 0 0 / 40%);
+  border-radius: v.$radius-sm;
+  padding: v.$space-2 v.$space-3;
+  pointer-events: none;
+  width: min(200px, 45vw);
+}
+
+.meterRow {
+  display: flex;
+  align-items: center;
+  gap: v.$space-2;
+}
+
+.meterLabel {
+  font-size: 0.7rem;
+  color: v.$color-text-muted;
+  width: 2.2em;
+  flex-shrink: 0;
+}
+
+.meterTrack {
+  flex: 1;
+  height: 8px;
+  border-radius: v.$radius-sm;
+  background: rgb(255 255 255 / 12%);
+  overflow: hidden;
+}
+
+.meterFillChorus {
+  height: 100%;
+  background: v.$color-accent-strong;
+  transition: width 0.1s linear;
+}
+
+.meterFillSync {
+  height: 100%;
+  background: v.$color-accent;
+  transition: width 0.1s linear;
+}
+
+.meterFillEnergy {
+  height: 100%;
+  background: v.$color-warning;
+  transition: width 0.1s linear;
+}
+
+.hint {
+  position: absolute;
+  left: v.$space-3;
+  bottom: v.$space-3;
+  right: v.$space-3;
+  font-size: 0.75rem;
+  color: v.$color-text-muted;
+  background: rgb(0 0 0 / 40%);
+  padding: v.$space-2 v.$space-3;
+  border-radius: v.$radius-sm;
+  pointer-events: none;
+  max-width: min(420px, 90vw);
+  line-height: 1.5;
+
+  @include m.mobile {
+    font-size: 0.68rem;
+  }
+}
+
+.gameOver {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: v.$space-2;
+  background: rgb(5 7 13 / 85%);
+  z-index: 5;
+  text-align: center;
+  padding: v.$space-4;
+}
+
+.gameOverTitle {
+  font-size: 1.4rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+}
+
+.gameOverScore {
+  font-family: v.$font-family-mono;
+  color: v.$color-accent;
+  font-size: 1.1rem;
+}
+
+.gameOverSub {
+  font-family: v.$font-family-mono;
+  color: v.$color-text-muted;
+  font-size: 0.8rem;
+}
+
+.restartButton {
+  margin-top: v.$space-3;
+  padding: v.$space-2 v.$space-5;
+  border-radius: v.$radius-md;
+  border: 1px solid v.$color-accent;
+  background: transparent;
+  color: v.$color-text;
+  font-size: 0.95rem;
+  cursor: pointer;
+
+  &:hover {
+    background: v.$color-accent;
+    color: #05060a;
+  }
+}
