@@ -317,4 +317,20 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "gyro-vault",
+    title: "Gyro Vault",
+    description:
+      "盤面を傾けてボールを転がすリアルタイム金庫破りパズル。落とし穴を避けながらチェックポイントを踏み、奥の宝石ゴールへたどり着け。ゴールするたびに次の金庫室はより複雑になる。",
+    tags: ["arcade", "puzzle", "physics", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-09-15",
+    controls: {
+      mouse: "ドラッグした方向・距離で盤面を傾ける",
+      touch: "ドラッグした方向・距離で盤面を傾ける",
+      keyboard: "矢印キー/WASD: 盤面を傾ける / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
