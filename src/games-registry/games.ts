@@ -382,4 +382,20 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "gold-seam",
+    title: "Gold Seam",
+    description:
+      "割れた器を金継ぎで直すリアルタイム集中力パズル。ひびの始点からポインタを離さずになぞり続けて金を継ごう。経路を外れると金粉が無駄になり、尽きると器は割れてしまう。",
+    tags: ["arcade", "puzzle", "precision", "craft", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-09-15",
+    controls: {
+      mouse: "ドラッグでひびの始点からポインタを進め、なぞって金を継ぐ",
+      touch: "ドラッグでひびの始点からポインタを進め、なぞって金を継ぐ",
+      keyboard: "Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
