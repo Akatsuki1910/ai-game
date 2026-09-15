@@ -430,4 +430,20 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "dohyo-duel",
+    title: "Dohyo Duel",
+    description:
+      "土俵の中央でせめぎ合うリアルタイム押し相撲。長押しでためて離すと押し込め、相手の突き直後に押し返すと会心の反撃になる。ため中に突かれると大きく崩されるので駆け引きが重要。土俵の外まで押し切れば勝ち、3敗で本日の取組終了。",
+    tags: ["arcade", "action", "timing", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-09-15",
+    controls: {
+      mouse: "長押しでため、離すと押し込む",
+      touch: "長押しでため、離すと押し込む",
+      keyboard: "Enter: 長押しでため、離すと押し込む / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
