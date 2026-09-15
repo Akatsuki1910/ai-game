@@ -398,4 +398,20 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "signal-lantern",
+    title: "Signal Lantern",
+    description:
+      "灯台の光の長さを読んで打ち返す、モールス信号風リアルタイム・タイミングパズル。短い点滅(点)には短く、長い点滅(線)には長くレバーを握って応答しよう。ラウンドを重ねるほど信号数が増え、応答の制限時間も縮む。",
+    tags: ["arcade", "timing", "rhythm", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-09-15",
+    controls: {
+      mouse: "画面を長押しして離す(長押し時間で点/線を選ぶ)",
+      touch: "画面を長押しして離す(長押し時間で点/線を選ぶ)",
+      keyboard: "Enterキー長押しで応答 / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
