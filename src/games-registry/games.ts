@@ -333,4 +333,21 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "frost-curl",
+    title: "Frost Curl",
+    description:
+      "氷上でストーンを滑らせるリアルタイム・カーリング物理パズル。ドラッグで引いて離すと逆方向へ投球し、飛行中は長押しでスイープして摩擦とカールを抑えられる。ホグラインを越えないとバーン、エンドを重ねるほどガードが増えて狙いにくくなる。",
+    tags: ["arcade", "physics", "curling", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-09-15",
+    controls: {
+      mouse: "ドラッグして引っ張り離すと投球、飛行中は長押しでスイープ",
+      touch: "ドラッグして引っ張り離すと投球、飛行中は長押しでスイープ",
+      keyboard:
+        "矢印キー: 角度/パワー調整 / Enter: 投球 / Sキー長押し: スイープ / 1・2: カール方向 / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
