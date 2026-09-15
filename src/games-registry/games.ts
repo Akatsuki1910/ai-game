@@ -268,4 +268,20 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "kite-duel",
+    title: "Kite Duel",
+    description:
+      "凧糸で相手の凧糸を切り裂く、風祭りの凧合戦アクション。錨から伸びる自分の凧を旋回させて漂うライバルの凧糸に重ね、素早く揺さぶって断ち切ろう。風が絶えず糸を揺らすので気を抜くと逃げられる。",
+    tags: ["arcade", "action", "realtime", "festival"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-09-15",
+    controls: {
+      mouse: "ドラッグで凧の向きを操作、相手の凧糸に重ねて素早く揺さぶり切る",
+      touch: "ドラッグで凧の向きを操作、相手の凧糸に重ねて素早く揺さぶり切る",
+      keyboard: "矢印キー/AD: 凧の向きを旋回 / Space: 一時停止 / R: ラウンドをリセット",
+    },
+    status: "prototype",
+  },
 ];
