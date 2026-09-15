@@ -463,4 +463,20 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "shadow-cast",
+    title: "Shadow Cast",
+    description:
+      "光源とスクリーンの間で人形を操り、壁に映る影の位置と大きさをお題にぴったり重ねて保ち続けるリアルタイム影絵パズル。光源に近づくほど影は大きく映るが、左右に動かせる幅は狭くなる。重ねるほどお題は厳しく速くなる。",
+    tags: ["arcade", "puzzle", "light", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-09-15",
+    controls: {
+      mouse: "ドラッグで人形を移動(上下で光源からの距離、左右で位置)",
+      touch: "ドラッグで人形を移動(上下で光源からの距離、左右で位置)",
+      keyboard: "矢印キー/WASD: 人形を移動 / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
