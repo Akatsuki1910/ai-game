@@ -430,4 +430,21 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "topiary-trim",
+    title: "Topiary Trim",
+    description:
+      "円形の目標シルエットからはみ出す前に枝を刈り込み続けるリアルタイム剪定パズル。放射状に伸びる枝をタップ/クリックで剪定し、はみ出したまま放置すると枝が折れて体力が減る。刈り込むほど充填率が上がりスコアが伸びる。",
+    tags: ["arcade", "puzzle", "precision", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-09-15",
+    controls: {
+      mouse: "はみ出した枝をクリックして剪定",
+      touch: "はみ出した枝をタップして剪定",
+      keyboard:
+        "矢印キー/AD: シアーを回転 / Enter: シアーの位置で剪定 / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
