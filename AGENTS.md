@@ -85,6 +85,31 @@ src/
    個別に走らせたい場合は `npm run lint` / `npm run test` / `npm run test:story` / `npm run build`。
    手元でブラウザを触って確認したい場合は `npm run dev`（`.claude/launch.json` の `ai-game-dev` 設定でも起動できる）。
 
+   **サンドボックス実行環境でのPlaywrightブラウザについて**: 環境にプリインストールされている
+   Playwright ブラウザのリビジョンと、`package.json` が指す `@playwright/test` が期待する
+   リビジョンが食い違い、`npm run test:story` が
+   `browserType.launch: Executable doesn't exist at .../chromium_headless_shell-XXXX/...`
+   で失敗することがある。この場合 `npx playwright install` は外部ネットワーク（egressポリシー）で
+   ブロックされて失敗するため実行しないこと。代わりに `playwright.config.ts` が対応している
+   環境変数 `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` に、環境に既にあるchromium実行体のパス
+   （多くの場合 `/opt/pw-browsers/chromium`）を渡して実行する。
+   ```bash
+   PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/opt/pw-browsers/chromium npm run verify
+   ```
+
+   **CPU/GPUが弱いサンドボックスでの散発的なタイムアウトについて**: 環境によっては
+   `workers: 2` でも「ドラッグ/連打などの操作後にスコアや進捗が伸びるはず」という
+   `expect.poll` が既定のタイムアウト内に間に合わず、無関係な複数のゲームで散発的に
+   タイムアウト失敗することがある(内部関数を直接呼ばず実画面操作をしているため、
+   フレーム供給が遅い環境では本当に間に合わないことがある)。これはゲーム側のバグとは
+   限らないため、失敗をそのまま「バグ」と断定する前に、失敗したテストだけを
+   `--last-failed --workers=1` で単独実行し、リソース競合なしでも同じテストが
+   再現して失敗するかを必ず確認すること。単独実行で通るなら環境側のリソース制約が原因、
+   単独実行でも落ちるなら実装側の不具合を疑う。
+   ```bash
+   PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/opt/pw-browsers/chromium npx playwright test --last-failed --workers=1
+   ```
+
 ### GameMeta（レジストリの1件）の書き方
 
 `src/games-registry/types.ts` を参照。特に迷いやすい項目:
@@ -196,7 +221,7 @@ src/
 
 ## やってはいけないこと
 
-- **既存のゲームを壊さない**。`shared/` を変更するときは、既存の全ゲーム（現状: prism-drift）が
+- **既存のゲームを壊さない**。`shared/` を変更するときは、既存の全ゲームが
   `npm run build` を通ることを必ず確認する。破壊的変更が必要なら、まず全ゲームの呼び出し側を追従させる。
 - 既存ゲームの `slug`（URL）を後から変えない。リンク切れの原因になる。
 - `next lint` や ESLint を追加しない（Biomeに一本化する）。
@@ -220,4 +245,21 @@ src/
 `master`）に設定済み。**ゲームを1本追加してコミットしたら、そのままリモートにも `git push` すること**
 （`git push` または `git push origin master`）。定期実行のたびにpushまで完了させる運用のため、
 コミットだけで止めない。force pushは行わない。
+
+### 作業開始前に必ず確認すること（detached HEAD 事故の防止）
+
+過去に、実行環境がセッション開始時に **detached HEAD**（どのブランチにも属さない状態）で
+チェックアウトされ、複数回のセッションにわたってそのままコミットを積み重ねてしまい、
+`git push origin master` が「ローカルの `master` ブランチ自体は動いていない」ため
+実質何も送信せず成功したかのように見える、という事故が起きたことがある
+（19本分のゲームが1日以上リモートに反映されないまま失われかけた）。
+作業開始時・push前に必ず以下を確認すること。
+
+- **作業開始時**: `git branch --show-current` を実行し、出力が空（=detached HEAD）なら、
+  `git checkout master` あるいは `git switch -C master origin/master` で必ず `master` ブランチに
+  乗ってから作業を始める。`git status` の1行目が `HEAD detached from ...` になっていたら要注意。
+- **push後**: `git push` の出力が `Everything up-to-date` になっていないか、
+  かつ `git log --oneline -1` のコミットハッシュが `git log --oneline -1 origin/master` と
+  一致しているかを確認する。一致しない・up-to-date とだけ表示されて新しいコミットが含まれていない
+  場合は、pushが実質的に失敗している（今回のコミットが乗っていない）ため原因を調査すること。
 
