@@ -366,4 +366,20 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "spindle-circus",
+    title: "Spindle Circus",
+    description:
+      "5本の柱で回る皿を落とす前にタップしてスピンをかけ直し続けるリアルタイム皿回しジャグリング。ぎりぎりで回すほど高得点だが、目を離すと皿は落ちてライフが減る。柱は次々増え、ぐらつく速さも徐々に上がる。",
+    tags: ["arcade", "juggling", "timing", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-09-15",
+    controls: {
+      mouse: "回っている柱をクリックしてスピンをかけ直す",
+      touch: "回っている柱をタップしてスピンをかけ直す",
+      keyboard: "1〜5: 対応する柱にスピンをかけ直す / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
