@@ -479,4 +479,20 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "bellows-forge",
+    title: "Bellows Forge",
+    description:
+      "温度帯を保ちながら金属を打つリアルタイム鍛冶パズル。左を長押しして送風し、ゲージの目標帯に温度が入ったら右をタップして打とう。帯を外すと品質が減り、送風しすぎて振り切ると焦げついて減点される。",
+    tags: ["arcade", "puzzle", "craft", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-09-15",
+    controls: {
+      mouse: "左側を長押しで送風、右側をクリックで打つ",
+      touch: "左側を長押しで送風、右側をタップで打つ",
+      keyboard: "W/↑: 長押しで送風 / S・↓・Enter: 打つ / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
