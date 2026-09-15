@@ -333,4 +333,20 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "grain-scale",
+    title: "Grain Scale",
+    description:
+      "天秤の両皿に降り注ぐ砂を注ぎ分け、目標の重さで釣り合わせ続けるリアルタイム・バランスパズル。砂を落とす壺をドラッグして左右に動かし、傾きすぎて砂がこぼれる前に両皿を目標の帯へ収めよう。",
+    tags: ["arcade", "balance", "puzzle", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-09-15",
+    controls: {
+      mouse: "ドラッグで砂を注ぐ壺を左右に移動",
+      touch: "ドラッグで壺を左右に移動",
+      keyboard: "矢印キー/AD: 壺を移動 / Space: 一時停止 / R: ラウンドをリセット",
+    },
+    status: "prototype",
+  },
 ];
