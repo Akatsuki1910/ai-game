@@ -1,0 +1,150 @@
+@use "../../../shared/styles/variables" as v;
+@use "../../../shared/styles/mixins" as m;
+
+.stageInner {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 20%, #1a1522 0%, #0a0b12 70%);
+  @include m.touch-safe;
+}
+
+.canvasHost {
+  position: absolute;
+  inset: 0;
+
+  canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.hud {
+  position: absolute;
+  top: v.$space-3;
+  right: v.$space-3;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: v.$space-2;
+  pointer-events: none;
+}
+
+.lives {
+  font-family: v.$font-family-mono;
+  font-size: 0.8rem;
+  padding: v.$space-1 v.$space-3;
+  border-radius: v.$radius-sm;
+  background: rgb(0 0 0 / 40%);
+  color: v.$color-danger;
+  letter-spacing: 0.05em;
+}
+
+.hint {
+  position: absolute;
+  left: v.$space-3;
+  top: v.$space-3;
+  font-size: 0.75rem;
+  color: v.$color-text-muted;
+  background: rgb(0 0 0 / 40%);
+  padding: v.$space-1 v.$space-2;
+  border-radius: v.$radius-sm;
+  pointer-events: none;
+  max-width: min(320px, 60vw);
+  line-height: 1.5;
+
+  @include m.mobile {
+    font-size: 0.68rem;
+    max-width: 56vw;
+  }
+}
+
+.panel {
+  position: absolute;
+  left: 50%;
+  bottom: v.$space-4;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: v.$space-2;
+  pointer-events: none;
+
+  @include m.mobile {
+    bottom: v.$space-3;
+  }
+}
+
+.panelRow {
+  display: flex;
+  align-items: center;
+  gap: v.$space-2;
+  background: rgb(0 0 0 / 40%);
+  padding: v.$space-1 v.$space-3;
+  border-radius: v.$radius-md;
+}
+
+.panelLabel {
+  font-size: 0.7rem;
+  color: v.$color-text-muted;
+  min-width: 2.4em;
+}
+
+.lamp {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 1px solid rgb(255 255 255 / 40%);
+  opacity: 0.55;
+
+  &[data-state="live"] {
+    opacity: 1;
+    box-shadow: 0 0 8px 1px currentcolor;
+  }
+
+  &[data-state="cooldown"] {
+    opacity: 0.3;
+  }
+}
+
+.gameOver {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: v.$space-2;
+  background: rgb(10 11 18 / 85%);
+  z-index: 5;
+  text-align: center;
+  padding: v.$space-4;
+}
+
+.gameOverTitle {
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+}
+
+.gameOverScore {
+  font-family: v.$font-family-mono;
+  color: v.$color-accent;
+  font-size: 1.1rem;
+}
+
+.restartButton {
+  margin-top: v.$space-3;
+  padding: v.$space-2 v.$space-5;
+  border-radius: v.$radius-md;
+  border: 1px solid v.$color-accent;
+  background: transparent;
+  color: v.$color-text;
+  font-size: 0.95rem;
+  cursor: pointer;
+
+  &:hover {
+    background: v.$color-accent;
+    color: #05060a;
+  }
+}

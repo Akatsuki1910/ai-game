@@ -300,4 +300,21 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "switchboard-shift",
+    title: "Switchboard Shift",
+    description:
+      "次々と鳴る回線を捌くリアルタイム交換手パズル。光る発信ジャックから同じ色の受信ジャックへケーブルをドラッグして繋ぎ、タイムアウトする前に接続せよ。誤接続や放置はライフを削り、鳴る回線は次第に増えて忙しくなる。",
+    tags: ["arcade", "puzzle", "timing", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-09-15",
+    controls: {
+      mouse: "光っている発信ジャックからドラッグし、同じ色の受信ジャックの上で放して接続",
+      touch: "光っている発信ジャックからドラッグし、同じ色の受信ジャックの上で放して接続",
+      keyboard:
+        "1〜5: 発信ジャックを選択してケーブルを持つ、再度1〜5で相手ジャックへ接続 / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
