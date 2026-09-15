@@ -511,4 +511,20 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "constellation-echo",
+    title: "Constellation Echo",
+    description:
+      "星座の光る順番を覚えて同じ順にタップし直すリアルタイム記憶パズル。星をつなぐ光の軌跡を一度だけ見せてもらえるので、消える前に順路を頭に焼き付けよう。クリアするたびに手順は1つずつ長くなる。",
+    tags: ["arcade", "puzzle", "memory", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-09-15",
+    controls: {
+      mouse: "光った順に星をクリックして選ぶ",
+      touch: "光った順に星をタップして選ぶ",
+      keyboard: "1〜8: 対応する星を選択 / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
