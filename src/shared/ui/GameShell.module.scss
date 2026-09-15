@@ -86,6 +86,10 @@
   z-index: 10;
   text-align: center;
   padding: v.$space-4;
+  // ステージ上でのドラッグ操作が、この文言をテキスト選択してしまわないようにする
+  // (touch-action は変えない: 一部ゲームのタップ判定に影響するため)。
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .pauseOverlayTitle {

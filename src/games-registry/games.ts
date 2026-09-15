@@ -414,4 +414,20 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "kendama-swing",
+    title: "Kendama Swing",
+    description:
+      "紐でつながった玉をカップで操るリアルタイム剣玉アクション。カップをドラッグして玉を振り上げ、受け口に飛び込んだ瞬間にキャッチしてコンボを繋ごう。キャッチするほど受け口は狭く玉は速くなり、床に落とすとライフが減る。",
+    tags: ["arcade", "physics", "timing", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-09-15",
+    controls: {
+      mouse: "ドラッグ/長押しでカップを移動",
+      touch: "ドラッグ/長押しでカップを移動",
+      keyboard: "矢印キー/WASD: カップを移動 / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
