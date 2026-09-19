@@ -527,4 +527,20 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "blackout-ferry",
+    title: "Blackout Ferry",
+    description:
+      "夜の海峡をサーチライトから隠れながら渡るリアルタイム潜入ボート。回転するサーチライトに照らされ続けると疑心度が満ちて拿捕されてしまう。ブーストで速く渡れるが、照らされたときのリスクも増す。渡り切るたびに次の航海はサーチライトが増える。",
+    tags: ["arcade", "stealth", "realtime", "night"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-09-19",
+    controls: {
+      mouse: "ドラッグ/クリックした位置へ舟を左右に操舵、ボタン長押しでブースト",
+      touch: "ドラッグ/タップした位置へ舟を左右に操舵、ボタン長押しでブースト",
+      keyboard: "矢印キー/AD: 操舵 / Shift長押し: ブースト / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
