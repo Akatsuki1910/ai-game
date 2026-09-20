@@ -527,4 +527,20 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "nigiri-rush",
+    title: "Nigiri Rush",
+    description:
+      "回転寿司のレーンから注文と同じネタだけを狙って取るリアルタイム仕分けパズル。注文はネタを取るたびに変わり、違うネタを取る・わさびに触れる・注文を取り逃すといずれもライフが減る。連続成功で流れは速く忙しくなる。",
+    tags: ["arcade", "puzzle", "timing", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-09-20",
+    controls: {
+      mouse: "注文と同じネタがあるレーンのボタンをクリックして取る",
+      touch: "注文と同じネタがあるレーンのボタンをタップして取る",
+      keyboard: "1〜3: 対応するレーンを取る / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];

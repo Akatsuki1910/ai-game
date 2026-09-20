@@ -1,0 +1,164 @@
+@use "../../../shared/styles/variables" as v;
+@use "../../../shared/styles/mixins" as m;
+
+.stageInner {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 15%, #1a1f22 0%, #0a0b12 70%);
+  @include m.touch-safe;
+}
+
+.canvasHost {
+  position: absolute;
+  inset: 0;
+
+  canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.hud {
+  position: absolute;
+  top: v.$space-3;
+  right: v.$space-3;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: v.$space-2;
+  pointer-events: none;
+}
+
+.lives {
+  font-family: v.$font-family-mono;
+  font-size: 0.8rem;
+  padding: v.$space-1 v.$space-3;
+  border-radius: v.$radius-sm;
+  background: rgb(0 0 0 / 40%);
+  color: v.$color-danger;
+  letter-spacing: 0.05em;
+}
+
+.orderPanel {
+  position: absolute;
+  top: v.$space-3;
+  left: v.$space-3;
+  display: flex;
+  align-items: center;
+  gap: v.$space-2;
+  background: rgb(0 0 0 / 40%);
+  padding: v.$space-1 v.$space-3;
+  border-radius: v.$radius-md;
+  pointer-events: none;
+}
+
+.orderLabel {
+  font-size: 0.7rem;
+  color: v.$color-text-muted;
+}
+
+.orderChip {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #0a0b12;
+  padding: v.$space-1 v.$space-3;
+  border-radius: v.$radius-sm;
+}
+
+.hint {
+  position: absolute;
+  left: v.$space-3;
+  top: 64px;
+  font-size: 0.75rem;
+  color: v.$color-text-muted;
+  background: rgb(0 0 0 / 40%);
+  padding: v.$space-1 v.$space-2;
+  border-radius: v.$radius-sm;
+  pointer-events: none;
+  max-width: min(360px, 60vw);
+  line-height: 1.5;
+
+  @include m.mobile {
+    font-size: 0.68rem;
+    max-width: 56vw;
+  }
+}
+
+.lanes {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.laneRow {
+  position: relative;
+  flex: 1;
+}
+
+.laneButton {
+  position: absolute;
+  left: v.$space-3;
+  top: v.$space-2;
+  bottom: v.$space-2;
+  width: 25%;
+  border-radius: v.$radius-md;
+  border: 2px solid v.$color-border;
+  background: rgb(20 22 29 / 55%);
+  color: v.$color-text;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+
+  &:hover {
+    background: rgb(20 22 29 / 80%);
+  }
+
+  @include m.mobile {
+    width: 32%;
+    font-size: 0.75rem;
+  }
+}
+
+.gameOver {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: v.$space-2;
+  background: rgb(10 11 18 / 85%);
+  z-index: 5;
+  text-align: center;
+  padding: v.$space-4;
+}
+
+.gameOverTitle {
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+}
+
+.gameOverScore {
+  font-family: v.$font-family-mono;
+  color: v.$color-accent;
+  font-size: 1.1rem;
+}
+
+.restartButton {
+  margin-top: v.$space-3;
+  padding: v.$space-2 v.$space-5;
+  border-radius: v.$radius-md;
+  border: 1px solid v.$color-accent;
+  background: transparent;
+  color: v.$color-text;
+  font-size: 0.95rem;
+  cursor: pointer;
+
+  &:hover {
+    background: v.$color-accent;
+    color: #05060a;
+  }
+}
