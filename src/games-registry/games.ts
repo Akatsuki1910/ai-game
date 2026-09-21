@@ -527,4 +527,20 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "koi-climb",
+    title: "Koi Climb",
+    description:
+      "滝を遡る鯉を操るリアルタイム登流サバイバル。ドラッグで鯉を導き、岩と流木を避けながら真珠を集めて体力を保とう。流れは徐々に速くなり、体力が尽きると押し流されて終了する。",
+    tags: ["arcade", "survival", "realtime", "physics"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-09-21",
+    controls: {
+      mouse: "ドラッグ/長押しした位置へ鯉を誘導",
+      touch: "ドラッグ/長押しした位置へ鯉を誘導",
+      keyboard: "矢印キー/WASD: 鯉を移動 / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
