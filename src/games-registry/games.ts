@@ -527,4 +527,20 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "talon-dive",
+    title: "Talon Dive",
+    description:
+      "巣とライバルの鷹の間で獲物を狩り続けるリアルタイム狩猟シミュレーター。ドラッグした方向へ隼を滑空させて逃げる獲物を仕留めよう。巣の外ではスタミナが減り続け、尽きる前に戻らないと力尽きる。ライバルに先を越されるとストリークが切れる。",
+    tags: ["arcade", "hunting", "physics", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-09-22",
+    controls: {
+      mouse: "ドラッグ/長押しした方向へ隼を滑空させる",
+      touch: "ドラッグ/長押しした方向へ隼を滑空させる",
+      keyboard: "矢印キー/WASD: 滑空方向を指定 / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
