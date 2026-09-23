@@ -543,4 +543,20 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "cornice-watch",
+    title: "Cornice Watch",
+    description:
+      "山の斜面に積もる雪を人為的に崩し続けて麓の集落を雪崩から守るリアルタイム防災シミュレーター。レーンをタップして予防的に雪を落とせるが、際どく溜め込んでからの解放は高得点な代わりに隣のレーンへ飛び火する。放置してレーンが満杯になると集落に直撃してダメージが入る。",
+    tags: ["arcade", "management", "survival", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-09-23",
+    controls: {
+      mouse: "レーンをクリックして人為的に雪を崩す",
+      touch: "レーンをタップして人為的に雪を崩す",
+      keyboard: "1〜6: 対応するレーンを崩す / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
