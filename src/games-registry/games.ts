@@ -543,4 +543,21 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "ember-ward",
+    title: "Ember Ward",
+    description:
+      "夜の集落へ降り注ぐ火の粉を、ドラッグで描いた結界の線で弾き返すリアルタイム防衛アクション。結界は数秒で消えるので、置き場所とタイミングを読んで社を守り抜け。続けて弾くほどコンボが伸び、社に火の粉が届くとライフが減る。",
+    tags: ["arcade", "action", "physics", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-09-24",
+    controls: {
+      mouse: "ドラッグで結界の線を描き、火の粉を弾き返す",
+      touch: "ドラッグで結界の線を描き、火の粉を弾き返す",
+      keyboard:
+        "矢印キー/WASD: 結界カーソルを移動 / Enter: カーソル位置に結界を設置 / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
