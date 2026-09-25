@@ -543,4 +543,20 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "thermal-glider",
+    title: "Thermal Glider",
+    description:
+      "紙飛行機で上昇気流(サーマル)を捕まえながら飛び続けるリアルタイム3Dグライダー。左右で旋回、上下で昇降しながらオレンジ色のサーマルに入って高度を稼ごう。何もしなければ重力で沈み、鳥にぶつかると高度が大きく減って0になると墜落する。",
+    tags: ["arcade", "flight", "physics", "3d", "realtime"],
+    dimension: "3d",
+    engine: "three",
+    createdAt: "2026-09-25",
+    controls: {
+      mouse: "ドラッグ/長押しした位置へ旋回、上下位置で昇降を操作",
+      touch: "ドラッグ/長押しした位置へ旋回、上下位置で昇降を操作",
+      keyboard: "矢印キー/WASD: 旋回(左右)・昇降(上下) / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
