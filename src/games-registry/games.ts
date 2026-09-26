@@ -559,4 +559,20 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "ember-loft",
+    title: "Ember Loft",
+    description:
+      "バーナーの熱で高度を操るリアルタイム熱気球サバイバル。低層・中層・高層で強さの変わる風を読んで追い風の層へ移り、雲や鳥を避けながら上昇気流のオーブを集めよう。熱を失って地面に触れると即座に墜落する。",
+    tags: ["arcade", "survival", "physics", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-09-26",
+    controls: {
+      mouse: "画面を長押しでバーナー点火(上昇)、離すと冷えて下降",
+      touch: "画面を長押しでバーナー点火(上昇)、離すと冷えて下降",
+      keyboard: "↑・W: 長押しでバーナー点火 / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
