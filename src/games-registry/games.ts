@@ -559,4 +559,20 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "rapids-slalom",
+    title: "Rapids Slalom",
+    description:
+      "急流を下るリアルタイム・スラロームカヤック。緑のゲートはそのまま、赤のゲートはブレース(パドルで身構える)しながら通過し、流れてくる岩を避けよう。コンボが伸びるほど流れは速く、ゲートの隙間は狭くなる。",
+    tags: ["arcade", "sports", "physics", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-09-27",
+    controls: {
+      mouse: "ドラッグ/クリックした位置へ操舵。クリックでブレースも発動",
+      touch: "ドラッグ/タップした位置へ操舵。タップでブレースも発動",
+      keyboard: "矢印キー/AD: 操舵 / Enter: ブレース発動 / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
