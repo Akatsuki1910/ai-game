@@ -559,4 +559,21 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "auger-drop",
+    title: "Auger Drop",
+    description:
+      "凍った湖でルアーを操るリアルタイム穴釣りシミュレーター。魚の近くで素早く揺すって誘い、食いついたら長押しでリールを巻こう。テンションを上げすぎると糸が切れて魚を逃し、放っておくと寒さで体力(あたたかさ)が尽きてしまう。",
+    tags: ["arcade", "fishing", "timing", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-09-28",
+    controls: {
+      mouse: "ドラッグ/長押しでルアーを操作。掛かったら長押しでリール",
+      touch: "ドラッグ/長押しでルアーを操作。掛かったら長押しでリール",
+      keyboard:
+        "矢印キー/WASD: ルアー操作 / Enter: その場で長押し(リール) / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
