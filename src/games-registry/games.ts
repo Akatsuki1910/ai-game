@@ -559,4 +559,21 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "homing-arc",
+    title: "Homing Arc",
+    description:
+      "ブーメランを投げて戻ってくる瞬間をキャッチし続けるリアルタイム・タイミングアクション。ドラッグで引っ張って離すと弧を描いて飛んでいき、戻ってきて「キャッチ!」の表示中にタップで受け止めよう。岩に当たるかキャッチし損ねるとライフが減り、コンボが伸びるほど岩は増えてキャッチの窓は狭くなる。",
+    tags: ["arcade", "timing", "precision", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-09-29",
+    controls: {
+      mouse: "ドラッグして引っ張り、離すと逆方向へ投げる。戻ってきたらクリックでキャッチ",
+      touch: "ドラッグして引っ張り、離すと逆方向へ投げる。戻ってきたらタップでキャッチ",
+      keyboard:
+        "矢印キー/WASD: 角度・パワー調整 / Enter: 投げる・キャッチ / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
