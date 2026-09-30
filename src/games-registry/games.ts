@@ -559,4 +559,20 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "sensu-fold",
+    title: "Sensu Fold",
+    description:
+      "紙の扇(せんす)を1枚ずつ折りたたむリアルタイム折り紙パズル。上下の動きで折り角度を合わせ、揺れ動くターゲット帯に重なったところでピン留めしよう。外すと紙が傷み、畳み終えるほど扇は長く目標帯は細く速くなる。",
+    tags: ["arcade", "puzzle", "precision", "craft", "3d", "realtime"],
+    dimension: "3d",
+    engine: "three",
+    createdAt: "2026-09-30",
+    controls: {
+      mouse: "ポインタを上下に動かして折り角度を調整、クリックでその角度にピン留め",
+      touch: "ドラッグして折り角度を調整、指を離すとその角度にピン留め",
+      keyboard: "↑↓・W/S: 折り角度を調整 / Enter: ピン留め / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
