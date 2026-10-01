@@ -559,4 +559,21 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "shredder-line",
+    title: "Shredder Line",
+    description:
+      "ベルトコンベアを流れるスクラップを同じ色のシュートへ仕分け続けるリアルタイム工場パズル。ドラッグで掴んでシュートへ投入し、シュレッダーに届く前に捌き切れ。捌くほどベルトは速く、出現間隔も短くなる。",
+    tags: ["arcade", "sorting", "industrial", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-10-01",
+    controls: {
+      mouse: "ドラッグでスクラップを掴み、同じ色のシュートの上で離して投入",
+      touch: "ドラッグでスクラップを掴み、同じ色のシュートの上で離して投入",
+      keyboard:
+        "1〜3: 最も危険なスクラップを対応するシュートへ即投入 / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
