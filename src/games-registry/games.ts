@@ -576,4 +576,20 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "prize-crane",
+    title: "Prize Crane",
+    description:
+      "レール上のクレーンを操るリアルタイム・クレーンゲーム。狙いを定めて降ろし、つかんだ景品を振り落とさないよう搬出口まで運んで獲得しよう。アテンプトは限られており、獲得を重ねるほどつかめる許容は狭く、動きも速くなる。",
+    tags: ["arcade", "precision", "crane", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-10-02",
+    controls: {
+      mouse: "ドラッグでクレーンを左右に移動、ボタンクリックで降ろす/置く",
+      touch: "ドラッグでクレーンを左右に移動、ボタンタップで降ろす/置く",
+      keyboard: "←→・A/D: クレーンを移動 / Enter: 降ろす・置く / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
