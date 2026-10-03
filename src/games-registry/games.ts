@@ -576,4 +576,20 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "rail-weaver",
+    title: "Rail Weaver",
+    description:
+      "峡谷を渡るトロッコの前方に途切れたレールが現れ続けるリアルタイム補修パズル。近づいたら画面をタップして板を渡し、板の在庫が尽きたり補修が遅れたりすると脱線する。進むほどトロッコは速くなり、レールの切れ目も頻発する。",
+    tags: ["arcade", "survival", "timing", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-10-03",
+    controls: {
+      mouse: "キャンバスをクリックして最も近いレールの切れ目に板を渡す",
+      touch: "キャンバスをタップして最も近いレールの切れ目に板を渡す",
+      keyboard: "Enter: 板を渡す / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
