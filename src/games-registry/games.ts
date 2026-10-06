@@ -576,4 +576,20 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "taut-line",
+    title: "Taut Line",
+    description:
+      "魚を巻き寄せるリアルタイム釣りアクション。画面を押して上へ引く「ポンピング」動作でリールを巻き、魚が穏やかな間に寄せよう。強く引く(run)間に巻きすぎるとラインが切れ、油断すると限界距離まで逃げられる。",
+    tags: ["arcade", "fishing", "tension", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-10-06",
+    controls: {
+      mouse: "画面を押し下げたまま上方向へ引き上げる動きを繰り返してリールを巻く",
+      touch: "画面を押したまま上方向へスワイプする動きを繰り返してリールを巻く",
+      keyboard: "↑ / W を連打してリールを巻く / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
