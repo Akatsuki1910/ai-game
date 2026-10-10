@@ -576,4 +576,21 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "holding-pattern",
+    title: "Holding Pattern",
+    description:
+      "計器のない管制塔から複数の機体を誘導するリアルタイム航空管制パズル。機体をドラッグで選び、滑走路の先に立つビーコンまで狙いを引き延ばして方位を揃え、着陸させ続けよう。機体同士を接近させすぎず、燃料が尽きる前に導けるかが勝負。",
+    tags: ["arcade", "simulation", "routing", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-10-10",
+    controls: {
+      mouse: "機体をドラッグして選択し、狙いたい方角まで引き延ばして方位を設定",
+      touch: "機体をドラッグして選択し、狙いたい方角まで引き延ばして方位を設定",
+      keyboard:
+        "N: 最も燃料が少ない機体を選択 / ←→・A・D: 選択機の方位を回転 / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
