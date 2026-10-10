@@ -576,4 +576,20 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "senko-spark",
+    title: "Senko Spark",
+    description:
+      "線香花火の火球をできるだけ揺らさずに持ち続けるリアルタイム集中力パズル。持ち手を素早く動かすと火球が離れて不安定になり、安定度が尽きると火球が落ちて終わる。漂う火花をタップで掬うとボーナスだが、掬う反動で火球が跳ねるリスクもある。",
+    tags: ["arcade", "precision", "balance", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-10-09",
+    controls: {
+      mouse: "ドラッグ/長押しで持ち手を動かす、動かさずタップで近くの火花を掬う",
+      touch: "ドラッグ/長押しで持ち手を動かす、動かさずタップで近くの火花を掬う",
+      keyboard: "矢印キー/WASD: 持ち手を移動 / Enter: 火花を掬う / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
