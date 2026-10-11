@@ -576,4 +576,20 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "glass-turn",
+    title: "Glass Turn",
+    description:
+      "炉から取り出した玉を膨らませて狙った大きさに仕上げるリアルタイム吹きガラス工芸パズル。長押しで送風しながら左右に振って転がし、歪みを抑えつつ目標の帯で仕上げよう。膨らませすぎれば割れ、転がし忘れれば歪んで崩れる。",
+    tags: ["arcade", "puzzle", "craft", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-10-11",
+    controls: {
+      mouse: "長押しで送風(膨らむ)、押しながら左右に振って転がす、ボタンクリックで仕上げる",
+      touch: "長押しで送風(膨らむ)、押しながら左右に振って転がす、タップで仕上げる",
+      keyboard: "Enter長押し: 送風 / ←→・AD: 転がす / F: 仕上げる / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
