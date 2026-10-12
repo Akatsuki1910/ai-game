@@ -63,6 +63,7 @@ export function NoodlePullGame() {
   const [score, setScore] = useState(0);
   const [round, setRound] = useState(1);
   const [freshnessPercent, setFreshnessPercent] = useState(100);
+  const [tensionPercent, setTensionPercent] = useState(0);
   const [strandCount, setStrandCount] = useState(1);
   const [isRoundOver, setIsRoundOver] = useState(false);
   const [resultInfo, setResultInfo] = useState<{
@@ -144,6 +145,7 @@ export function NoodlePullGame() {
         setScore(world.score);
         setRound(world.round);
         setFreshnessPercent(Math.round(world.freshnessRatio * 100));
+        setTensionPercent(Math.round((world.stretch / MAX_SAFE_STRETCH) * 100));
         setStrandCount(world.strandCount);
         setIsRoundOver(world.isRoundOver);
 
@@ -283,6 +285,9 @@ export function NoodlePullGame() {
           <div className={styles.freshnessTrack}>
             <div className={styles.freshnessFill} style={{ width: `${freshnessPercent}%` }} />
           </div>
+          <span className={styles.tensionLabel} data-testid="noodle-pull-tension">
+            引き具合 {tensionPercent}%
+          </span>
         </div>
         <div className={styles.hint}>
           長押しで麺を引き伸ばし、緑のゾーンに入ったら離して畳む(キーボードはEnter長押し)。

@@ -69,6 +69,12 @@
   transition: width 0.1s linear;
 }
 
+.tensionLabel {
+  font-family: v.$font-family-mono;
+  font-size: 0.75rem;
+  color: v.$color-text-muted;
+}
+
 .hint {
   position: absolute;
   left: v.$space-3;

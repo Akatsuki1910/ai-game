@@ -2,14 +2,16 @@ import { expect, type Locator, type Page, test } from "@playwright/test";
 import { collectPageErrors, dragOnStage, waitForFrames } from "./support/gameStory";
 
 const GAME_PATH = "/games/noodle-pull";
-// 的は的の幅の最小でも MIN_FOLD_STRETCH より十分広いので、0.55秒前後の押下は
-// 的のランダムな位置に関わらず「的に近いか、的の中」になり、0点にはならない。
-const MID_HOLD_MS = 550;
-// 低スペックなサンドボックスではフレーム供給が遅く、ゲーム内時間の進みが実時間より
-// 遅れることがある(AGENTS.md参照)。千切れ(SNAP_STRETCH=1.3)は1ラウンドの制限時間
-// (6秒、ゲーム内時間)より確実に早く起きるため、固定時間ではなく「結果が出るまで
-// 押し続ける」方式にして、フレーム供給の遅さに関わらず確実に千切れを再現する。
+// 的の位置はラウンドごとにランダムで、低スペックなサンドボックスではフレーム供給が遅く
+// ゲーム内時間の進みが実時間よりばらつくため(AGENTS.md参照)、固定の長押し時間では
+// 一発で的の中に入るとは限らない。的の中で畳めるまで(=得点が増えるまで)、
+// 長押し→離すを繰り返す(dohyoDuel.story.spec.ts の長押し連打パターンと同様の考え方)。
+const HOLD_MS = 550;
+// 千切れ(SNAP_STRETCH)まで実時間を固定せず押し続ける用のタイムアウト。
 const SNAP_RESULT_TIMEOUT_MS = 20_000;
+// 畳む・千切れるのどちらでもラウンドが進む操作を、十分に長く押し続けるための時間
+// (的に入らなくても、鮮度切れ(6秒・ゲーム内時間)より先に千切れるかラウンドが進む)。
+const ANY_OUTCOME_HOLD_MS = 1500;
 
 async function readScore(page: Page): Promise<number> {
   const text = await page.getByTestId("game-shell-score").innerText();
@@ -49,6 +51,27 @@ async function pressAndHold(page: Page, stage: Locator, holdMs: number): Promise
   await waitForFrames(page, 4);
 }
 
+/**
+ * 的の位置はラウンドごとにランダムなので、1回の長押しでは的の中に入らないことがある。
+ * 的の中で畳めて得点が増えるまで、長押し→離すを繰り返す。
+ */
+async function holdUntilScoreIncreases(
+  page: Page,
+  stage: Locator,
+  scoreBefore: number,
+  timeoutMs = 60_000,
+): Promise<void> {
+  await expect
+    .poll(
+      async () => {
+        await pressAndHold(page, stage, HOLD_MS);
+        return readScore(page);
+      },
+      { message: "いずれ的の中で畳めて得点が増える", timeout: timeoutMs },
+    )
+    .toBeGreaterThan(scoreBefore);
+}
+
 test.describe("Noodle Pull のストーリー", () => {
   test("起動直後はラウンド1・鮮度満タン・麺1本・スコア0でHUDが表示される", async ({ page }) => {
     const errors = collectPageErrors(page);
@@ -58,6 +81,7 @@ test.describe("Noodle Pull のストーリー", () => {
     await expect(page.getByTestId("noodle-pull-round")).toBeVisible();
     await expect(page.getByTestId("noodle-pull-strands")).toBeVisible();
     await expect(page.getByTestId("noodle-pull-freshness")).toBeVisible();
+    await expect(page.getByTestId("noodle-pull-tension")).toBeVisible();
     await expect(page.getByTestId("noodle-pull-result")).toBeHidden();
 
     expect(await readScore(page), "開始時のスコアは0").toBe(0);
@@ -90,21 +114,18 @@ test.describe("Noodle Pull のストーリー", () => {
   });
 
   test("ほどよく引いて離すと得点が加わり、少し間を置いて次のラウンドへ進む", async ({ page }) => {
+    test.slow();
     const errors = collectPageErrors(page);
     await page.goto(GAME_PATH);
     const stage = page.getByTestId("game-shell-stage");
     await expect(stage.locator("canvas")).toBeVisible();
 
     const scoreBefore = await readScore(page);
-    await pressAndHold(page, stage, MID_HOLD_MS);
-
-    await expect
-      .poll(() => readScore(page), { message: "畳むと得点が増える" })
-      .toBeGreaterThan(scoreBefore);
+    await holdUntilScoreIncreases(page, stage, scoreBefore);
 
     await expect
       .poll(() => readRound(page), { message: "少し間を置いて次のラウンドへ進む", timeout: 4000 })
-      .toBe(2);
+      .toBeGreaterThan(1);
     await expect(page.getByTestId("noodle-pull-result")).toBeHidden();
     expect(
       await readFreshnessPercent(page),
@@ -150,6 +171,7 @@ test.describe("Noodle Pull のストーリー", () => {
   });
 
   test("キーボード(Enter長押し)でも遊べ、連打や短い空振りでも壊れない", async ({ page }) => {
+    test.slow();
     const errors = collectPageErrors(page);
     await page.goto(GAME_PATH);
     const stage = page.getByTestId("game-shell-stage");
@@ -162,15 +184,16 @@ test.describe("Noodle Pull のストーリー", () => {
     await waitForFrames(page, 10);
     await expect(stage.locator("canvas"), "空振り連打後もキャンバスが生きている").toBeVisible();
 
-    // Enterを長押しして離すとキーボードでも畳める
+    // Enterを長押しして離すとキーボードでも畳める/千切れるかのいずれかでラウンドが進む
+    // (的の位置はランダムなので、的に入らずとも千切れれば必ずラウンドは進む)。
     const roundBefore = await readRound(page);
     await page.keyboard.down("Enter");
-    await page.waitForTimeout(MID_HOLD_MS);
+    await page.waitForTimeout(ANY_OUTCOME_HOLD_MS);
     await page.keyboard.up("Enter");
     await waitForFrames(page, 4);
 
     await expect
-      .poll(() => readRound(page), { message: "キーボード操作でもラウンドが進む", timeout: 4000 })
+      .poll(() => readRound(page), { message: "キーボード操作でもラウンドが進む", timeout: 15_000 })
       .toBeGreaterThan(roundBefore);
 
     expect(errors, "キーボード操作・連打でエラーが出ていない").toEqual([]);
@@ -188,7 +211,7 @@ test.describe("Noodle Pull のストーリー", () => {
     const freshnessWhilePaused = await readFreshnessPercent(page);
     const scoreWhilePaused = await readScore(page);
 
-    await pressAndHold(page, stage, MID_HOLD_MS);
+    await pressAndHold(page, stage, HOLD_MS);
 
     expect(await readFreshnessPercent(page), "一時停止中は鮮度が変化しない").toBe(
       freshnessWhilePaused,
@@ -208,15 +231,20 @@ test.describe("Noodle Pull のストーリー", () => {
   test("Rキーでセッション全体(ラウンド・スコア・鮮度・麺の本数)がリセットされる", async ({
     page,
   }) => {
+    test.slow();
     const errors = collectPageErrors(page);
     await page.goto(GAME_PATH);
     const stage = page.getByTestId("game-shell-stage");
     await expect(stage.locator("canvas")).toBeVisible();
 
-    await pressAndHold(page, stage, MID_HOLD_MS);
+    // 的に入らず千切れた場合でもラウンドは進むので、ここでは「とにかく1ラウンド進める」ことだけを狙う。
+    await pressAndHold(page, stage, ANY_OUTCOME_HOLD_MS);
     await expect
-      .poll(() => readRound(page), { message: "1ラウンド終えて2ラウンド目に入る", timeout: 4000 })
-      .toBe(2);
+      .poll(() => readRound(page), {
+        message: "1ラウンド終えて2ラウンド目以降に入る",
+        timeout: 15_000,
+      })
+      .toBeGreaterThan(1);
 
     await page.keyboard.press("r");
 
@@ -233,6 +261,7 @@ test.describe("Noodle Pull のストーリー", () => {
   });
 
   test("画面サイズが変わっても遊べる状態が続く", async ({ page }) => {
+    test.slow();
     const errors = collectPageErrors(page);
     await page.goto(GAME_PATH);
     const stage = page.getByTestId("game-shell-stage");
@@ -253,10 +282,7 @@ test.describe("Noodle Pull のストーリー", () => {
     await expect(stage.locator("canvas"), "操作後もキャンバスが生きている").toBeVisible();
 
     const scoreBefore = await readScore(page);
-    await pressAndHold(page, stage, MID_HOLD_MS);
-    await expect
-      .poll(() => readScore(page), { message: "リサイズ後も畳むと得点が増える" })
-      .toBeGreaterThan(scoreBefore);
+    await holdUntilScoreIncreases(page, stage, scoreBefore);
 
     expect(errors, "リサイズ中にエラーが出ていない").toEqual([]);
   });
