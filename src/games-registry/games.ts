@@ -576,4 +576,20 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "satellite-uplink",
+    title: "Satellite Uplink",
+    description:
+      "パラボラアンテナで夜空を横切る衛星を追いかけ続けるリアルタイム・トラッキングパズル。狙った方角と高度にアンテナを向け続けてロックを維持し、データを受信しよう。照準が外れるとノイズが蓄積し、満ちると回線切断。",
+    tags: ["arcade", "tracking", "realtime", "space"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-10-13",
+    controls: {
+      mouse: "ドラッグ/長押しした方角・高度へアンテナを向ける",
+      touch: "ドラッグ/長押しした方角・高度へアンテナを向ける",
+      keyboard: "矢印キー/WASD: アンテナを方位・高度方向へ旋回 / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
