@@ -576,4 +576,20 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "baton-sync",
+    title: "Baton Sync",
+    description:
+      "指揮棒の位置でオーケストラの「テンポ」と「音量」を同時に操るリアルタイム指揮者パズル。左右でテンポ、上下で音量を表現し、刻々と変わる目標の帯に合わせ続けよう。外れている時間が長いと観客の集中力が切れて演奏が崩壊する。",
+    tags: ["arcade", "music", "precision", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-10-14",
+    controls: {
+      mouse: "ドラッグ/長押しでバトンを移動（左右=テンポ、上下=音量）",
+      touch: "ドラッグ/長押しでバトンを移動（左右=テンポ、上下=音量）",
+      keyboard: "矢印キー/WASD: バトンを移動 / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
