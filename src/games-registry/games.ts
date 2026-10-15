@@ -851,4 +851,20 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "noodle-pull",
+    title: "Noodle Pull",
+    description:
+      "麺を引き伸ばして畳むリアルタイム拉麺職人パズル。長押しで麺を伸ばし、ちょうどいい伸び具合のゾーンで離して畳めば麺は倍の本数に。伸ばしすぎると千切れ、ためらっていると鮮度が尽きてしまう。",
+    tags: ["arcade", "craft", "timing", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-10-12",
+    controls: {
+      mouse: "長押しで麺を引き伸ばし、離すと畳む",
+      touch: "長押しで麺を引き伸ばし、離すと畳む",
+      keyboard: "Enter: 長押しで引き伸ばし、離すと畳む / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
