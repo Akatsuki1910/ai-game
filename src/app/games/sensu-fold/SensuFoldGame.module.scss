@@ -1,0 +1,215 @@
+@use "../../../shared/styles/variables" as v;
+@use "../../../shared/styles/mixins" as m;
+
+.stageInner {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 15%, #33384a 0%, #14161d 75%);
+  @include m.touch-safe;
+}
+
+.canvasHost {
+  position: absolute;
+  inset: 0;
+
+  canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.hud {
+  position: absolute;
+  top: v.$space-3;
+  right: v.$space-3;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: v.$space-2;
+  pointer-events: none;
+}
+
+.round,
+.progress {
+  font-family: v.$font-family-mono;
+  font-size: 0.8rem;
+  padding: v.$space-1 v.$space-3;
+  border-radius: v.$radius-sm;
+  background: rgb(0 0 0 / 40%);
+  color: v.$color-text;
+  letter-spacing: 0.05em;
+}
+
+.wrinkles {
+  font-size: 1rem;
+  padding: v.$space-1 v.$space-3;
+  border-radius: v.$radius-sm;
+  background: rgb(0 0 0 / 40%);
+  color: v.$color-danger;
+  letter-spacing: 0.15em;
+}
+
+.gaugePanel {
+  position: absolute;
+  left: 50%;
+  bottom: v.$space-4;
+  transform: translateX(-50%);
+  width: min(460px, 88vw);
+  display: flex;
+  flex-direction: column;
+  gap: v.$space-2;
+  padding: v.$space-3;
+  border-radius: v.$radius-md;
+  background: rgb(0 0 0 / 45%);
+  pointer-events: none;
+
+  @include m.mobile {
+    bottom: v.$space-3;
+    padding: v.$space-2;
+  }
+}
+
+.gaugeReadouts {
+  display: flex;
+  justify-content: space-between;
+  font-family: v.$font-family-mono;
+  font-size: 0.72rem;
+  color: v.$color-text-muted;
+  letter-spacing: 0.03em;
+}
+
+.gaugeTrack {
+  position: relative;
+  height: 20px;
+  border-radius: v.$radius-sm;
+  background: v.$color-surface;
+  border: 1px solid v.$color-border;
+  overflow: hidden;
+}
+
+.gaugeBand {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  background: rgb(110 231 255 / 45%);
+  border-left: 1px solid v.$color-accent;
+  border-right: 1px solid v.$color-accent;
+}
+
+.gaugeMarker {
+  position: absolute;
+  top: -3px;
+  bottom: -3px;
+  width: 3px;
+  margin-left: -1.5px;
+  background: v.$color-accent-strong;
+  box-shadow: 0 0 8px 1px v.$color-accent-strong;
+}
+
+.hint {
+  position: absolute;
+  left: v.$space-3;
+  top: v.$space-3;
+  font-size: 0.72rem;
+  color: v.$color-text;
+  background: rgb(0 0 0 / 45%);
+  padding: v.$space-2 v.$space-3;
+  border-radius: v.$radius-sm;
+  pointer-events: none;
+  max-width: min(360px, 70vw);
+  line-height: 1.5;
+
+  @include m.mobile {
+    font-size: 0.66rem;
+    max-width: 60vw;
+  }
+}
+
+@keyframes popup-rise {
+  0% {
+    transform: translate(-50%, 0);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -80%);
+    opacity: 0;
+  }
+}
+
+.popupSuccess,
+.popupMiss,
+.popupClear {
+  position: absolute;
+  left: 50%;
+  top: 40%;
+  transform: translate(-50%, 0);
+  font-weight: 700;
+  font-size: 1.05rem;
+  white-space: nowrap;
+  pointer-events: none;
+  animation: popup-rise 0.8s ease-out forwards;
+  text-shadow: 0 2px 6px rgb(0 0 0 / 60%);
+}
+
+.popupSuccess {
+  color: v.$color-accent-strong;
+}
+
+.popupMiss {
+  color: v.$color-danger;
+}
+
+.popupClear {
+  color: v.$color-warning;
+  font-size: 1.2rem;
+}
+
+.gameOver {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: v.$space-2;
+  background: rgb(10 14 20 / 82%);
+  z-index: 5;
+  text-align: center;
+  padding: v.$space-4;
+}
+
+.gameOverTitle {
+  font-size: 1.6rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  color: v.$color-accent;
+}
+
+.gameOverScore {
+  font-family: v.$font-family-mono;
+  color: v.$color-accent;
+  font-size: 1.1rem;
+}
+
+.gameOverSub {
+  font-family: v.$font-family-mono;
+  color: v.$color-text-muted;
+  font-size: 0.8rem;
+}
+
+.restartButton {
+  margin-top: v.$space-3;
+  padding: v.$space-2 v.$space-5;
+  border-radius: v.$radius-md;
+  border: 1px solid v.$color-accent;
+  background: transparent;
+  color: v.$color-text;
+  font-size: 0.95rem;
+  cursor: pointer;
+
+  &:hover {
+    background: v.$color-accent;
+    color: #05060a;
+  }
+}
