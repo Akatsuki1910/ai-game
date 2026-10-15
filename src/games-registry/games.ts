@@ -560,6 +560,281 @@ export const games: GameMeta[] = [
     status: "prototype",
   },
   {
+    slug: "shredder-line",
+    title: "Shredder Line",
+    description:
+      "ベルトコンベアを流れるスクラップを同じ色のシュートへ仕分け続けるリアルタイム工場パズル。ドラッグで掴んでシュートへ投入し、シュレッダーに届く前に捌き切れ。捌くほどベルトは速く、出現間隔も短くなる。",
+    tags: ["arcade", "sorting", "industrial", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-10-01",
+    controls: {
+      mouse: "ドラッグでスクラップを掴み、同じ色のシュートの上で離して投入",
+      touch: "ドラッグでスクラップを掴み、同じ色のシュートの上で離して投入",
+      keyboard:
+        "1〜3: 最も危険なスクラップを対応するシュートへ即投入 / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
+  {
+    slug: "senko-spark",
+    title: "Senko Spark",
+    description:
+      "線香花火の火球をできるだけ揺らさずに持ち続けるリアルタイム集中力パズル。持ち手を素早く動かすと火球が離れて不安定になり、安定度が尽きると火球が落ちて終わる。漂う火花をタップで掬うとボーナスだが、掬う反動で火球が跳ねるリスクもある。",
+    tags: ["arcade", "precision", "balance", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-10-09",
+    controls: {
+      mouse: "ドラッグ/長押しで持ち手を動かす、動かさずタップで近くの火花を掬う",
+      touch: "ドラッグ/長押しで持ち手を動かす、動かさずタップで近くの火花を掬う",
+      keyboard: "矢印キー/WASD: 持ち手を移動 / Enter: 火花を掬う / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
+  {
+    slug: "blackout-ferry",
+    title: "Blackout Ferry",
+    description:
+      "夜の海峡をサーチライトから隠れながら渡るリアルタイム潜入ボート。回転するサーチライトに照らされ続けると疑心度が満ちて拿捕されてしまう。ブーストで速く渡れるが、照らされたときのリスクも増す。渡り切るたびに次の航海はサーチライトが増える。",
+    tags: ["arcade", "stealth", "realtime", "night"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-09-19",
+    controls: {
+      mouse: "ドラッグ/クリックした位置へ舟を左右に操舵、ボタン長押しでブースト",
+      touch: "ドラッグ/タップした位置へ舟を左右に操舵、ボタン長押しでブースト",
+      keyboard: "矢印キー/AD: 操舵 / Shift長押し: ブースト / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
+  {
+    slug: "rapids-slalom",
+    title: "Rapids Slalom",
+    description:
+      "急流を下るリアルタイム・スラロームカヤック。緑のゲートはそのまま、赤のゲートはブレース(パドルで身構える)しながら通過し、流れてくる岩を避けよう。コンボが伸びるほど流れは速く、ゲートの隙間は狭くなる。",
+    tags: ["arcade", "sports", "physics", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-09-27",
+    controls: {
+      mouse: "ドラッグ/クリックした位置へ操舵。クリックでブレースも発動",
+      touch: "ドラッグ/タップした位置へ操舵。タップでブレースも発動",
+      keyboard: "矢印キー/AD: 操舵 / Enter: ブレース発動 / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
+  {
+    slug: "ember-loft",
+    title: "Ember Loft",
+    description:
+      "バーナーの熱で高度を操るリアルタイム熱気球サバイバル。低層・中層・高層で強さの変わる風を読んで追い風の層へ移り、雲や鳥を避けながら上昇気流のオーブを集めよう。熱を失って地面に触れると即座に墜落する。",
+    tags: ["arcade", "survival", "physics", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-09-26",
+    controls: {
+      mouse: "画面を長押しでバーナー点火(上昇)、離すと冷えて下降",
+      touch: "画面を長押しでバーナー点火(上昇)、離すと冷えて下降",
+      keyboard: "↑・W: 長押しでバーナー点火 / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
+  {
+    slug: "sensu-fold",
+    title: "Sensu Fold",
+    description:
+      "紙の扇(せんす)を1枚ずつ折りたたむリアルタイム折り紙パズル。上下の動きで折り角度を合わせ、揺れ動くターゲット帯に重なったところでピン留めしよう。外すと紙が傷み、畳み終えるほど扇は長く目標帯は細く速くなる。",
+    tags: ["arcade", "puzzle", "precision", "craft", "3d", "realtime"],
+    dimension: "3d",
+    engine: "three",
+    createdAt: "2026-09-30",
+    controls: {
+      mouse: "ポインタを上下に動かして折り角度を調整、クリックでその角度にピン留め",
+      touch: "ドラッグして折り角度を調整、指を離すとその角度にピン留め",
+      keyboard: "↑↓・W/S: 折り角度を調整 / Enter: ピン留め / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
+  {
+    slug: "flail-ward",
+    title: "Flail Ward",
+    description:
+      "鎖につながったフレイル(鉄球)を振り回して中央のコアを守るリアルタイム防衛パズル。ポインタの方向へバネ物理で追従する鉄球で、四方から迫るメテオを弾き返せ。コアに当たるとライフが減り、時間とともにメテオは増え速くなる。",
+    tags: ["arcade", "physics", "defense", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-10-04",
+    controls: {
+      mouse: "ドラッグ/長押しでフレイルをポインタの方向へ振り回す",
+      touch: "ドラッグ/長押しでフレイルをポインタの方向へ振り回す",
+      keyboard: "矢印キー/A・D: フレイルを回転 / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
+  {
+    slug: "orb-weaver",
+    title: "Orb Weaver",
+    description:
+      "巣を守る蜘蛛となり、糸を伝って中心へ迫る虫を捕獲圏のタイミングで弾き落とすリアルタイム反射神経パズル。中心まで到達されると糸が破れ、補修するまでその糸では虫を捕らえられなくなる。",
+    tags: ["arcade", "reflex", "precision", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-10-07",
+    controls: {
+      mouse: "クリックで糸を選び、虫が光る捕獲圏に入った瞬間に弾く。破れた糸は長押しで補修",
+      touch: "タップで糸を選び、虫が光る捕獲圏に入った瞬間に弾く。破れた糸は長押しで補修",
+      keyboard: "1〜6: 対応する糸を選択・捕獲(長押しで補修) / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
+  {
+    slug: "prize-crane",
+    title: "Prize Crane",
+    description:
+      "レール上のクレーンを操るリアルタイム・クレーンゲーム。狙いを定めて降ろし、つかんだ景品を振り落とさないよう搬出口まで運んで獲得しよう。アテンプトは限られており、獲得を重ねるほどつかめる許容は狭く、動きも速くなる。",
+    tags: ["arcade", "precision", "crane", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-10-02",
+    controls: {
+      mouse: "ドラッグでクレーンを左右に移動、ボタンクリックで降ろす/置く",
+      touch: "ドラッグでクレーンを左右に移動、ボタンタップで降ろす/置く",
+      keyboard: "←→・A/D: クレーンを移動 / Enter: 降ろす・置く / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
+  {
+    slug: "rapids-weave",
+    title: "Rapids Weave",
+    description:
+      "急流を下り続けるリアルタイム・カヤックウィーヴィング。左右に傾けて岩と岸を避け、ブイの間を通り抜けてコンボを稼げ。流れは時間とともに速くなり、川幅も次第に狭くなる。",
+    tags: ["arcade", "survival", "physics", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-10-05",
+    controls: {
+      mouse: "ドラッグ/長押しした位置へカヤックを傾けて操舵",
+      touch: "ドラッグ/長押しした位置へカヤックを傾けて操舵",
+      keyboard: "矢印キー/AD: 長押しで左右に傾ける / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
+  {
+    slug: "rail-weaver",
+    title: "Rail Weaver",
+    description:
+      "峡谷を渡るトロッコの前方に途切れたレールが現れ続けるリアルタイム補修パズル。近づいたら画面をタップして板を渡し、板の在庫が尽きたり補修が遅れたりすると脱線する。進むほどトロッコは速くなり、レールの切れ目も頻発する。",
+    tags: ["arcade", "survival", "timing", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-10-03",
+    controls: {
+      mouse: "キャンバスをクリックして最も近いレールの切れ目に板を渡す",
+      touch: "キャンバスをタップして最も近いレールの切れ目に板を渡す",
+      keyboard: "Enter: 板を渡す / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
+  {
+    slug: "glass-turn",
+    title: "Glass Turn",
+    description:
+      "炉から取り出した玉を膨らませて狙った大きさに仕上げるリアルタイム吹きガラス工芸パズル。長押しで送風しながら左右に振って転がし、歪みを抑えつつ目標の帯で仕上げよう。膨らませすぎれば割れ、転がし忘れれば歪んで崩れる。",
+    tags: ["arcade", "puzzle", "craft", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-10-11",
+    controls: {
+      mouse: "長押しで送風(膨らむ)、押しながら左右に振って転がす、ボタンクリックで仕上げる",
+      touch: "長押しで送風(膨らむ)、押しながら左右に振って転がす、タップで仕上げる",
+      keyboard: "Enter長押し: 送風 / ←→・AD: 転がす / F: 仕上げる / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
+  {
+    slug: "holding-pattern",
+    title: "Holding Pattern",
+    description:
+      "計器のない管制塔から複数の機体を誘導するリアルタイム航空管制パズル。機体をドラッグで選び、滑走路の先に立つビーコンまで狙いを引き延ばして方位を揃え、着陸させ続けよう。機体同士を接近させすぎず、燃料が尽きる前に導けるかが勝負。",
+    tags: ["arcade", "simulation", "routing", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-10-10",
+    controls: {
+      mouse: "機体をドラッグして選択し、狙いたい方角まで引き延ばして方位を設定",
+      touch: "機体をドラッグして選択し、狙いたい方角まで引き延ばして方位を設定",
+      keyboard:
+        "N: 最も燃料が少ない機体を選択 / ←→・A・D: 選択機の方位を回転 / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
+  {
+    slug: "cornice-watch",
+    title: "Cornice Watch",
+    description:
+      "山の斜面に積もる雪を人為的に崩し続けて麓の集落を雪崩から守るリアルタイム防災シミュレーター。レーンをタップして予防的に雪を落とせるが、際どく溜め込んでからの解放は高得点な代わりに隣のレーンへ飛び火する。放置してレーンが満杯になると集落に直撃してダメージが入る。",
+    tags: ["arcade", "management", "survival", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-09-23",
+    controls: {
+      mouse: "レーンをクリックして人為的に雪を崩す",
+      touch: "レーンをタップして人為的に雪を崩す",
+      keyboard: "1〜6: 対応するレーンを崩す / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
+  {
+    slug: "nigiri-rush",
+    title: "Nigiri Rush",
+    description:
+      "回転寿司のレーンから注文と同じネタだけを狙って取るリアルタイム仕分けパズル。注文はネタを取るたびに変わり、違うネタを取る・わさびに触れる・注文を取り逃すといずれもライフが減る。連続成功で流れは速く忙しくなる。",
+    tags: ["arcade", "puzzle", "timing", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-09-20",
+    controls: {
+      mouse: "注文と同じネタがあるレーンのボタンをクリックして取る",
+      touch: "注文と同じネタがあるレーンのボタンをタップして取る",
+      keyboard: "1〜3: 対応するレーンを取る / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
+  {
+    slug: "ember-ward",
+    title: "Ember Ward",
+    description:
+      "夜の集落へ降り注ぐ火の粉を、ドラッグで描いた結界の線で弾き返すリアルタイム防衛アクション。結界は数秒で消えるので、置き場所とタイミングを読んで社を守り抜け。続けて弾くほどコンボが伸び、社に火の粉が届くとライフが減る。",
+    tags: ["arcade", "action", "physics", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-09-24",
+    controls: {
+      mouse: "ドラッグで結界の線を描き、火の粉を弾き返す",
+      touch: "ドラッグで結界の線を描き、火の粉を弾き返す",
+      keyboard:
+        "矢印キー/WASD: 結界カーソルを移動 / Enter: カーソル位置に結界を設置 / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
+  {
+    slug: "koi-climb",
+    title: "Koi Climb",
+    description:
+      "滝を遡る鯉を操るリアルタイム登流サバイバル。ドラッグで鯉を導き、岩と流木を避けながら真珠を集めて体力を保とう。流れは徐々に速くなり、体力が尽きると押し流されて終了する。",
+    tags: ["arcade", "survival", "realtime", "physics"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-09-21",
+    controls: {
+      mouse: "ドラッグ/長押しした位置へ鯉を誘導",
+      touch: "ドラッグ/長押しした位置へ鯉を誘導",
+      keyboard: "矢印キー/WASD: 鯉を移動 / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
+  {
     slug: "homing-arc",
     title: "Homing Arc",
     description:
