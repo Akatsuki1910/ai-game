@@ -672,4 +672,20 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "orb-weaver",
+    title: "Orb Weaver",
+    description:
+      "巣を守る蜘蛛となり、糸を伝って中心へ迫る虫を捕獲圏のタイミングで弾き落とすリアルタイム反射神経パズル。中心まで到達されると糸が破れ、補修するまでその糸では虫を捕らえられなくなる。",
+    tags: ["arcade", "reflex", "precision", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-10-07",
+    controls: {
+      mouse: "クリックで糸を選び、虫が光る捕獲圏に入った瞬間に弾く。破れた糸は長押しで補修",
+      touch: "タップで糸を選び、虫が光る捕獲圏に入った瞬間に弾く。破れた糸は長押しで補修",
+      keyboard: "1〜6: 対応する糸を選択・捕獲(長押しで補修) / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
