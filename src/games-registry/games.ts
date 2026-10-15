@@ -560,6 +560,71 @@ export const games: GameMeta[] = [
     status: "prototype",
   },
   {
+    slug: "shredder-line",
+    title: "Shredder Line",
+    description:
+      "ベルトコンベアを流れるスクラップを同じ色のシュートへ仕分け続けるリアルタイム工場パズル。ドラッグで掴んでシュートへ投入し、シュレッダーに届く前に捌き切れ。捌くほどベルトは速く、出現間隔も短くなる。",
+    tags: ["arcade", "sorting", "industrial", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-10-01",
+    controls: {
+      mouse: "ドラッグでスクラップを掴み、同じ色のシュートの上で離して投入",
+      touch: "ドラッグでスクラップを掴み、同じ色のシュートの上で離して投入",
+      keyboard:
+        "1〜3: 最も危険なスクラップを対応するシュートへ即投入 / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
+  {
+    slug: "senko-spark",
+    title: "Senko Spark",
+    description:
+      "線香花火の火球をできるだけ揺らさずに持ち続けるリアルタイム集中力パズル。持ち手を素早く動かすと火球が離れて不安定になり、安定度が尽きると火球が落ちて終わる。漂う火花をタップで掬うとボーナスだが、掬う反動で火球が跳ねるリスクもある。",
+    tags: ["arcade", "precision", "balance", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-10-09",
+    controls: {
+      mouse: "ドラッグ/長押しで持ち手を動かす、動かさずタップで近くの火花を掬う",
+      touch: "ドラッグ/長押しで持ち手を動かす、動かさずタップで近くの火花を掬う",
+      keyboard: "矢印キー/WASD: 持ち手を移動 / Enter: 火花を掬う / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
+  {
+    slug: "blackout-ferry",
+    title: "Blackout Ferry",
+    description:
+      "夜の海峡をサーチライトから隠れながら渡るリアルタイム潜入ボート。回転するサーチライトに照らされ続けると疑心度が満ちて拿捕されてしまう。ブーストで速く渡れるが、照らされたときのリスクも増す。渡り切るたびに次の航海はサーチライトが増える。",
+    tags: ["arcade", "stealth", "realtime", "night"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-09-19",
+    controls: {
+      mouse: "ドラッグ/クリックした位置へ舟を左右に操舵、ボタン長押しでブースト",
+      touch: "ドラッグ/タップした位置へ舟を左右に操舵、ボタン長押しでブースト",
+      keyboard: "矢印キー/AD: 操舵 / Shift長押し: ブースト / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
+  {
+    slug: "rapids-slalom",
+    title: "Rapids Slalom",
+    description:
+      "急流を下るリアルタイム・スラロームカヤック。緑のゲートはそのまま、赤のゲートはブレース(パドルで身構える)しながら通過し、流れてくる岩を避けよう。コンボが伸びるほど流れは速く、ゲートの隙間は狭くなる。",
+    tags: ["arcade", "sports", "physics", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-09-27",
+    controls: {
+      mouse: "ドラッグ/クリックした位置へ操舵。クリックでブレースも発動",
+      touch: "ドラッグ/タップした位置へ操舵。タップでブレースも発動",
+      keyboard: "矢印キー/AD: 操舵 / Enter: ブレース発動 / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
+  {
     slug: "ember-loft",
     title: "Ember Loft",
     description:
