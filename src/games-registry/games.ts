@@ -656,4 +656,20 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "flail-ward",
+    title: "Flail Ward",
+    description:
+      "鎖につながったフレイル(鉄球)を振り回して中央のコアを守るリアルタイム防衛パズル。ポインタの方向へバネ物理で追従する鉄球で、四方から迫るメテオを弾き返せ。コアに当たるとライフが減り、時間とともにメテオは増え速くなる。",
+    tags: ["arcade", "physics", "defense", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-10-04",
+    controls: {
+      mouse: "ドラッグ/長押しでフレイルをポインタの方向へ振り回す",
+      touch: "ドラッグ/長押しでフレイルをポインタの方向へ振り回す",
+      keyboard: "矢印キー/A・D: フレイルを回転 / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
