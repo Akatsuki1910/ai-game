@@ -704,4 +704,20 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "rapids-weave",
+    title: "Rapids Weave",
+    description:
+      "急流を下り続けるリアルタイム・カヤックウィーヴィング。左右に傾けて岩と岸を避け、ブイの間を通り抜けてコンボを稼げ。流れは時間とともに速くなり、川幅も次第に狭くなる。",
+    tags: ["arcade", "survival", "physics", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-10-05",
+    controls: {
+      mouse: "ドラッグ/長押しした位置へカヤックを傾けて操舵",
+      touch: "ドラッグ/長押しした位置へカヤックを傾けて操舵",
+      keyboard: "矢印キー/AD: 長押しで左右に傾ける / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
