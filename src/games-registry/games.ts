@@ -528,6 +528,71 @@ export const games: GameMeta[] = [
     status: "prototype",
   },
   {
+    slug: "talon-dive",
+    title: "Talon Dive",
+    description:
+      "巣とライバルの鷹の間で獲物を狩り続けるリアルタイム狩猟シミュレーター。ドラッグした方向へ隼を滑空させて逃げる獲物を仕留めよう。巣の外ではスタミナが減り続け、尽きる前に戻らないと力尽きる。ライバルに先を越されるとストリークが切れる。",
+    tags: ["arcade", "hunting", "physics", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-09-22",
+    controls: {
+      mouse: "ドラッグ/長押しした方向へ隼を滑空させる",
+      touch: "ドラッグ/長押しした方向へ隼を滑空させる",
+      keyboard: "矢印キー/WASD: 滑空方向を指定 / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
+  {
+    slug: "thermal-glider",
+    title: "Thermal Glider",
+    description:
+      "紙飛行機で上昇気流(サーマル)を捕まえながら飛び続けるリアルタイム3Dグライダー。左右で旋回、上下で昇降しながらオレンジ色のサーマルに入って高度を稼ごう。何もしなければ重力で沈み、鳥にぶつかると高度が大きく減って0になると墜落する。",
+    tags: ["arcade", "flight", "physics", "3d", "realtime"],
+    dimension: "3d",
+    engine: "three",
+    createdAt: "2026-09-25",
+    controls: {
+      mouse: "ドラッグ/長押しした位置へ旋回、上下位置で昇降を操作",
+      touch: "ドラッグ/長押しした位置へ旋回、上下位置で昇降を操作",
+      keyboard: "矢印キー/WASD: 旋回(左右)・昇降(上下) / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
+  {
+    slug: "shredder-line",
+    title: "Shredder Line",
+    description:
+      "ベルトコンベアを流れるスクラップを同じ色のシュートへ仕分け続けるリアルタイム工場パズル。ドラッグで掴んでシュートへ投入し、シュレッダーに届く前に捌き切れ。捌くほどベルトは速く、出現間隔も短くなる。",
+    tags: ["arcade", "sorting", "industrial", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-10-01",
+    controls: {
+      mouse: "ドラッグでスクラップを掴み、同じ色のシュートの上で離して投入",
+      touch: "ドラッグでスクラップを掴み、同じ色のシュートの上で離して投入",
+      keyboard:
+        "1〜3: 最も危険なスクラップを対応するシュートへ即投入 / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
+  {
+    slug: "senko-spark",
+    title: "Senko Spark",
+    description:
+      "線香花火の火球をできるだけ揺らさずに持ち続けるリアルタイム集中力パズル。持ち手を素早く動かすと火球が離れて不安定になり、安定度が尽きると火球が落ちて終わる。漂う火花をタップで掬うとボーナスだが、掬う反動で火球が跳ねるリスクもある。",
+    tags: ["arcade", "precision", "balance", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-10-09",
+    controls: {
+      mouse: "ドラッグ/長押しで持ち手を動かす、動かさずタップで近くの火花を掬う",
+      touch: "ドラッグ/長押しで持ち手を動かす、動かさずタップで近くの火花を掬う",
+      keyboard: "矢印キー/WASD: 持ち手を移動 / Enter: 火花を掬う / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
+  {
     slug: "blackout-ferry",
     title: "Blackout Ferry",
     description:
