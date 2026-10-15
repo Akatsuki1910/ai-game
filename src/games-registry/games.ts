@@ -577,6 +577,86 @@ export const games: GameMeta[] = [
     status: "prototype",
   },
   {
+    slug: "senko-spark",
+    title: "Senko Spark",
+    description:
+      "線香花火の火球をできるだけ揺らさずに持ち続けるリアルタイム集中力パズル。持ち手を素早く動かすと火球が離れて不安定になり、安定度が尽きると火球が落ちて終わる。漂う火花をタップで掬うとボーナスだが、掬う反動で火球が跳ねるリスクもある。",
+    tags: ["arcade", "precision", "balance", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-10-09",
+    controls: {
+      mouse: "ドラッグ/長押しで持ち手を動かす、動かさずタップで近くの火花を掬う",
+      touch: "ドラッグ/長押しで持ち手を動かす、動かさずタップで近くの火花を掬う",
+      keyboard: "矢印キー/WASD: 持ち手を移動 / Enter: 火花を掬う / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
+  {
+    slug: "blackout-ferry",
+    title: "Blackout Ferry",
+    description:
+      "夜の海峡をサーチライトから隠れながら渡るリアルタイム潜入ボート。回転するサーチライトに照らされ続けると疑心度が満ちて拿捕されてしまう。ブーストで速く渡れるが、照らされたときのリスクも増す。渡り切るたびに次の航海はサーチライトが増える。",
+    tags: ["arcade", "stealth", "realtime", "night"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-09-19",
+    controls: {
+      mouse: "ドラッグ/クリックした位置へ舟を左右に操舵、ボタン長押しでブースト",
+      touch: "ドラッグ/タップした位置へ舟を左右に操舵、ボタン長押しでブースト",
+      keyboard: "矢印キー/AD: 操舵 / Shift長押し: ブースト / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
+  {
+    slug: "rapids-slalom",
+    title: "Rapids Slalom",
+    description:
+      "急流を下るリアルタイム・スラロームカヤック。緑のゲートはそのまま、赤のゲートはブレース(パドルで身構える)しながら通過し、流れてくる岩を避けよう。コンボが伸びるほど流れは速く、ゲートの隙間は狭くなる。",
+    tags: ["arcade", "sports", "physics", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-09-27",
+    controls: {
+      mouse: "ドラッグ/クリックした位置へ操舵。クリックでブレースも発動",
+      touch: "ドラッグ/タップした位置へ操舵。タップでブレースも発動",
+      keyboard: "矢印キー/AD: 操舵 / Enter: ブレース発動 / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
+  {
+    slug: "ember-loft",
+    title: "Ember Loft",
+    description:
+      "バーナーの熱で高度を操るリアルタイム熱気球サバイバル。低層・中層・高層で強さの変わる風を読んで追い風の層へ移り、雲や鳥を避けながら上昇気流のオーブを集めよう。熱を失って地面に触れると即座に墜落する。",
+    tags: ["arcade", "survival", "physics", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-09-26",
+    controls: {
+      mouse: "画面を長押しでバーナー点火(上昇)、離すと冷えて下降",
+      touch: "画面を長押しでバーナー点火(上昇)、離すと冷えて下降",
+      keyboard: "↑・W: 長押しでバーナー点火 / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
+  {
+    slug: "sensu-fold",
+    title: "Sensu Fold",
+    description:
+      "紙の扇(せんす)を1枚ずつ折りたたむリアルタイム折り紙パズル。上下の動きで折り角度を合わせ、揺れ動くターゲット帯に重なったところでピン留めしよう。外すと紙が傷み、畳み終えるほど扇は長く目標帯は細く速くなる。",
+    tags: ["arcade", "puzzle", "precision", "craft", "3d", "realtime"],
+    dimension: "3d",
+    engine: "three",
+    createdAt: "2026-09-30",
+    controls: {
+      mouse: "ポインタを上下に動かして折り角度を調整、クリックでその角度にピン留め",
+      touch: "ドラッグして折り角度を調整、指を離すとその角度にピン留め",
+      keyboard: "↑↓・W/S: 折り角度を調整 / Enter: ピン留め / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
+  {
     slug: "flail-ward",
     title: "Flail Ward",
     description:
