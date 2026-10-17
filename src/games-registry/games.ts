@@ -916,4 +916,20 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "pagoda-stack",
+    title: "Pagoda Stack",
+    description:
+      "振り子状に揺れる段をタイミングよく落として積み上げるリアルタイム五重塔ビルダー。下の段とのズレがそのまま次の段の幅になるので、ずらすほど塔は細くなる。外すか薄すぎて崩れると終了、高く積むほど振れと風は速くなる。",
+    tags: ["arcade", "timing", "stacking", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-10-17",
+    controls: {
+      mouse: "クリックで、振れている段をその位置に積む",
+      touch: "タップで、振れている段をその位置に積む",
+      keyboard: "Enter: 積む / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
