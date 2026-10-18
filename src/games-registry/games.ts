@@ -916,4 +916,20 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "kyusu-pour",
+    title: "Kyusu Pour",
+    description:
+      "ベルトコンベアで流れてくる湯呑みへ、急須でお茶を注ぐ長押しタイミングゲーム。お茶は落ちるのに時間がかかるので、湯呑みの到着を先読みして注ぎ始め、空中の分まで見越して白い線ぴったりで止めよう。こぼしすぎや注ぎ損ないでライフが減る。",
+    tags: ["arcade", "timing", "one-button", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-10-18",
+    controls: {
+      mouse: "長押しで急須を傾けて注ぐ",
+      touch: "長押しで急須を傾けて注ぐ",
+      keyboard: "↓/S: 長押しで注ぐ / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
