@@ -964,4 +964,20 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "spore-surge",
+    title: "Spore Surge",
+    description:
+      "夜の森で自動反撃する胞子の精霊を操り、迫る影ダニの大群をドラッグ移動だけで生き延びるリアルタイム・サバイバル。花粉を集めてレベルアップしたら3つの強化から1つを選び、できるだけ長く生き残れ。",
+    tags: ["arcade", "survival", "roguelite", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-10-16",
+    controls: {
+      mouse: "ドラッグ/長押しした位置へ移動。レベルアップ時は強化カードをクリックで選択",
+      touch: "ドラッグ/長押しした位置へ移動。レベルアップ時は強化カードをタップで選択",
+      keyboard: "矢印キー/WASD: 移動 / 1〜3: 強化を選択 / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
