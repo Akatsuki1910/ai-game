@@ -9,9 +9,9 @@ import {
   type FishSpecies,
   LINES_MAX,
   type LossEvent,
-  TautLineWorld,
+  TautLinePumpWorld,
 } from "./engine/world";
-import styles from "./TautLineGame.module.scss";
+import styles from "./TautLinePumpGame.module.scss";
 
 const SPECIES_HEX = {
   minnow: 0xbfd7ea,
@@ -93,7 +93,7 @@ interface FloatingPopup {
   age: number;
 }
 
-export function TautLineGame() {
+export function TautLinePumpGame() {
   const { ref: stageRef, size } = useElementSize<HTMLDivElement>();
   const [score, setScore] = useState(0);
   const [combo, setCombo] = useState(0);
@@ -104,7 +104,7 @@ export function TautLineGame() {
 
   const canvasHostRef = useRef<HTMLDivElement | null>(null);
   const fishMarkerRef = useRef<HTMLDivElement | null>(null);
-  const worldRef = useRef<TautLineWorld | null>(null);
+  const worldRef = useRef<TautLinePumpWorld | null>(null);
   const appRef = useRef<Application | null>(null);
   const loopRef = useRef<GameLoop | null>(null);
   const inputRef = useRef<InputManager | null>(null);
@@ -132,7 +132,7 @@ export function TautLineGame() {
     let disposed = false;
 
     const app = new Application();
-    const world = new TautLineWorld();
+    const world = new TautLinePumpWorld();
     worldRef.current = world;
 
     const lineGraphics = new Graphics();
@@ -322,24 +322,28 @@ export function TautLineGame() {
 
   return (
     <GameShell
-      title="Taut Line"
+      title="Taut Line Pump"
       score={score}
       isPaused={isPaused}
       onTogglePause={handleTogglePause}
     >
-      <div ref={stageRef} className={styles.stageInner} data-testid="taut-line-stage">
-        <div ref={canvasHostRef} className={styles.canvasHost} data-testid="taut-line-canvas" />
-        <div ref={fishMarkerRef} className={styles.fishMarker} data-testid="taut-line-fish" />
+      <div ref={stageRef} className={styles.stageInner} data-testid="taut-line-pump-stage">
+        <div
+          ref={canvasHostRef}
+          className={styles.canvasHost}
+          data-testid="taut-line-pump-canvas"
+        />
+        <div ref={fishMarkerRef} className={styles.fishMarker} data-testid="taut-line-pump-fish" />
         <div className={styles.hud}>
-          <span className={styles.combo} data-testid="taut-line-combo">
+          <span className={styles.combo} data-testid="taut-line-pump-combo">
             COMBO {combo}
           </span>
-          <span className={styles.lines} data-testid="taut-line-lines" data-lines={lines}>
+          <span className={styles.lines} data-testid="taut-line-pump-lines" data-lines={lines}>
             ライン {lines} / {LINES_MAX}
           </span>
           <span
             className={styles.tension}
-            data-testid="taut-line-tension"
+            data-testid="taut-line-pump-tension"
             data-tension={tensionPercent}
           >
             テンション {tensionPercent}%
@@ -358,14 +362,14 @@ export function TautLineGame() {
           / R: リセット
         </div>
         {isOver && (
-          <div className={styles.gameOver} data-testid="taut-line-gameover">
+          <div className={styles.gameOver} data-testid="taut-line-pump-gameover">
             <div className={styles.gameOverTitle}>今日の釣果</div>
             <div className={styles.gameOverScore}>SCORE {score.toLocaleString("ja-JP")}</div>
             <button
               type="button"
               className={styles.restartButton}
               onClick={handleRestart}
-              data-testid="taut-line-restart"
+              data-testid="taut-line-pump-restart"
             >
               もう一度あそぶ
             </button>

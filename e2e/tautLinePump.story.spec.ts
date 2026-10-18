@@ -1,7 +1,7 @@
 import { expect, type Locator, type Page, test } from "@playwright/test";
 import { collectPageErrors, waitForFrames } from "./support/gameStory";
 
-const GAME_PATH = "/games/taut-line";
+const GAME_PATH = "/games/taut-line-pump";
 const LINES_MAX = 3;
 
 async function readScore(page: Page): Promise<number> {
@@ -10,20 +10,20 @@ async function readScore(page: Page): Promise<number> {
 }
 
 async function readCombo(page: Page): Promise<number> {
-  const text = await page.getByTestId("taut-line-combo").innerText();
+  const text = await page.getByTestId("taut-line-pump-combo").innerText();
   const matched = text.match(/COMBO (\d+)/);
   expect(matched, `コンボの表示から数値を読み取れる: "${text}"`).not.toBeNull();
   return Number(matched?.[1] ?? Number.NaN);
 }
 
 async function readLines(page: Page): Promise<number> {
-  const value = await page.getByTestId("taut-line-lines").getAttribute("data-lines");
+  const value = await page.getByTestId("taut-line-pump-lines").getAttribute("data-lines");
   expect(value, "ラインの残数が属性から読み取れる").not.toBeNull();
   return Number(value);
 }
 
 async function readIsRunning(page: Page): Promise<boolean> {
-  const value = await page.getByTestId("taut-line-fish").getAttribute("data-running");
+  const value = await page.getByTestId("taut-line-pump-fish").getAttribute("data-running");
   return value === "true";
 }
 
@@ -54,7 +54,7 @@ async function pumpOnStage(page: Page, stage: Locator, pumps: number): Promise<v
   await page.mouse.up();
 }
 
-test.describe("Taut Line のストーリー", () => {
+test.describe("Taut Line Pump のストーリー", () => {
   test("ポンピング操作でキャッチでき、スコア・コンボが増える。一時停止中は操作が無視される", async ({
     page,
   }) => {
@@ -66,7 +66,7 @@ test.describe("Taut Line のストーリー", () => {
     expect(await readCombo(page), "開始時のコンボは0").toBe(0);
     expect(await readLines(page), "開始時のラインは満タン").toBe(LINES_MAX);
 
-    const stage = page.getByTestId("taut-line-stage");
+    const stage = page.getByTestId("taut-line-pump-stage");
 
     // ポンプ(押して上へ引く)を繰り返して1匹目をキャッチする。
     // toPassは失敗するたびに待ち時間を伸ばして再試行するため、1回の試行で複数回ポンプして
@@ -106,7 +106,7 @@ test.describe("Taut Line のストーリー", () => {
     const errors = collectPageErrors(page);
     await page.goto(GAME_PATH);
 
-    const stage = page.getByTestId("taut-line-stage");
+    const stage = page.getByTestId("taut-line-pump-stage");
 
     // 1回目: 何もせず放置して距離が限界に達し、魚に逃げられる(escaped)。
     await expect
@@ -130,7 +130,7 @@ test.describe("Taut Line のストーリー", () => {
       await waitForFrames(page, 60);
     }
 
-    await expect(page.getByTestId("taut-line-gameover")).toBeVisible({ timeout: 15000 });
+    await expect(page.getByTestId("taut-line-pump-gameover")).toBeVisible({ timeout: 15000 });
     expect(await readLines(page), "ラインが0になっている").toBe(0);
 
     // ゲームオーバー中にポンプしても、実際のユーザーと同様に入力が無視される。
@@ -142,8 +142,8 @@ test.describe("Taut Line のストーリー", () => {
     );
 
     // リスタートすると最初の状態に戻る。
-    await page.getByTestId("taut-line-restart").click();
-    await expect(page.getByTestId("taut-line-gameover")).toBeHidden();
+    await page.getByTestId("taut-line-pump-restart").click();
+    await expect(page.getByTestId("taut-line-pump-gameover")).toBeHidden();
     expect(await readLines(page), "リスタートでラインが全回復する").toBe(LINES_MAX);
     expect(await readScore(page), "リスタートでスコアが0に戻る").toBe(0);
     expect(await readCombo(page), "リスタートでコンボが0に戻る").toBe(0);
@@ -156,7 +156,7 @@ test.describe("Taut Line のストーリー", () => {
     const errors = collectPageErrors(page);
     await page.goto(GAME_PATH);
 
-    const stage = page.getByTestId("taut-line-stage");
+    const stage = page.getByTestId("taut-line-pump-stage");
 
     // キーボード操作: ↑キーを連打(押して離す)してリールを巻く。
     // toPassの再試行間隔が伸びても魚の引きに負けないよう、1回の試行で複数回押す。
@@ -169,10 +169,10 @@ test.describe("Taut Line のストーリー", () => {
     }).toPass({ timeout: 20000 });
 
     // ポンプ連打とキー連打を混ぜても表示が壊れない(ゲームオーバーなら都度リスタート)。
-    const gameOver = page.getByTestId("taut-line-gameover");
+    const gameOver = page.getByTestId("taut-line-pump-gameover");
     for (let i = 0; i < 8; i++) {
       if (await gameOver.isVisible().catch(() => false)) {
-        await page.getByTestId("taut-line-restart").click();
+        await page.getByTestId("taut-line-pump-restart").click();
         continue;
       }
       if (i % 2 === 0) {
@@ -183,7 +183,7 @@ test.describe("Taut Line のストーリー", () => {
       await waitForFrames(page, 5);
     }
     if (await gameOver.isVisible().catch(() => false)) {
-      await page.getByTestId("taut-line-restart").click();
+      await page.getByTestId("taut-line-pump-restart").click();
     }
     await expect(stage.locator("canvas"), "連打後もキャンバスが生きている").toBeVisible();
 

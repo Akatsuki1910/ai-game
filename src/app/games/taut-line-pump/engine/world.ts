@@ -66,7 +66,7 @@ function pickSpecies(catchCount: number): FishSpecies {
  * calm中はゆっくりなら安全に巻き寄せられるが、run中に巻くとテンションが
  * 跳ね上がりラインが切れやすくなる。巻かずに耐えると距離が伸びて逃げられる。
  */
-export class TautLineWorld {
+export class TautLinePumpWorld {
   private catchCount = 0;
   private stateTimer = CALM_DURATION_SECONDS;
 

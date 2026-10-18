@@ -7,13 +7,13 @@ import {
   type LossReason,
   MAX_DISTANCE,
   SPECIES_SCORE_MULTIPLIER,
-  TautLineWorld,
+  TautLinePumpWorld,
 } from "./world.ts";
 
 const FRAME = 1 / 60;
 
 /** calm中に何度か巻いて、今の魚をちょうど1匹だけ釣り上げる(comboの増加を検知したら止める)。 */
-function catchCurrentFish(world: TautLineWorld): void {
+function catchCurrentFish(world: TautLinePumpWorld): void {
   const comboBefore = world.combo;
   for (let i = 0; i < 20 && world.combo === comboBefore && !world.isOver; i++) {
     world.reel(0.5);
@@ -21,7 +21,7 @@ function catchCurrentFish(world: TautLineWorld): void {
 }
 
 /** 小さいフレーム刻みでstepし、run状態に切り替わるまで進める(大きな1stepだと逃走が先に起きてしまう)。 */
-function advanceUntilRunning(world: TautLineWorld): void {
+function advanceUntilRunning(world: TautLinePumpWorld): void {
   for (let i = 0; i < 400 && !world.isRunning && !world.isOver; i++) {
     world.step(FRAME);
   }
@@ -29,7 +29,7 @@ function advanceUntilRunning(world: TautLineWorld): void {
 }
 
 test("初期状態は魚がcalmで待機しており、スコア0・ライン満タン", () => {
-  const world = new TautLineWorld();
+  const world = new TautLinePumpWorld();
 
   assert.equal(world.distance, INITIAL_DISTANCE);
   assert.equal(world.tension, 0);
@@ -42,14 +42,14 @@ test("初期状態は魚がcalmで待機しており、スコア0・ライン満
 });
 
 test("calm中は時間経過でゆっくり距離が伸びる(魚がのんびり泳ぐ)", () => {
-  const world = new TautLineWorld();
+  const world = new TautLinePumpWorld();
   world.step(FRAME);
   assert.ok(world.distance > INITIAL_DISTANCE, "calm中も距離はわずかに伸びる");
   assert.ok(world.distance < INITIAL_DISTANCE + 0.01, "calm中の伸びはごく小さい");
 });
 
 test("一定時間でrun状態に切り替わり、距離が速く伸びるようになる", () => {
-  const world = new TautLineWorld();
+  const world = new TautLinePumpWorld();
   advanceUntilRunning(world);
   const distanceAtRunStart = world.distance;
 
@@ -59,7 +59,7 @@ test("一定時間でrun状態に切り替わり、距離が速く伸びるよ�
 });
 
 test("reel()で距離が縮みテンションが上がる", () => {
-  const world = new TautLineWorld();
+  const world = new TautLinePumpWorld();
   const distanceBefore = world.distance;
 
   world.reel(0.3);
@@ -69,7 +69,7 @@ test("reel()で距離が縮みテンションが上がる", () => {
 });
 
 test("力0以下のreel()は何も変化させない", () => {
-  const world = new TautLineWorld();
+  const world = new TautLinePumpWorld();
   const before = { distance: world.distance, tension: world.tension };
 
   world.reel(0);
@@ -79,7 +79,7 @@ test("力0以下のreel()は何も変化させない", () => {
 });
 
 test("十分に巻き切るとキャッチ成立し、スコアとコンボが増えて次の魚に切り替わる", () => {
-  const world = new TautLineWorld();
+  const world = new TautLinePumpWorld();
   let caughtPoints: number | undefined;
   world.onCatch = (event) => {
     caughtPoints = event.points;
@@ -97,7 +97,7 @@ test("十分に巻き切るとキャッチ成立し、スコアとコンボが�
 });
 
 test("連続でキャッチするとコンボボーナスが加点に乗る", () => {
-  const world = new TautLineWorld();
+  const world = new TautLinePumpWorld();
 
   // 魚種によって得点倍率が異なる(SPECIES_SCORE_MULTIPLIER)ため、乱数で選ばれた魚種を
   // 都度読み取り、コンボボーナスを含む想定点を計算してから比較する。
@@ -119,7 +119,7 @@ test("連続でキャッチするとコンボボーナスが加点に乗る", ()
 });
 
 test("run中に強く巻くとテンションが跳ね上がりラインが切れる(snapped)", () => {
-  const world = new TautLineWorld();
+  const world = new TautLinePumpWorld();
   advanceUntilRunning(world);
 
   let lossReason: LossReason | undefined;
@@ -137,7 +137,7 @@ test("run中に強く巻くとテンションが跳ね上がりラインが切�
 });
 
 test("何もせず放置すると距離が限界に達して魚に逃げられる(escaped)", () => {
-  const world = new TautLineWorld();
+  const world = new TautLinePumpWorld();
   let lossReason: LossReason | undefined;
   world.onLoss = (event) => {
     lossReason = event.reason;
@@ -151,7 +151,7 @@ test("何もせず放置すると距離が限界に達して魚に逃げられ�
 });
 
 test("ラインが0になるとゲームオーバーになり、以降は状態が変化しない", () => {
-  const world = new TautLineWorld();
+  const world = new TautLinePumpWorld();
 
   for (let i = 0; i < LINES_MAX; i++) {
     world.step(200); // 放置して必ず逃げられる(escaped)
@@ -170,7 +170,7 @@ test("ラインが0になるとゲームオーバーになり、以降は状態�
 });
 
 test("reset()で最初の状態に戻る", () => {
-  const world = new TautLineWorld();
+  const world = new TautLinePumpWorld();
   catchCurrentFish(world);
   world.step(200);
 
@@ -185,7 +185,7 @@ test("reset()で最初の状態に戻る", () => {
 });
 
 test("釣果が増えるほど難易度が上がる(run時の引く速さが上昇・run持続時間は短縮)", () => {
-  const world = new TautLineWorld();
+  const world = new TautLinePumpWorld();
   const initialRunPullSpeed = world.runPullSpeed;
   const initialRunDuration = world.runDuration;
 
