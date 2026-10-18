@@ -23,7 +23,10 @@ async function readScore(page: Page): Promise<number> {
 }
 
 /** ステージの横幅いっぱいに水平な結界を1本描く。降ってくる火の粉を確実に拾うため何度か描き直す。 */
-async function sweepWardAcrossStage(page: Page, ratio: { xStart: number; xEnd: number; y: number }) {
+async function sweepWardAcrossStage(
+  page: Page,
+  ratio: { xStart: number; xEnd: number; y: number },
+) {
   const stage = page.getByTestId("ember-ward-stage");
   await dragOnStage(
     page,
@@ -34,7 +37,9 @@ async function sweepWardAcrossStage(page: Page, ratio: { xStart: number; xEnd: n
 }
 
 test.describe("Ember Ward のストーリー", () => {
-  test("遊び始めてから結界で火の粉を弾き、一時停止・再開までを通しで操作できる", async ({ page }) => {
+  test("遊び始めてから結界で火の粉を弾き、一時停止・再開までを通しで操作できる", async ({
+    page,
+  }) => {
     const errors = collectPageErrors(page);
     await page.goto(GAME_PATH);
 
