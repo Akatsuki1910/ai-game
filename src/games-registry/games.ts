@@ -948,4 +948,20 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "relic-dust",
+    title: "Relic Dust",
+    description:
+      "砂に埋もれた遺物を刷毛で払い続けるリアルタイム発掘パズル。薄くなった遺物を素早く払うとヒビが入るので、スタミナを見ながらゆっくり払って発掘率を上げよう。ラウンドを重ねるほど遺物は大きく、許容速度と制限時間は厳しくなる。",
+    tags: ["arcade", "puzzle", "precision", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-10-15",
+    controls: {
+      mouse: "ドラッグ/長押しで刷毛を動かして砂を払う(速すぎるとヒビが入る)",
+      touch: "ドラッグ/長押しで刷毛を動かして砂を払う(速すぎるとヒビが入る)",
+      keyboard: "矢印キー/WASD: 刷毛を移動 / Enterキー長押し: 払う / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
