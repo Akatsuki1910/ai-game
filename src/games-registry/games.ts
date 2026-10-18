@@ -980,4 +980,21 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "kana-trail",
+    title: "Kana Trail",
+    description:
+      "5×5の仮名グリッドをなぞって言葉を探すリアルタイム言葉つなぎパズル。隣接するタイルをドラッグでつないで言葉を作り、タイムリミットが尽きる前にできるだけ多くの言葉を見つけてスコアを稼げ。同じ言葉は2回数えられない。",
+    tags: ["arcade", "puzzle", "word", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-10-18",
+    controls: {
+      mouse: "タイルをドラッグしてなぞり、隣接する文字をつないで言葉を作る。離すと確定",
+      touch: "タイルを指でなぞって隣接する文字をつなぎ、言葉を作る。離すと確定",
+      keyboard:
+        "矢印キー/WASD: カーソル移動 / Enter: タイルを鎖に追加 / Backspace: 1文字戻す / F: 確定 / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
