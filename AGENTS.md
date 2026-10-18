@@ -242,9 +242,27 @@ src/
 実際のスケジューリング（cron等での定期起動設定）は本ドキュメントの範囲外で、別途設定する。
 
 リモートリポジトリは `https://github.com/Akatsuki1910/ai-game`（Public, `origin`, デフォルトブランチ
-`master`）に設定済み。**ゲームを1本追加してコミットしたら、そのままリモートにも `git push` すること**
-（`git push` または `git push origin master`）。定期実行のたびにpushまで完了させる運用のため、
-コミットだけで止めない。force pushは行わない。
+`master`）に設定済み。**ゲームを1本追加したら、そのコミットが `origin/master` に入るところまでを
+1回の作業とする。** コミットだけ・作業ブランチへのpushだけで止めない。force pushは行わない。
+
+### master への取り込み（毎回必須）
+
+クラウドの定期実行セッションは `master` ではなく `claude/...` のような作業ブランチで開始され、
+そのブランチへのpushしか許されないことが多い。過去に、各セッションが作業ブランチへpushしただけで
+終わり、完成したゲームが何本も master に入らないまま溜まったことがある。完成したら必ず以下を行うこと。
+
+1. 作業ブランチにコミットし、`git push -u origin <作業ブランチ>` する。
+2. `git fetch origin master` → `git merge origin/master` で master の変更を取り込む（rebase・force pushはしない）。
+   別セッションが同時にゲームを足していると `src/games-registry/games.ts` が競合するので、
+   **両方のエントリを残して**解消する。マージで変更が入ったら `npm run lint && npm run test` を再実行し、
+   競合を手で解消した場合は `npm run verify` もやり直してから push する。
+3. GitHub MCP ツールで master 向けの PR を作り（`mcp__github__create_pull_request`、base: `master`）、
+   続けて `mcp__github__merge_pull_request`（merge_method: `merge`）でマージする。
+   作業ブランチが `master` そのものなら `git push origin master` でよい（下記の detached HEAD の確認を行う）。
+4. `git fetch origin master` し、`git merge-base --is-ancestor <追加したコミット> origin/master` が
+   成功することを確認する。失敗した場合は「完成」と報告せず、原因（マージ不可・権限エラー等）をそのまま報告する。
+
+master に入ると Vercel に自動デプロイされる。
 
 ### 作業開始前に必ず確認すること（detached HEAD 事故の防止）
 
