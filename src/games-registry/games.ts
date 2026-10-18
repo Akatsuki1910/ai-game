@@ -917,6 +917,86 @@ export const games: GameMeta[] = [
     status: "prototype",
   },
   {
+    slug: "taut-line",
+    title: "Taut Line",
+    description:
+      "リールを巻いて魚を釣り上げるリアルタイム・テンション管理釣りゲーム。長押しで巻き寄せ、魚が走っている間は手を止めてラインが切れるのを防げ。巻き切ればコンボ的に次の魚はより手強くなる。",
+    tags: ["arcade", "fishing", "tension", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-10-08",
+    controls: {
+      mouse: "長押しでリールを巻く(離すとリールは止まる)",
+      touch: "長押しでリールを巻く(離すとリールは止まる)",
+      keyboard: "Enterキー長押し: リールを巻く / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
+  {
+    slug: "taut-line-pump",
+    title: "Taut Line Pump",
+    description:
+      "魚を巻き寄せるリアルタイム釣りアクション。画面を押して上へ引く「ポンピング」動作でリールを巻き、魚が穏やかな間に寄せよう。強く引く(run)間に巻きすぎるとラインが切れ、油断すると限界距離まで逃げられる。",
+    tags: ["arcade", "fishing", "tension", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-10-06",
+    controls: {
+      mouse: "画面を押し下げたまま上方向へ引き上げる動きを繰り返してリールを巻く",
+      touch: "画面を押したまま上方向へスワイプする動きを繰り返してリールを巻く",
+      keyboard: "↑ / W を連打してリールを巻く / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
+  {
+    slug: "relic-dust",
+    title: "Relic Dust",
+    description:
+      "砂に埋もれた遺物を刷毛で払い続けるリアルタイム発掘パズル。薄くなった遺物を素早く払うとヒビが入るので、スタミナを見ながらゆっくり払って発掘率を上げよう。ラウンドを重ねるほど遺物は大きく、許容速度と制限時間は厳しくなる。",
+    tags: ["arcade", "puzzle", "precision", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-10-15",
+    controls: {
+      mouse: "ドラッグ/長押しで刷毛を動かして砂を払う(速すぎるとヒビが入る)",
+      touch: "ドラッグ/長押しで刷毛を動かして砂を払う(速すぎるとヒビが入る)",
+      keyboard: "矢印キー/WASD: 刷毛を移動 / Enterキー長押し: 払う / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
+  {
+    slug: "spore-surge",
+    title: "Spore Surge",
+    description:
+      "夜の森で自動反撃する胞子の精霊を操り、迫る影ダニの大群をドラッグ移動だけで生き延びるリアルタイム・サバイバル。花粉を集めてレベルアップしたら3つの強化から1つを選び、できるだけ長く生き残れ。",
+    tags: ["arcade", "survival", "roguelite", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-10-16",
+    controls: {
+      mouse: "ドラッグ/長押しした位置へ移動。レベルアップ時は強化カードをクリックで選択",
+      touch: "ドラッグ/長押しした位置へ移動。レベルアップ時は強化カードをタップで選択",
+      keyboard: "矢印キー/WASD: 移動 / 1〜3: 強化を選択 / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
+  {
+    slug: "pagoda-stack",
+    title: "Pagoda Stack",
+    description:
+      "振り子状に揺れる段をタイミングよく落として積み上げるリアルタイム五重塔ビルダー。下の段とのズレがそのまま次の段の幅になるので、ずらすほど塔は細くなる。外すか薄すぎて崩れると終了、高く積むほど振れと風は速くなる。",
+    tags: ["arcade", "timing", "stacking", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-10-17",
+    controls: {
+      mouse: "クリックで、振れている段をその位置に積む",
+      touch: "タップで、振れている段をその位置に積む",
+      keyboard: "Enter: 積む / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
+  {
     slug: "kana-trail",
     title: "Kana Trail",
     description:
