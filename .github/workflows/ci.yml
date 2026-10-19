@@ -28,7 +28,8 @@ jobs:
         run: npm run test
 
   # ストーリーテストは全ゲーム×PC/スマホで600件を超え、1ジョブで流すと約1時間かかる。
-  # 並列数(workers)を上げるとWebGLの奪い合いで待ち合わせが時間切れになるため、
+  # ランナーにGPUは無くWebGLはソフトウェア描画になるため、同じジョブで2つ並べるだけでも
+  # CPUの奪い合いでフレームレートが落ち、待ち合わせが時間切れになる。そこで1ジョブ1ワーカーにし、
   # ジョブを分割(シャーディング)して並べることで所要時間を抑える。
   story:
     runs-on: ubuntu-latest
@@ -36,7 +37,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        shard: [1, 2, 3, 4, 5, 6]
+        shard: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
     steps:
       - uses: actions/checkout@v5
 
@@ -51,8 +52,8 @@ jobs:
       - name: Install Playwright browser
         run: npx playwright install --with-deps chromium
 
-      - name: Story tests (PC / スマホ想定の通し操作) shard ${{ matrix.shard }}/6
-        run: npm run test:story -- --shard=${{ matrix.shard }}/6
+      - name: Story tests (PC / スマホ想定の通し操作) shard ${{ matrix.shard }}/12
+        run: npm run test:story -- --shard=${{ matrix.shard }}/12 --workers=1
 
       - name: Upload story test traces on failure
         if: failure()

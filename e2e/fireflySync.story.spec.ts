@@ -27,9 +27,16 @@ async function readNight(page: Page): Promise<number> {
   return Number(value);
 }
 
-/** ステージの中央をクリックしてパルスを送る。 */
+/**
+ * ステージの中央をタップしてパルスを送る。locator.click() は実行前の安定待ちに遅い環境で
+ * 1回1〜3秒かかり、その間隔だと群れが揃い切る前に1夜目の制限時間(40秒)が尽きてしまうため、
+ * 座標へ直接タップする(1秒に1回程度送れればほぼ確実に揃う)。
+ */
 async function tapCenter(page: Page): Promise<void> {
-  await page.getByTestId("firefly-sync-stage").click();
+  const box = await page.getByTestId("firefly-sync-stage").boundingBox();
+  expect(box, "ステージの領域が取得できる").not.toBeNull();
+  if (!box) return;
+  await page.mouse.click(box.x + box.width / 2, box.y + box.height / 2);
 }
 
 test.describe("Firefly Sync のストーリー", () => {

@@ -126,14 +126,23 @@ test.describe("Loom Weave のストーリー", () => {
     // ボタン連打(正解・不正解入り混じり)をしても表示が破綻しない。
     // 途中で生地が破れて終了オーバーレイが出た場合はリスタートしてから続ける
     // (オーバーレイ表示中はボタンへのクリックが届かないのが正しい挙動のため)。
+    // locator.click() だと遅い環境では1回1秒ほどかかって「連打」にならず、確認した直後に
+    // 生地が破れるとオーバーレイに阻まれたまま待ち続けてしまうため、ボタンの位置を1度だけ取って
+    // 座標へ続けざまに叩く(オーバーレイが出ていればそちらに当たるだけ)。
     const colors = ["indigo", "gold", "crimson"] as const;
     const gameOver = page.getByTestId("loom-weave-gameover");
+    const buttonCenters: { x: number; y: number }[] = [];
+    for (const color of colors) {
+      const box = await page.getByTestId(`loom-weave-button-${color}`).boundingBox();
+      expect(box, `${color} のボタンの位置が取得できる`).not.toBeNull();
+      if (box) buttonCenters.push({ x: box.x + box.width / 2, y: box.y + box.height / 2 });
+    }
     for (let i = 0; i < 30; i++) {
-      if (await gameOver.isVisible().catch(() => false)) {
+      if (i % colors.length === 0 && (await gameOver.isVisible().catch(() => false))) {
         await page.getByTestId("loom-weave-restart").click();
-        continue;
       }
-      await page.getByTestId(`loom-weave-button-${colors[i % colors.length]}`).click();
+      const center = buttonCenters[i % buttonCenters.length];
+      await page.mouse.click(center.x, center.y);
     }
     await waitForFrames(page, 10);
     await expect(page.getByTestId("loom-weave-progress")).toBeVisible();
@@ -152,14 +161,18 @@ test.describe("Loom Weave のストーリー", () => {
     await waitForFrames(page, 20);
     await expect(stage.locator("canvas"), "横長でもキャンバスが生きている").toBeVisible();
 
-    // リサイズ後も操作を受け付ける。
-    if (!(await gameOver.isVisible().catch(() => false))) {
-      const before = await readProgress(page);
-      await pressActiveColorButton(page);
-      await expect
-        .poll(() => readProgress(page), { message: "リサイズ後も進行する" })
-        .toBeGreaterThan(before);
-    }
+    // リサイズ後も操作を受け付ける。待っている間も拍は進み、取り逃しが続いて生地が破れている
+    // (または確認の直後に破れる)ことがあるため、Rキーで最初から織り直してから確かめる。
+    // (拍は1.3秒ごとに進むため、読み取るまでに1段進んでいることは許容する)
+    await page.keyboard.press("r");
+    await expect
+      .poll(() => readProgress(page), { message: "Rキーで最初から織り直しになる" })
+      .toBeLessThanOrEqual(1);
+    const before = await readProgress(page);
+    await pressActiveColorButton(page);
+    await expect
+      .poll(() => readProgress(page), { message: "リサイズ後も進行する" })
+      .toBeGreaterThan(before);
 
     expect(errors, "連打・リサイズ中にエラーが出ていない").toEqual([]);
   });

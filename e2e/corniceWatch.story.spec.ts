@@ -184,14 +184,21 @@ test.describe("Cornice Watch のストーリー", () => {
     // 全レーンを連打しても壊れない(ほとんどは積雪0のため空振りのはず)。
     // 途中でゲームオーバーになった場合はリスタートしてから続ける
     // (オーバーレイ表示中はレーンへのクリックが届かないのが正しい挙動のため)。
+    // locator.click() だと遅い環境では1回1秒ほどかかって「連打」にならず、確認した直後に
+    // ゲームオーバーになるとオーバーレイに阻まれたまま待ち続けてしまうため、ボタンの位置を
+    // 1度だけ取って座標へ続けざまに叩く(オーバーレイが出ていればそちらに当たるだけ)。
     const gameOver = page.getByTestId("cornice-watch-gameover");
+    const laneCenters: { x: number; y: number }[] = [];
+    for (let i = 0; i < LANE_COUNT; i++) {
+      const box = await page.getByTestId(`cornice-watch-lane-${i}`).boundingBox();
+      expect(box, `レーン${i + 1}のボタンの位置が取得できる`).not.toBeNull();
+      if (box) laneCenters.push({ x: box.x + box.width / 2, y: box.y + box.height / 2 });
+    }
     for (let round = 0; round < 5; round++) {
-      for (let i = 0; i < LANE_COUNT; i++) {
-        if (await gameOver.isVisible().catch(() => false)) {
-          await page.getByTestId("cornice-watch-restart").click();
-        }
-        await page.getByTestId(`cornice-watch-lane-${i}`).click();
+      if (await gameOver.isVisible().catch(() => false)) {
+        await page.getByTestId("cornice-watch-restart").click();
       }
+      for (const center of laneCenters) await page.mouse.click(center.x, center.y);
     }
     await waitForFrames(page, 10);
     if (await gameOver.isVisible().catch(() => false)) {

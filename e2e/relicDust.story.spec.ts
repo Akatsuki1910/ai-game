@@ -160,17 +160,20 @@ test.describe("Relic Dust のストーリー", () => {
   test("何もせず放置すると制限時間が尽きてライフが減り、次の発掘へ自動的に進む", async ({
     page,
   }) => {
-    test.setTimeout(45000);
+    test.setTimeout(75000);
     const errors = collectPageErrors(page);
     await page.goto(GAME_PATH);
     await expect(page.getByTestId("game-shell-stage").locator("canvas")).toBeVisible();
 
     expect(await readLives(page)).toBe(3);
 
+    // 制限時間(1発掘目は24秒)はゲームループの経過時間で減る。ゲームループは1フレームを最大0.1秒で
+    // 数えるため、GPUの無いCI(ソフトウェア描画で10fpsを下回ることがある)では実時間より遅く進む。
+    // 実時間の待ち時間はその分の余裕を持たせる。
     await expect
       .poll(() => readLives(page), {
         message: "無操作のまま制限時間が尽きるとライフが減る",
-        timeout: 30000,
+        timeout: 60000,
       })
       .toBeLessThan(3);
     expect(await readRound(page), "タイムアウトでも次の発掘ラウンドへ進む").toBe(2);
@@ -181,16 +184,17 @@ test.describe("Relic Dust のストーリー", () => {
   test("3回タイムアウトを放置し続けるとゲームオーバーになり、リスタートできる", async ({
     page,
   }) => {
-    test.setTimeout(120000);
+    test.setTimeout(210000);
     const errors = collectPageErrors(page);
     await page.goto(GAME_PATH);
     await expect(page.getByTestId("game-shell-stage").locator("canvas")).toBeVisible();
     await expect(page.getByTestId("relic-dust-gameover")).toBeHidden();
 
     await expect
+      // 24+23+22秒のゲーム内時間を待つ。上のテストと同じ理由で実時間には余裕を持たせる。
       .poll(() => page.getByTestId("relic-dust-gameover").isVisible(), {
         message: "ライフを使い切ると発掘中止の表示が出る",
-        timeout: 90000,
+        timeout: 180000,
       })
       .toBe(true);
     expect(await readLives(page), "ゲームオーバー時のライフは0").toBe(0);
