@@ -223,13 +223,17 @@ test.describe("Switchboard Shift のストーリー", () => {
     // 点灯時間はごく短いため、たまたまその瞬間にタイムアウトへ入れ替わることがある。
     // その場合は次に点灯したジャックで取り直して接続を試みる(ゲーム側のロジックではなく、
     // 実時間で動くゲームに対するテスト操作タイミングの揺れを吸収するためのリトライ)。
+    // スコア表示は次のフレームで反映されるため、接続できたかは少し待って確かめる
+    // (すぐ読んで取り直すと、接続済みでまだ「点灯中」と表示されているジャックを押し直してしまう)。
     const scoreBeforeKeyboard = await readScore(page);
     await expect(async () => {
       const live = await waitForLiveSource(page);
       const destinationIndex = await findDestinationIndexByColor(page, live.color);
       await page.keyboard.press(String(live.index + 1));
       await page.keyboard.press(String(destinationIndex + 1));
-      expect(await readScore(page)).toBeGreaterThan(scoreBeforeKeyboard);
+      await expect
+        .poll(() => readScore(page), { timeout: 3000 })
+        .toBeGreaterThan(scoreBeforeKeyboard);
     }).toPass({ timeout: 20000 });
 
     // ランダムな位置へのドラッグを連打しても表示が壊れない(ゲームオーバーなら都度リスタート)。

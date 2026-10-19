@@ -135,16 +135,18 @@ test.describe("Firefly Sync のストーリー", () => {
     await waitForFrames(page, 20);
     await expect(stage.locator("canvas"), "横長でもキャンバスが生きている").toBeVisible();
 
-    // リサイズ後もパルスを受け付ける(エネルギーが回復しているはず)。
-    await waitForFrames(page, 60);
-    const before = await readChorus(page);
-    for (let i = 0; i < 8; i++) {
-      await tapCenter(page);
-      await waitForFrames(page, 6);
-    }
+    // リサイズ後もパルスを受け付ける。合唱計は群れの揃い方で自然に下がることも、
+    // 夜をクリアして0に戻ることもあるため、パルスを送ったときだけ減るエネルギーで確かめる。
     await expect
-      .poll(() => readChorus(page), { message: "リサイズ後も合唱計が進む" })
-      .toBeGreaterThanOrEqual(before);
+      .poll(() => readEnergy(page), { message: "エネルギーが満タンまで回復する" })
+      .toBe(100);
+    await tapCenter(page);
+    await expect
+      .poll(() => readEnergy(page), {
+        message: "リサイズ後もパルスを受け付けてエネルギーを消費する",
+        intervals: [16],
+      })
+      .toBeLessThan(100);
 
     expect(errors, "連打・リサイズ中にエラーが出ていない").toEqual([]);
   });

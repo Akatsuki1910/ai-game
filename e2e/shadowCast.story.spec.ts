@@ -45,7 +45,8 @@ async function readTargetScale(page: Page): Promise<number> {
  */
 function pointerRatioFarFromScale(targetScale: number): Ratio {
   const midScale = (SCALE_MIN + SCALE_MAX) / 2;
-  const farDepthRatio = targetScale < midScale ? DEPTH_MAX : DEPTH_MIN;
+  // 拡大率は奥行きの逆数(DEPTH_MIN で最大)なので、小さいお題には最も大きく映る奥行きを選ぶ。
+  const farDepthRatio = targetScale < midScale ? DEPTH_MIN : DEPTH_MAX;
   return {
     x: LIGHT_X_RATIO,
     y: LIGHT_Y_RATIO + farDepthRatio * (WALL_Y_RATIO - LIGHT_Y_RATIO),
