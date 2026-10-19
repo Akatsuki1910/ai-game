@@ -30,6 +30,27 @@ async function findLaneWithLoadAtLeast(page: Page, minLoad: number): Promise<num
   return null;
 }
 
+/**
+ * 飛び火(解放したレーンの積雪×0.2)を受けても隣が雪崩にならない積雪量の上限。
+ * 解放の操作が届くまでの間にも積雪は増えるため、その分の余裕も見込む。
+ */
+const NEIGHBOR_LOAD_WITH_ROOM = 0.5;
+
+/**
+ * しきい値以上まで積もっていて、両隣には飛び火を受け止める余裕があるレーンの番号を返す
+ * (なければnull)。隣が満杯に近いと、飛び火で雪崩が起きて積雪が0に戻り「増えた」ことを確かめられない。
+ */
+async function findClutchLaneWithRoomForSpill(page: Page): Promise<number | null> {
+  const loads: number[] = [];
+  for (let i = 0; i < LANE_COUNT; i++) loads.push(await readLaneLoad(page, i));
+  for (let i = 0; i < LANE_COUNT; i++) {
+    if (loads[i] < CHAIN_THRESHOLD) continue;
+    const neighborLoads = [loads[i - 1], loads[i + 1]].filter((load) => load !== undefined);
+    if (neighborLoads.every((load) => load <= NEIGHBOR_LOAD_WITH_ROOM)) return i;
+  }
+  return null;
+}
+
 test.describe("Cornice Watch のストーリー", () => {
   test("放置すると積雪が進み、タップで解放すると得点が入る", async ({ page }) => {
     test.setTimeout(60_000);
@@ -78,22 +99,35 @@ test.describe("Cornice Watch のストーリー", () => {
     await expect(page.getByTestId("cornice-watch-stage").locator("canvas")).toBeVisible();
     await waitForFrames(page, 10);
 
+    let laneIndex: number | null = null;
     await expect
-      .poll(async () => findLaneWithLoadAtLeast(page, CHAIN_THRESHOLD), {
-        message: "際どいしきい値まで積もるレーンを待つ",
-        timeout: 40_000,
-      })
+      .poll(
+        async () => {
+          laneIndex = await findClutchLaneWithRoomForSpill(page);
+          return laneIndex;
+        },
+        {
+          message: "際どいしきい値まで積もり、両隣に飛び火の余裕があるレーンを待つ",
+          timeout: 40_000,
+        },
+      )
       .not.toBeNull();
-    // 積雪は解放するまで増え続ける一方なので、しきい値到達を確認した直後に読み直しても安全。
-    const laneIndex = (await findLaneWithLoadAtLeast(page, CHAIN_THRESHOLD)) ?? 0;
+    const clutchLane = laneIndex ?? 0;
 
-    const neighborIndices = [laneIndex - 1, laneIndex + 1].filter((i) => i >= 0 && i < LANE_COUNT);
+    const neighborIndices = [clutchLane - 1, clutchLane + 1].filter(
+      (i) => i >= 0 && i < LANE_COUNT,
+    );
     expect(neighborIndices.length, "少なくとも1つは隣のレーンがある").toBeGreaterThan(0);
     const neighborLoadsBefore = await Promise.all(
       neighborIndices.map((i) => readLaneLoad(page, i)),
     );
 
-    await page.getByTestId(`cornice-watch-lane-${laneIndex}`).click();
+    // locator.click() の実行前の安定待ちの間にも積雪は進むため、座標へ直接タップして素早く解放する。
+    const laneBox = await page.getByTestId(`cornice-watch-lane-${clutchLane}`).boundingBox();
+    expect(laneBox, "解放するレーンのボタンの位置が取得できる").not.toBeNull();
+    if (laneBox) {
+      await page.mouse.click(laneBox.x + laneBox.width / 2, laneBox.y + laneBox.height / 2);
+    }
 
     for (let i = 0; i < neighborIndices.length; i++) {
       await expect

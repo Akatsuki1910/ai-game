@@ -45,14 +45,24 @@ export function TalonDiveGame() {
     setIsPaused(loopRef.current.togglePause());
   }, []);
 
+  const syncHud = useCallback((world: TalonDiveWorld) => {
+    setScore(Math.floor(world.score));
+    setStreak(world.streak);
+    setStamina(world.stamina);
+  }, []);
+
   const handleRestart = useCallback(() => {
-    worldRef.current?.reset();
+    const world = worldRef.current;
+    if (!world) return;
+    world.reset();
+    // 次フレームを待たずにHUDも戻す(オーバーレイだけ消えて前回のスタミナが残る瞬間を作らない)。
+    syncHud(world);
     setIsOver(false);
     if (loopRef.current?.isPaused) {
       loopRef.current.resume();
       setIsPaused(false);
     }
-  }, []);
+  }, [syncHud]);
 
   useEffect(() => {
     const host = canvasHostRef.current;
@@ -125,9 +135,7 @@ export function TalonDiveGame() {
         }
 
         world.step(deltaSeconds);
-        setScore(Math.floor(world.score));
-        setStreak(world.streak);
-        setStamina(world.stamina);
+        syncHud(world);
         if (world.isOver) setIsOver(true);
 
         const perchPulse = 0.4 + Math.sin(performance.now() / 400) * 0.15;
@@ -213,6 +221,7 @@ export function TalonDiveGame() {
             setIsPaused(loop.togglePause());
           } else if (key === "r") {
             world.reset();
+            syncHud(world);
             setIsOver(false);
           }
         },
@@ -233,7 +242,7 @@ export function TalonDiveGame() {
         appRef.current = null;
       }
     };
-  }, []);
+  }, [syncHud]);
 
   useEffect(() => {
     if (size.width === 0 || size.height === 0) return;
