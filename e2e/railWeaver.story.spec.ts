@@ -159,15 +159,15 @@ test.describe("Rail Weaver のストーリー", () => {
       await expectScoreAbove(page, scoreBeforeKeyboard);
     }).toPass({ timeout: 20000 });
 
-    // タップを連打しても表示が壊れない(ゲームオーバーなら都度リスタート)。
-    for (let i = 0; i < 20; i++) {
-      if (await gameOver.isVisible().catch(() => false)) {
-        await page.getByTestId("rail-weaver-restart").click();
-        continue;
-      }
-      await tapStage(page, stage);
-      await waitForFrames(page, 5);
+    // タップを連打しても表示が壊れない(ゲームオーバーになっていたらリスタート)。
+    // 1回ごとに状態を確かめながらタップすると、遅い環境では1タップに1秒以上かかって「連打」に
+    // ならず、テストの持ち時間も使い切ってしまうため、ステージの位置を1度だけ取って続けざまに叩く。
+    const stageBox = await stage.boundingBox();
+    expect(stageBox, "ステージの領域が取得できる").not.toBeNull();
+    if (stageBox) {
+      for (let i = 0; i < 20; i++) await page.mouse.click(stageBox.x + 10, stageBox.y + 10);
     }
+    await waitForFrames(page, 10);
     if (await gameOver.isVisible().catch(() => false)) {
       await page.getByTestId("rail-weaver-restart").click();
     }

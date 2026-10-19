@@ -65,21 +65,33 @@ function shortestAzDiff(fromDeg: number, toDeg: number): number {
   return ((((toDeg - fromDeg) % 360) + 540) % 360) - 180;
 }
 
-/** キーボードで衛星の方向へ少しだけアンテナを向ける(1ステップ分、押して少し待って離す)。 */
-async function keyboardStepTowardSatelliteOnce(page: Page): Promise<void> {
+/**
+ * キーボードで衛星の方向へアンテナを向ける。押す向きが変わるまでキーは押したままにする
+ * (毎回押して離すと、角度を読み取っている間は回らないため、遅い環境では押している時間の
+ * 割合が2割ほどに落ち、動き続ける衛星に追いつけないまま回線切断になる)。
+ */
+async function keyboardSteerTowardSatellite(page: Page, heldKeys: Set<string>): Promise<void> {
   const dishAz = await readAngle(page, "satellite-uplink-dish-marker", "data-az");
   const dishEl = await readAngle(page, "satellite-uplink-dish-marker", "data-el");
   const satAz = await readAngle(page, "satellite-uplink-satellite-marker", "data-az");
   const satEl = await readAngle(page, "satellite-uplink-satellite-marker", "data-el");
 
   const azDiff = shortestAzDiff(dishAz, satAz);
-  const keysDown: string[] = [];
-  if (Math.abs(azDiff) > 1) keysDown.push(azDiff > 0 ? "ArrowRight" : "ArrowLeft");
-  if (Math.abs(satEl - dishEl) > 1) keysDown.push(satEl > dishEl ? "ArrowUp" : "ArrowDown");
+  const wantedKeys = new Set<string>();
+  if (Math.abs(azDiff) > 1) wantedKeys.add(azDiff > 0 ? "ArrowRight" : "ArrowLeft");
+  if (Math.abs(satEl - dishEl) > 1) wantedKeys.add(satEl > dishEl ? "ArrowUp" : "ArrowDown");
 
-  for (const key of keysDown) await page.keyboard.down(key);
-  await waitForFrames(page, 4);
-  for (const key of keysDown) await page.keyboard.up(key);
+  for (const key of [...heldKeys]) {
+    if (wantedKeys.has(key)) continue;
+    await page.keyboard.up(key);
+    heldKeys.delete(key);
+  }
+  for (const key of wantedKeys) {
+    if (heldKeys.has(key)) continue;
+    await page.keyboard.down(key);
+    heldKeys.add(key);
+  }
+  await waitForFrames(page, 2);
 }
 
 test.describe("Satellite Uplink のストーリー", () => {
@@ -174,15 +186,17 @@ test.describe("Satellite Uplink のストーリー", () => {
 
     const stage = page.getByTestId("game-shell-stage");
 
+    const heldKeys = new Set<string>();
     await expect
       .poll(
         async () => {
-          await keyboardStepTowardSatelliteOnce(page);
+          await keyboardSteerTowardSatellite(page, heldKeys);
           return readScore(page);
         },
         { message: "キーボードでも追尾してデータが増える", timeout: 25_000, intervals: [50] },
       )
       .toBeGreaterThan(0);
+    for (const key of heldKeys) await page.keyboard.up(key);
 
     // 連打(ランダムな位置への一瞬のドラッグ)をしても画面が壊れない。回線切断ならその都度リスタートする。
     const gameOver = page.getByTestId("satellite-uplink-gameover");
