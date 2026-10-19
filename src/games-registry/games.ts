@@ -1029,4 +1029,23 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "domino-reach",
+    title: "Domino Reach",
+    description:
+      "ドミノを並べてからGOで起爆する「配置→実行」型の連鎖反応パズル。標準ドミノとコースの溝を飛び越えられるブースタードミノを限られた本数だけ置いて、スタートの起爆からゴールの旗まで連鎖を途切れさせずに届かせろ。",
+    tags: ["arcade", "puzzle", "physics", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-10-19",
+    controls: {
+      mouse:
+        "パレットをクリックしてドミノを選択し、コース上をクリックで設置。未武装でドミノをクリックすると回収。GOで連鎖開始",
+      touch:
+        "パレットをタップしてドミノを選択し、コース上をタップで設置。未武装でドミノをタップすると回収。GOで連鎖開始",
+      keyboard:
+        "1: 標準ドミノを選択 / 2: ブースタードミノを選択 / G: 連鎖開始 / R: 最初からやり直す / Space: 一時停止",
+    },
+    status: "prototype",
+  },
 ];
