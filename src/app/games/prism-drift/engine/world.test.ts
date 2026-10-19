@@ -22,6 +22,20 @@ function parkTargetOnBeam(world: PrismDriftWorld, index: number, x: number): voi
   target.vy = 0;
 }
 
+/**
+ * 検証対象以外の的をビームから遠ざけて静止させる。
+ * 的の初期位置・速度は乱数なので、放っておくと偶然ビーム上に乗って同時に撃ち切られ、
+ * 「1つだけ撃ち切った」という検証が約2割の確率で落ちる（不安定なテストになる）。
+ */
+function parkOtherTargetsAwayFromBeam(world: PrismDriftWorld, keepIndex: number): void {
+  world.targets.forEach((target, index) => {
+    if (index === keepIndex) return;
+    target.y = HEIGHT * 0.1;
+    target.vx = 0;
+    target.vy = 0;
+  });
+}
+
 function assertFinite(world: PrismDriftWorld, label: string): void {
   assert.ok(Number.isFinite(world.score), `${label}: score`);
   assert.ok(Number.isFinite(world.timeRemaining), `${label}: timeRemaining`);
@@ -74,6 +88,7 @@ test("ビームを当て続けるとチャージが溜まり、得点して的�
   const world = new PrismDriftWorld(WIDTH, HEIGHT);
   clearBeamPath(world);
   parkTargetOnBeam(world, 0, WIDTH * 0.5);
+  parkOtherTargetsAwayFromBeam(world, 0);
 
   const completed: number[] = [];
   world.onTargetCompleted = ({ points }) => completed.push(points);
@@ -88,6 +103,7 @@ test("ビームを当て続けるとチャージが溜まり、得点して的�
   // 当て続ければ必ず得点に到達する（チャージ55%/秒なので2秒で満タン）
   for (let i = 0; i < 180 && completed.length === 0; i++) {
     parkTargetOnBeam(world, 0, WIDTH * 0.5);
+    parkOtherTargetsAwayFromBeam(world, 0);
     world.step(FRAME);
   }
 
