@@ -113,8 +113,8 @@ function headingAxisOffset(heading: number, runwayHeading: number): number {
   return Math.abs(diff);
 }
 
-function randRange(min: number, max: number): number {
-  return min + Math.random() * (max - min);
+function randRange(min: number, max: number, randomFn: () => number): number {
+  return min + randomFn() * (max - min);
 }
 
 interface EdgeSpawn {
@@ -123,26 +123,26 @@ interface EdgeSpawn {
   heading: number;
 }
 
-function randomEdgeSpawn(width: number, height: number): EdgeSpawn {
-  const edge = Math.floor(randRange(0, 4));
+function randomEdgeSpawn(width: number, height: number, randomFn: () => number): EdgeSpawn {
+  const edge = Math.floor(randRange(0, 4, randomFn));
   let x: number;
   let y: number;
   if (edge === 0) {
-    x = randRange(0, width);
+    x = randRange(0, width, randomFn);
     y = -SPAWN_EDGE_MARGIN;
   } else if (edge === 1) {
     x = width + SPAWN_EDGE_MARGIN;
-    y = randRange(0, height);
+    y = randRange(0, height, randomFn);
   } else if (edge === 2) {
-    x = randRange(0, width);
+    x = randRange(0, width, randomFn);
     y = height + SPAWN_EDGE_MARGIN;
   } else {
     x = -SPAWN_EDGE_MARGIN;
-    y = randRange(0, height);
+    y = randRange(0, height, randomFn);
   }
   const towardCenter = Math.atan2(height / 2 - y, width / 2 - x);
   const heading = normalizeAngle(
-    towardCenter + randRange(-SPAWN_HEADING_SPREAD, SPAWN_HEADING_SPREAD),
+    towardCenter + randRange(-SPAWN_HEADING_SPREAD, SPAWN_HEADING_SPREAD, randomFn),
   );
   return { x, y, heading };
 }
@@ -171,8 +171,11 @@ export class HoldingPatternWorld {
   private spawnTimer = 0;
   private successCount = 0;
   private nextId = 0;
+  private readonly randomFn: () => number;
 
-  constructor(width: number, height: number) {
+  /** randomFn を差し替えられるのはテストで決定的な出現位置を再現するため(本番は Math.random)。 */
+  constructor(width: number, height: number, randomFn: () => number = Math.random) {
+    this.randomFn = randomFn;
     this.resize(width, height);
     this.reset();
   }
@@ -345,7 +348,7 @@ export class HoldingPatternWorld {
 
   private trySpawn(): void {
     if (this._planes.length >= MAX_PLANES) return;
-    const spawn = randomEdgeSpawn(this.width, this.height);
+    const spawn = randomEdgeSpawn(this.width, this.height, this.randomFn);
     this._planes.push({
       id: this.nextId++,
       x: spawn.x,

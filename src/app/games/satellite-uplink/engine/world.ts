@@ -63,8 +63,11 @@ export class SatelliteUplinkWorld {
   private maneuverTimer = 0;
   private azVelocityDegPerSec = AZ_SPEED_BASE;
   private elTargetDeg = INITIAL_SAT_EL;
+  private readonly randomFn: () => number;
 
-  constructor() {
+  /** randomFn を差し替えられるのはテストで決定的な衛星の動きを再現するため(本番は Math.random)。 */
+  constructor(randomFn: () => number = Math.random) {
+    this.randomFn = randomFn;
     this.reset();
   }
 
@@ -147,13 +150,13 @@ export class SatelliteUplinkWorld {
   }
 
   private pickManeuver(): void {
-    const sign = Math.random() < 0.5 ? -1 : 1;
-    this.azVelocityDegPerSec = sign * (AZ_SPEED_BASE + Math.random() * AZ_SPEED_VARIANCE);
+    const sign = this.randomFn() < 0.5 ? -1 : 1;
+    this.azVelocityDegPerSec = sign * (AZ_SPEED_BASE + this.randomFn() * AZ_SPEED_VARIANCE);
     this.elTargetDeg =
       ELEVATION_MIN +
       ELEVATION_TARGET_MARGIN +
-      Math.random() * (ELEVATION_MAX - ELEVATION_MIN - ELEVATION_TARGET_MARGIN * 2);
+      this.randomFn() * (ELEVATION_MAX - ELEVATION_MIN - ELEVATION_TARGET_MARGIN * 2);
     this.maneuverTimer =
-      MANEUVER_INTERVAL_MIN + Math.random() * (MANEUVER_INTERVAL_MAX - MANEUVER_INTERVAL_MIN);
+      MANEUVER_INTERVAL_MIN + this.randomFn() * (MANEUVER_INTERVAL_MAX - MANEUVER_INTERVAL_MIN);
   }
 }

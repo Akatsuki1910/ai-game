@@ -14,6 +14,11 @@ import {
 const WIDTH = 800;
 const HEIGHT = 600;
 
+/** テストを決定的にするための固定乱数(常に同じ値を返す)。 */
+function fixedRandom(value: number): () => number {
+  return () => value;
+}
+
 function forceSpawn(world: HoldingPatternWorld): void {
   // step()は内部のspawnTimerが尽きたときだけスポーンするため、十分大きいdtで必ず1つ出す。
   world.step(10);
@@ -55,7 +60,9 @@ test("目標方位を設定しても即座には向きが変わらず、旋回�
 });
 
 test("十分な時間stepすると目標方位に一致する", () => {
-  const world = new HoldingPatternWorld(WIDTH, HEIGHT);
+  // 乱数次第では滑走路のすぐ脇に湧いて旋回し終える前に着陸(=ワールドから除去)してしまい、
+  // 方位が更新されなくなるため、乱数を固定して上端の左寄り(滑走路から遠い位置)に出す。
+  const world = new HoldingPatternWorld(WIDTH, HEIGHT, fixedRandom(0.1));
   forceSpawn(world);
   const plane = world.planes[0];
   const target = plane.heading + Math.PI * 0.7;
@@ -208,7 +215,9 @@ test("警告がMAX_STRIKESに達するとゲームオーバーになり、以降
 });
 
 test("ゲームオーバー後はsetPlaneTargetHeading/rotatePlaneTargetHeadingも無視される", () => {
-  const world = new HoldingPatternWorld(WIDTH, HEIGHT);
+  // 乱数次第では後から湧いた機体とsurvivorが異常接近して両方消えてしまうため、
+  // 乱数を固定して出現位置を揃える(survivorはその間に出現位置から遠く離れている)。
+  const world = new HoldingPatternWorld(WIDTH, HEIGHT, fixedRandom(0.1));
   forceSpawn(world);
   const survivor = world.planes[0];
   const survivorTargetBefore = survivor.targetHeading;

@@ -10,6 +10,11 @@ import {
   wrapDeg,
 } from "./world.ts";
 
+/** テストを決定的にするための固定乱数(常に同じ値を返す)。 */
+function fixedRandom(value: number): () => number {
+  return () => value;
+}
+
 test("wrapDegは0〜360度の範囲に正規化する", () => {
   assert.equal(wrapDeg(0), 0);
   assert.equal(wrapDeg(359), 359);
@@ -53,7 +58,9 @@ test("ロックしていない間はノイズが蓄積し、スコアは増え�
 });
 
 test("ノイズが上限に達すると回線切断(ゲームオーバー)になる", () => {
-  const world = new SatelliteUplinkWorld();
+  // 一気に時間を進めた先の衛星位置がたまたまアンテナの向きと重なるとロックが成立して
+  // ノイズが溜まらないため、乱数を固定して確実に外れた位置へ動かす。
+  const world = new SatelliteUplinkWorld(fixedRandom(0.5));
 
   world.step(1000); // 十分大きいdtで必ず上限に到達させる
 
@@ -67,7 +74,8 @@ test("ノイズが上限に達すると回線切断(ゲームオーバー)にな
 });
 
 test("ゲームオーバー後はsetDishAim/turnDishが無視される", () => {
-  const world = new SatelliteUplinkWorld();
+  // 上のテストと同じく、乱数を固定して確実にロックが外れた状態でゲームオーバーにする。
+  const world = new SatelliteUplinkWorld(fixedRandom(0.5));
   world.step(1000);
   assert.equal(world.isOver, true);
 

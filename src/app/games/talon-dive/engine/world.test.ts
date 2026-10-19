@@ -132,6 +132,9 @@ test("ライバルが先に獲物へ到達すると横取りされ、ストリ�
   world.streak = 5;
   world.falcon = { x: 10, y: 10, vx: 0, vy: 0 };
   const stolenTarget = world.prey[0];
+  // 他の獲物が乱数でたまたま近くに湧いていると同じフレームで一緒に横取りされて件数がずれるため、
+  // 対象の1匹だけにする。
+  world.prey = [stolenTarget];
   world.rival = { x: stolenTarget.x, y: stolenTarget.y, vx: 0, vy: 0 };
   let stolenCount = 0;
   world.onStolen = () => {
