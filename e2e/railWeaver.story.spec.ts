@@ -36,13 +36,28 @@ async function waitForGapInReach(page: Page): Promise<void> {
         const marker = page.getByTestId("rail-weaver-next-gap");
         return await marker.getAttribute("data-in-reach");
       },
-      { message: "レールの切れ目が補修圏内に入る", timeout: 10000 },
+      // 序盤でもギャップが補修圏内に留まるのは約2秒しかない。既定の間隔(最大1秒)で
+      // 見張っていると、見つけた時点で猶予の大半を使い切っていることがある。
+      { message: "レールの切れ目が補修圏内に入る", timeout: 10000, intervals: [50] },
     )
     .toBe("true");
 }
 
-async function tapStage(stage: Locator): Promise<void> {
-  await stage.click({ position: { x: 10, y: 10 } });
+/**
+ * ステージ左上付近をタップする。locator.click() は毎フレーム再描画中のステージに対して
+ * 実行前の安定待ちだけで1秒前後かかることがあり、約2秒しかない補修の猶予を食い潰して
+ * しまうため、座標へ直接タップする。
+ */
+async function tapStage(page: Page, stage: Locator): Promise<void> {
+  const box = await stage.boundingBox();
+  expect(box, "ステージの領域が取得できる").not.toBeNull();
+  if (!box) return;
+  await page.mouse.click(box.x + 10, box.y + 10);
+}
+
+/** HUDはゲームループの次フレームで反映されるため、スコアが閾値を超えるまで少しだけ待つ。 */
+async function expectScoreAbove(page: Page, threshold: number): Promise<void> {
+  await expect.poll(() => readScore(page), { timeout: 1000 }).toBeGreaterThan(threshold);
 }
 
 test.describe("Rail Weaver のストーリー", () => {
@@ -58,8 +73,8 @@ test.describe("Rail Weaver のストーリー", () => {
 
     await expect(async () => {
       await waitForGapInReach(page);
-      await tapStage(stage);
-      expect(await readScore(page)).toBeGreaterThan(0);
+      await tapStage(page, stage);
+      await expectScoreAbove(page, 0);
     }).toPass({ timeout: 20000 });
 
     expect(await readCombo(page), "補修でコンボが伸びる").toBeGreaterThan(0);
@@ -70,14 +85,18 @@ test.describe("Rail Weaver のストーリー", () => {
     await expect(page.getByTestId("game-shell-pause-overlay")).toBeVisible();
     const pausedScore = await readScore(page);
     const pausedDistance = await readDistance(page);
+    // 板は時間経過で1本ずつ回復するため、一時停止ボタンを押すまでの間に戻っていることがある。
+    // 比較の基準は「補修直後の在庫」ではなく「止めた時点の在庫」にする。
+    const pausedStock = await readPlankStock(page);
     await waitForFrames(page, 60);
     expect(await readScore(page), "一時停止中はスコアが変化しない").toBe(pausedScore);
     expect(await readDistance(page), "一時停止中は距離が進まない").toBe(pausedDistance);
+    expect(await readPlankStock(page), "一時停止中は板が回復しない").toBe(pausedStock);
 
     // 一時停止中にタップしても無視される。
-    await tapStage(stage);
+    await tapStage(page, stage);
     expect(await readScore(page), "一時停止中の操作でスコアが動かない").toBe(pausedScore);
-    expect(await readPlankStock(page), "一時停止中の操作で板が減らない").toBe(PLANK_STOCK_MAX - 1);
+    expect(await readPlankStock(page), "一時停止中の操作で板が減らない").toBe(pausedStock);
 
     // 再開すると進行を再開する。
     await page.getByTestId("game-shell-pause").click();
@@ -104,7 +123,7 @@ test.describe("Rail Weaver のストーリー", () => {
     // ゲームオーバー中にタップしても、実際のユーザーと同様に入力が無視される。
     const stage = page.getByTestId("game-shell-stage");
     const scoreAtGameOver = await readScore(page);
-    await tapStage(stage);
+    await tapStage(page, stage);
     await waitForFrames(page, 10);
     expect(await readScore(page), "ゲームオーバー後の操作でスコアが変化しない").toBe(
       scoreAtGameOver,
@@ -137,7 +156,7 @@ test.describe("Rail Weaver のストーリー", () => {
     await expect(async () => {
       await waitForGapInReach(page);
       await page.keyboard.press("Enter");
-      expect(await readScore(page)).toBeGreaterThan(scoreBeforeKeyboard);
+      await expectScoreAbove(page, scoreBeforeKeyboard);
     }).toPass({ timeout: 20000 });
 
     // タップを連打しても表示が壊れない(ゲームオーバーなら都度リスタート)。
@@ -146,7 +165,7 @@ test.describe("Rail Weaver のストーリー", () => {
         await page.getByTestId("rail-weaver-restart").click();
         continue;
       }
-      await tapStage(stage);
+      await tapStage(page, stage);
       await waitForFrames(page, 5);
     }
     if (await gameOver.isVisible().catch(() => false)) {
@@ -168,7 +187,7 @@ test.describe("Rail Weaver のストーリー", () => {
       const before = await readScore(page);
       await expect(async () => {
         await waitForGapInReach(page);
-        await tapStage(stage);
+        await tapStage(page, stage);
         expect(await readScore(page)).toBeGreaterThanOrEqual(before);
       }).toPass({ timeout: 20000 });
     }

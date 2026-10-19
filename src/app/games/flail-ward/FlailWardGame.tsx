@@ -4,7 +4,12 @@ import { Application, Container, Graphics, Text } from "pixi.js";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { GameLoop, InputManager, useElementSize } from "@/shared/engine";
 import { GameShell } from "@/shared/ui";
-import { type CoreHitEvent, FlailWardWorld, type MeteorDeflectedEvent } from "./engine/world";
+import {
+  type CoreHitEvent,
+  FlailWardWorld,
+  type Meteor,
+  type MeteorDeflectedEvent,
+} from "./engine/world";
 import styles from "./FlailWardGame.module.scss";
 
 interface FloatingPopup {
@@ -31,6 +36,7 @@ export function FlailWardGame() {
   const [isOver, setIsOver] = useState(false);
 
   const canvasHostRef = useRef<HTMLDivElement | null>(null);
+  const nextMeteorMarkerRef = useRef<HTMLDivElement | null>(null);
   const worldRef = useRef<FlailWardWorld | null>(null);
   const appRef = useRef<Application | null>(null);
   const loopRef = useRef<GameLoop | null>(null);
@@ -150,12 +156,24 @@ export function FlailWardGame() {
           .stroke({ width: 2, color: 0xffffff, alpha: 0.6 });
 
         meteorGraphics.clear();
+        let nearestMeteor: Meteor | null = null;
         for (const meteor of world.meteors) {
           const pos = world.meteorPosition(meteor);
           meteorGraphics
             .circle(pos.x, pos.y, meteor.size)
             .fill({ color: METEOR_COLOR, alpha: 0.9 })
             .stroke({ width: 1.5, color: 0x05060a, alpha: 0.5 });
+          if (!nearestMeteor || meteor.distance < nearestMeteor.distance) nearestMeteor = meteor;
+        }
+        if (nextMeteorMarkerRef.current) {
+          if (nearestMeteor) {
+            const pos = world.meteorPosition(nearestMeteor);
+            nextMeteorMarkerRef.current.style.left = `${pos.x}px`;
+            nextMeteorMarkerRef.current.style.top = `${pos.y}px`;
+            nextMeteorMarkerRef.current.style.display = "block";
+          } else {
+            nextMeteorMarkerRef.current.style.display = "none";
+          }
         }
 
         for (let i = floatingPopups.length - 1; i >= 0; i--) {
@@ -213,6 +231,11 @@ export function FlailWardGame() {
     >
       <div ref={stageRef} className={styles.stageInner} data-testid="flail-ward-stage">
         <div ref={canvasHostRef} className={styles.canvasHost} data-testid="flail-ward-canvas" />
+        <div
+          ref={nextMeteorMarkerRef}
+          className={styles.meteorMarker}
+          data-testid="flail-ward-next-meteor-marker"
+        />
         <div className={styles.hud}>
           <span className={styles.lives} data-testid="flail-ward-lives">
             ♥ {lives}
