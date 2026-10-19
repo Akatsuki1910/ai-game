@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import type { ReactNode } from "react";
 import styles from "./GameShell.module.scss";
 
@@ -33,9 +32,12 @@ export function GameShell({
   return (
     <div className={styles.shell}>
       <header className={styles.header}>
-        <Link href="/" className={styles.back} data-testid="game-shell-back">
+        {/* next/link の遷移は React の transition なので、ゲームループが毎フレーム HUD を
+            setState している間は後回しにされ続け、遅い端末では戻るまで10秒以上かかる。
+            一覧は静的ページなので、通常のページ遷移で確実に戻す。 */}
+        <a href="/" className={styles.back} data-testid="game-shell-back">
           ← 一覧へ
-        </Link>
+        </a>
         <h1 className={styles.title} data-testid="game-shell-title">
           {title}
         </h1>
