@@ -193,15 +193,21 @@ test.describe("Flail Ward のストーリー", () => {
     // ボタンでリスタート
     await page.getByTestId("flail-ward-restart").click();
     await expect(page.getByTestId("flail-ward-gameover")).toBeHidden();
-    expect(await readScore(page), "リスタートでスコアが0に戻る").toBe(0);
-    expect(await readLives(page), "リスタートでライフが満タンに戻る").toBeGreaterThan(0);
+    await expect.poll(() => readScore(page), { message: "リスタートでスコアが0に戻る" }).toBe(0);
+    await expect
+      .poll(() => readLives(page), { message: "リスタートでライフが満タンに戻る" })
+      .toBeGreaterThan(0);
 
     // Rキーでもいつでもやり直せる(ゲームオーバーまで待たず、プレイ中にリセットできることを確認する)
     await stage.click({ position: { x: 10, y: 10 } });
     await page.keyboard.press("r");
     await expect(page.getByTestId("flail-ward-gameover")).toBeHidden();
-    expect(await readScore(page), "Rキーのリスタートでもスコアが0に戻る").toBe(0);
-    expect(await readLives(page), "Rキーのリスタートでもライフが満タンに戻る").toBeGreaterThan(0);
+    await expect
+      .poll(() => readScore(page), { message: "Rキーのリスタートでもスコアが0に戻る" })
+      .toBe(0);
+    await expect
+      .poll(() => readLives(page), { message: "Rキーのリスタートでもライフが満タンに戻る" })
+      .toBeGreaterThan(0);
 
     expect(errors, "ゲームオーバー/リスタート中にエラーが出ていない").toEqual([]);
   });

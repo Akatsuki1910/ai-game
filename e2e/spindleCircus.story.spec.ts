@@ -136,8 +136,10 @@ test.describe("Spindle Circus のストーリー", () => {
 
     await page.getByTestId("spindle-circus-restart").click();
     await expect(gameOver).toBeHidden();
-    expect(await readScore(page), "リスタートでスコアが0に戻る").toBe(0);
-    expect(await readLives(page), "リスタートでライフが満タンに戻る").toBe(EXPECTED_START_LIVES);
+    await expect.poll(() => readScore(page), { message: "リスタートでスコアが0に戻る" }).toBe(0);
+    await expect
+      .poll(() => readLives(page), { message: "リスタートでライフが満タンに戻る" })
+      .toBe(EXPECTED_START_LIVES);
 
     expect(errors, "ゲームオーバーまでの操作でエラーが出ていない").toEqual([]);
   });

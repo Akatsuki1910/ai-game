@@ -207,8 +207,8 @@ test.describe("Switchboard Shift のストーリー", () => {
     // リスタートすると最初の状態に戻る。
     await page.getByTestId("switchboard-shift-restart").click();
     await expect(page.getByTestId("switchboard-shift-gameover")).toBeHidden();
-    expect(await readLives(page), "リスタートでライフが全回復する").toBe(3);
-    expect(await readScore(page), "リスタートでスコアが0に戻る").toBe(0);
+    await expect.poll(() => readLives(page), { message: "リスタートでライフが全回復する" }).toBe(3);
+    await expect.poll(() => readScore(page), { message: "リスタートでスコアが0に戻る" }).toBe(0);
 
     expect(errors, "ライフ減少・リスタート中にエラーが出ていない").toEqual([]);
   });

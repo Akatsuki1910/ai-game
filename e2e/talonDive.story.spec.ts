@@ -146,9 +146,10 @@ test.describe("Talon Dive のストーリー", () => {
     await expect(page.getByTestId("talon-dive-gameover")).toContainText("SCORE");
     await page.getByTestId("talon-dive-restart").click();
     await expect(page.getByTestId("talon-dive-gameover")).toBeHidden();
-    expect(await readStaminaFillWidth(page), "リスタートでスタミナが満タンに戻る").toBeGreaterThan(
-      0.95,
-    );
+    // スタミナバーの幅は CSS の transition で伸びるため、満タンの幅に達するまで待つ。
+    await expect
+      .poll(() => readStaminaFillWidth(page), { message: "リスタートでスタミナが満タンに戻る" })
+      .toBeGreaterThan(0.95);
     expect(await readStreak(page), "リスタートでストリークが0に戻る").toBe(0);
 
     expect(errors, "スタミナ切れの前後でエラーが出ていない").toEqual([]);

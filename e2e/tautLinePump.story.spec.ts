@@ -144,9 +144,11 @@ test.describe("Taut Line Pump のストーリー", () => {
     // リスタートすると最初の状態に戻る。
     await page.getByTestId("taut-line-pump-restart").click();
     await expect(page.getByTestId("taut-line-pump-gameover")).toBeHidden();
-    expect(await readLines(page), "リスタートでラインが全回復する").toBe(LINES_MAX);
-    expect(await readScore(page), "リスタートでスコアが0に戻る").toBe(0);
-    expect(await readCombo(page), "リスタートでコンボが0に戻る").toBe(0);
+    await expect
+      .poll(() => readLines(page), { message: "リスタートでラインが全回復する" })
+      .toBe(LINES_MAX);
+    await expect.poll(() => readScore(page), { message: "リスタートでスコアが0に戻る" }).toBe(0);
+    await expect.poll(() => readCombo(page), { message: "リスタートでコンボが0に戻る" }).toBe(0);
 
     expect(errors, "ライン減少・リスタート中にエラーが出ていない").toEqual([]);
   });

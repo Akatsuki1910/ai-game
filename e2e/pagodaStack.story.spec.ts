@@ -120,9 +120,13 @@ test.describe("Pagoda Stack のストーリー", () => {
 
     await page.getByTestId("pagoda-stack-restart").click();
     await expect(gameOver).toBeHidden();
-    expect(await readHeight(page), "リスタートすると高さが0に戻る").toBe(0);
-    expect(await readScore(page), "リスタートするとスコアが0に戻る").toBe(0);
-    expect(await readCombo(page), "リスタートするとコンボが0に戻る").toBe(0);
+    await expect.poll(() => readHeight(page), { message: "リスタートすると高さが0に戻る" }).toBe(0);
+    await expect
+      .poll(() => readScore(page), { message: "リスタートするとスコアが0に戻る" })
+      .toBe(0);
+    await expect
+      .poll(() => readCombo(page), { message: "リスタートするとコンボが0に戻る" })
+      .toBe(0);
 
     expect(errors, "一連の操作中にエラーが出ていない").toEqual([]);
   });

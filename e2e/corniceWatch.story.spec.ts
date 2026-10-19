@@ -200,8 +200,10 @@ test.describe("Cornice Watch のストーリー", () => {
 
     await page.getByTestId("cornice-watch-restart").click();
     await expect(page.getByTestId("cornice-watch-gameover")).toBeHidden();
-    expect(await readVillageHealth(page), "リスタートで集落の体力が全回復する").toBe(100);
-    expect(await readScore(page), "リスタートでスコアが0に戻る").toBe(0);
+    await expect
+      .poll(() => readVillageHealth(page), { message: "リスタートで集落の体力が全回復する" })
+      .toBe(100);
+    await expect.poll(() => readScore(page), { message: "リスタートでスコアが0に戻る" }).toBe(0);
 
     expect(errors, "ゲームオーバー・リスタート中にエラーが出ていない").toEqual([]);
   });

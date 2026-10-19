@@ -170,10 +170,12 @@ test.describe("Satellite Uplink のストーリー", () => {
 
     await page.getByTestId("satellite-uplink-restart").click();
     await expect(page.getByTestId("satellite-uplink-gameover")).toBeHidden();
-    expect(await readScore(page), "リスタートでデータが0に戻る").toBe(0);
+    await expect.poll(() => readScore(page), { message: "リスタートでデータが0に戻る" }).toBe(0);
     // ノイズはリセット直後も無操作なら時間経過で増え続けるため、クリックからこの読み取りまでの
     // わずかな経過フレーム分だけはゼロを超える可能性がある。「ほぼゼロに戻った」ことを許容幅つきで確認する。
-    expect(await readStaticLevel(page), "リスタートでノイズがほぼ0に戻る").toBeLessThanOrEqual(5);
+    await expect
+      .poll(() => readStaticLevel(page), { message: "リスタートでノイズがほぼ0に戻る" })
+      .toBeLessThanOrEqual(5);
 
     expect(errors, "ノイズ蓄積・リスタート中にエラーが出ていない").toEqual([]);
   });

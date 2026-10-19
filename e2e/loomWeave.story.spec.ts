@@ -110,8 +110,12 @@ test.describe("Loom Weave のストーリー", () => {
     // リスタートすると最初の状態に戻る。
     await page.getByTestId("loom-weave-restart").click();
     await expect(page.getByTestId("loom-weave-gameover")).toBeHidden();
-    expect(await readProgress(page), "リスタートで段数がリセットされる").toBe(0);
-    expect(await readIntegrity(page), "リスタートで耐久が全回復する").toBe(100);
+    await expect
+      .poll(() => readProgress(page), { message: "リスタートで段数がリセットされる" })
+      .toBe(0);
+    await expect
+      .poll(() => readIntegrity(page), { message: "リスタートで耐久が全回復する" })
+      .toBe(100);
 
     expect(errors, "破損・リスタート中にエラーが出ていない").toEqual([]);
   });

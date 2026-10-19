@@ -321,7 +321,7 @@ test.describe("Shadow Cast のストーリー", () => {
     await page.getByTestId("shadow-cast-restart").click();
     await expect(page.getByTestId("shadow-cast-gameover")).toBeHidden();
     await expect(page.getByTestId("shadow-cast-combo")).toHaveText("重ねた影 0回");
-    expect(await readScore(page), "やり直すとスコアが0に戻る").toBe(0);
+    await expect.poll(() => readScore(page), { message: "やり直すとスコアが0に戻る" }).toBe(0);
 
     expect(errors, "一連の操作でエラーが出ていない").toEqual([]);
   });

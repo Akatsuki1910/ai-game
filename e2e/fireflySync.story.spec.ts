@@ -104,8 +104,10 @@ test.describe("Firefly Sync のストーリー", () => {
 
     await page.getByTestId("firefly-sync-restart").click();
     await expect(gameOver).toBeHidden();
-    expect(await readNight(page), "リスタートで1夜目に戻る").toBe(1);
-    expect(await readChorus(page), "リスタートで合唱計もリセットされる").toBeLessThan(5);
+    await expect.poll(() => readNight(page), { message: "リスタートで1夜目に戻る" }).toBe(1);
+    await expect
+      .poll(() => readChorus(page), { message: "リスタートで合唱計もリセットされる" })
+      .toBeLessThan(5);
 
     expect(errors, "終了・リスタート中にエラーが出ていない").toEqual([]);
   });
