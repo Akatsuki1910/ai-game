@@ -71,6 +71,17 @@ async function digCarefully(page: Page, stage: Locator, holdFrames = 12): Promis
   }
 }
 
+// engine/world.ts の BASE_ROUND_SECONDS(24) と ROUND_SECONDS_STEP(1) から決まる、無操作で待つゲーム内時間。
+const FIRST_ROUND_SECONDS = 24;
+const FIRST_THREE_ROUNDS_SECONDS = 24 + 23 + 22;
+// ソフトウェア描画の実行環境ではこのゲームが10fpsを下回ることがあり(実測: モバイル相当で約7fps)、
+// GameLoop が1フレームの経過を0.1秒で打ち切るぶんゲーム内時間が実時間より遅れる。
+// 実時間の待ち上限はゲーム内時間の2倍とっておく。
+const SLOW_RENDER_TIME_FACTOR = 2;
+const IDLE_ROUND_TIMEOUT_MS = FIRST_ROUND_SECONDS * SLOW_RENDER_TIME_FACTOR * 1000;
+const IDLE_GAMEOVER_TIMEOUT_MS = FIRST_THREE_ROUNDS_SECONDS * SLOW_RENDER_TIME_FACTOR * 1000;
+const TEST_OVERHEAD_MS = 20_000;
+
 test.describe("Relic Dust のストーリー", () => {
   test("起動直後は発掘1・ライフ3・耐久100%・スタミナ100%・発掘率0%でHUDが表示される", async ({
     page,
@@ -160,7 +171,7 @@ test.describe("Relic Dust のストーリー", () => {
   test("何もせず放置すると制限時間が尽きてライフが減り、次の発掘へ自動的に進む", async ({
     page,
   }) => {
-    test.setTimeout(45000);
+    test.setTimeout(IDLE_ROUND_TIMEOUT_MS + TEST_OVERHEAD_MS);
     const errors = collectPageErrors(page);
     await page.goto(GAME_PATH);
     await expect(page.getByTestId("game-shell-stage").locator("canvas")).toBeVisible();
@@ -170,7 +181,7 @@ test.describe("Relic Dust のストーリー", () => {
     await expect
       .poll(() => readLives(page), {
         message: "無操作のまま制限時間が尽きるとライフが減る",
-        timeout: 30000,
+        timeout: IDLE_ROUND_TIMEOUT_MS,
       })
       .toBeLessThan(3);
     expect(await readRound(page), "タイムアウトでも次の発掘ラウンドへ進む").toBe(2);
@@ -181,7 +192,7 @@ test.describe("Relic Dust のストーリー", () => {
   test("3回タイムアウトを放置し続けるとゲームオーバーになり、リスタートできる", async ({
     page,
   }) => {
-    test.setTimeout(120000);
+    test.setTimeout(IDLE_GAMEOVER_TIMEOUT_MS + TEST_OVERHEAD_MS);
     const errors = collectPageErrors(page);
     await page.goto(GAME_PATH);
     await expect(page.getByTestId("game-shell-stage").locator("canvas")).toBeVisible();
@@ -190,7 +201,7 @@ test.describe("Relic Dust のストーリー", () => {
     await expect
       .poll(() => page.getByTestId("relic-dust-gameover").isVisible(), {
         message: "ライフを使い切ると発掘中止の表示が出る",
-        timeout: 90000,
+        timeout: IDLE_GAMEOVER_TIMEOUT_MS,
       })
       .toBe(true);
     expect(await readLives(page), "ゲームオーバー時のライフは0").toBe(0);
