@@ -1,6 +1,6 @@
 "use client";
 
-import type { ReactNode } from "react";
+import type { MouseEvent, ReactNode } from "react";
 import styles from "./GameShell.module.scss";
 
 export interface GameShellProps {
@@ -13,6 +13,15 @@ export interface GameShellProps {
   /** 一時停止中に stage の上に重ねるオーバーレイの文言。省略時は既定文言。 */
   pauseHint?: string;
   children: ReactNode;
+}
+
+/**
+ * マウス/タッチで押したときにボタンへフォーカスを残さない。残ると、ゲーム操作の Enter / Space が
+ * ボタンの再クリックとして扱われ、一時停止が勝手に切り替わる。キーボード(Tab)で選んだ場合は
+ * 従来どおりフォーカスされる。
+ */
+function handlePauseMouseDown(event: MouseEvent<HTMLButtonElement>) {
+  event.preventDefault();
 }
 
 /**
@@ -51,6 +60,7 @@ export function GameShell({
             type="button"
             className={styles.pauseButton}
             onClick={onTogglePause}
+            onMouseDown={handlePauseMouseDown}
             data-testid="game-shell-pause"
           >
             {isPaused ? "再開" : "一時停止"}

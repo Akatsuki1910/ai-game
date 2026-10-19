@@ -19,6 +19,12 @@ function fixedRandom(value: number): () => number {
   return () => value;
 }
 
+/** 渡した値を順に返し、尽きたら最後の値を返し続ける乱数。 */
+function sequenceRandom(values: readonly number[]): () => number {
+  let index = 0;
+  return () => values[Math.min(index++, values.length - 1)];
+}
+
 function forceSpawn(world: HoldingPatternWorld): void {
   // step()は内部のspawnTimerが尽きたときだけスポーンするため、十分大きいdtで必ず1つ出す。
   world.step(10);
@@ -327,4 +333,44 @@ test("resizeすると機体とランウェイの位置が比率を保って再�
     Math.abs(runwayAfter.x / (WIDTH * 2) - ratioXBefore) < 1e-9,
     "ランウェイの位置比率は変わらない",
   );
+});
+
+test("出現してすぐ勝手に滑走路へ入ってしまう位置・向きの出現は引き直される", () => {
+  // 1回目: 右端・東ランウェイの帯の高さから、ほぼ真西(滑走路の軸)へ向かう出現 → 誘導しなくても着陸する
+  // 2回目以降: 上端の左寄りから中央へ向かう出現
+  const world = new HoldingPatternWorld(WIDTH, HEIGHT, sequenceRandom([0.3, 0.32, 0.5, 0.1]));
+  let landings = 0;
+  world.onLand = () => {
+    landings += 1;
+  };
+  world.step(1 / 60);
+
+  assert.equal(world.planes.length, 1);
+  assert.ok(world.planes[0].x < WIDTH, "右端からの出現は引き直されている");
+
+  for (let t = 0; t < 3; t += 1 / 60) world.step(1 / 60);
+  assert.equal(landings, 0, "出現から3秒は、誘導しなければ着陸しない");
+});
+
+test("誘導しないと出現から3秒以内に着陸する機体は、どの出現位置でも現れない", () => {
+  for (let seed = 0; seed < 200; seed++) {
+    let state = seed + 1;
+    const random = () => {
+      state = (state * 16807) % 2147483647;
+      return state / 2147483647;
+    };
+    const world = new HoldingPatternWorld(WIDTH, HEIGHT, random);
+    let landedAt: number | null = null;
+    let elapsed = 0;
+    world.onLand = () => {
+      landedAt ??= elapsed;
+    };
+    world.step(1 / 60);
+    // 2機目が湧く前(出現間隔3秒)まで、1機目だけを誘導せずに飛ばす
+    while (elapsed < 2.9) {
+      world.step(1 / 60);
+      elapsed += 1 / 60;
+    }
+    assert.equal(landedAt, null, `seed ${seed}: 出現直後に勝手に着陸していない`);
+  }
 });
