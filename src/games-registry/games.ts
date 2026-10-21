@@ -1048,4 +1048,20 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "taiko-pulse",
+    title: "Taiko Pulse",
+    description:
+      "右から流れてくる音符をドン(赤・塗りつぶし)とカツ(青・縁取り)で叩き分けるリアルタイム太鼓リズムゲーム。判定リングに重なった瞬間を狙い、捌き切るたびにテンポと音符数が増していく。",
+    tags: ["arcade", "rhythm", "music", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-10-20",
+    controls: {
+      mouse: "DON/KATSUボタンをクリックして演奏",
+      touch: "DON/KATSUボタンをタップして演奏",
+      keyboard: "F: ドン / J: カツ / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
