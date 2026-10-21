@@ -1064,4 +1064,20 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "crux-hold",
+    title: "Crux Hold",
+    description:
+      "岩壁を交互の手で登り続けるリアルタイム・ボルダリング反射パズル。要求された側の手のホールドが光った瞬間にLEFT/RIGHTを叩いて掴め。手を間違える・タイミングを外す・見逃すと支えている側の腕力が減り、両腕とも尽きると滑落する。登るほど判定は狭く速くなる。",
+    tags: ["arcade", "climbing", "timing", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-10-21",
+    controls: {
+      mouse: "画面の左半分/右半分をクリック、または下部のLEFT/RIGHTボタンをクリックして掴む",
+      touch: "画面の左半分/右半分をタップ、または下部のLEFT/RIGHTボタンをタップして掴む",
+      keyboard: "←・A: LEFT / →・D: RIGHT / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
