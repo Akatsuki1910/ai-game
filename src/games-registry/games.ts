@@ -1080,4 +1080,20 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "bubble-garden",
+    title: "Bubble Garden",
+    description:
+      "長押しで育てた泡を風に流されながら花まで届けるリアルタイム精度パズル。泡の大きさと花の種類を合わせ、中心へ寄せて開花させよう。粘りすぎると暴発し、虫に触れても失敗する。",
+    tags: ["arcade", "puzzle", "precision", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-10-22",
+    controls: {
+      mouse: "長押しで泡を育てて放つ(ボタンまたはキャンバス)。飛行中はドラッグで狙いを調整",
+      touch: "長押しで泡を育てて放つ(ボタンまたはキャンバス)。飛行中はドラッグで狙いを調整",
+      keyboard: "Enter長押し: 泡を育てて放つ / ←→・AD: 狙いを調整 / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
