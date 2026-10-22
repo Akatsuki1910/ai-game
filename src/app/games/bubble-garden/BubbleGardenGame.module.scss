@@ -1,0 +1,258 @@
+@use "../../../shared/styles/variables" as v;
+@use "../../../shared/styles/mixins" as m;
+
+.stageInner {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 10%, #163023 0%, #0d1a14 70%);
+  @include m.touch-safe;
+}
+
+.canvasHost {
+  position: absolute;
+  inset: 0;
+
+  canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.topRow {
+  position: absolute;
+  top: v.$space-3;
+  left: v.$space-3;
+  right: v.$space-3;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: v.$space-2;
+  pointer-events: none;
+}
+
+.vitalityBar {
+  display: flex;
+  align-items: center;
+  gap: v.$space-2;
+  background: rgb(0 0 0 / 40%);
+  padding: v.$space-1 v.$space-2;
+  border-radius: v.$radius-sm;
+}
+
+.vitalityLabel {
+  font-size: 0.72rem;
+  color: v.$color-text-muted;
+}
+
+.vitalityTrack {
+  width: 110px;
+  height: 8px;
+  border-radius: v.$radius-sm;
+  background: rgb(255 255 255 / 12%);
+  overflow: hidden;
+
+  @include m.mobile {
+    width: 72px;
+  }
+}
+
+.vitalityFill {
+  height: 100%;
+  background: v.$color-accent-strong;
+  transition: width 0.15s linear;
+}
+
+.targetHint {
+  font-family: v.$font-family-mono;
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: v.$space-1 v.$space-3;
+  border-radius: v.$radius-sm;
+  background: rgb(0 0 0 / 40%);
+  color: v.$color-accent;
+  letter-spacing: 0.04em;
+}
+
+.combo {
+  font-family: v.$font-family-mono;
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: v.$space-1 v.$space-3;
+  border-radius: v.$radius-sm;
+  background: rgb(0 0 0 / 40%);
+  color: v.$color-warning;
+  letter-spacing: 0.04em;
+}
+
+.bubbleHint {
+  position: absolute;
+  left: 50%;
+  top: v.$space-3;
+  transform: translateX(-50%);
+  font-family: v.$font-family-mono;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: v.$space-1 v.$space-3;
+  border-radius: v.$radius-sm;
+  background: rgb(0 0 0 / 40%);
+  color: v.$color-text-muted;
+  letter-spacing: 0.04em;
+  pointer-events: none;
+  white-space: nowrap;
+
+  &[data-size="small"] {
+    color: #6ee7ff;
+  }
+
+  &[data-size="medium"] {
+    color: #7cf5c4;
+  }
+
+  &[data-size="large"] {
+    color: #ffb454;
+  }
+}
+
+.chargeBar {
+  position: absolute;
+  left: 50%;
+  bottom: 108px;
+  transform: translateX(-50%);
+  width: min(240px, 60vw);
+  height: 10px;
+  border-radius: v.$radius-sm;
+  background: rgb(0 0 0 / 45%);
+  overflow: hidden;
+  pointer-events: none;
+
+  @include m.mobile {
+    bottom: 128px;
+  }
+
+  &[data-charging="false"] {
+    opacity: 0.35;
+  }
+}
+
+.chargeFill {
+  height: 100%;
+  transition: width 0.05s linear;
+}
+
+.hint {
+  position: absolute;
+  left: v.$space-3;
+  bottom: v.$space-3;
+  font-size: 0.75rem;
+  color: v.$color-text-muted;
+  background: rgb(0 0 0 / 40%);
+  padding: v.$space-1 v.$space-2;
+  border-radius: v.$radius-sm;
+  pointer-events: none;
+  max-width: min(460px, 62vw);
+  line-height: 1.5;
+
+  @include m.mobile {
+    display: none;
+  }
+}
+
+.controlRow {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: v.$space-4;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: v.$space-3;
+  padding: 0 v.$space-4;
+}
+
+.steerButton {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  font-size: 1.3rem;
+  font-weight: 800;
+  cursor: pointer;
+  color: v.$color-accent;
+  border: 2px solid v.$color-border;
+  background: rgb(20 22 29 / 70%);
+
+  &:active {
+    transform: scale(0.94);
+  }
+}
+
+.blowButton {
+  min-width: 140px;
+  padding: v.$space-4 v.$space-5;
+  border-radius: v.$radius-lg;
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  color: v.$color-text;
+  border: 2px solid v.$color-accent-strong;
+  background: rgb(20 22 29 / 70%);
+
+  &:active {
+    transform: scale(0.96);
+    background: rgb(124 245 196 / 20%);
+  }
+
+  @include m.mobile {
+    min-width: 110px;
+    font-size: 0.9rem;
+    padding: v.$space-3 v.$space-4;
+  }
+}
+
+.gameOver {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: v.$space-2;
+  background: rgb(10 11 18 / 85%);
+  z-index: 5;
+  text-align: center;
+  padding: v.$space-4;
+}
+
+.gameOverTitle {
+  font-size: 1.4rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+}
+
+.gameOverScore {
+  font-family: v.$font-family-mono;
+  color: v.$color-accent;
+  font-size: 1.1rem;
+}
+
+.gameOverSub {
+  font-size: 0.85rem;
+  color: v.$color-text-muted;
+}
+
+.restartButton {
+  margin-top: v.$space-3;
+  padding: v.$space-2 v.$space-5;
+  border-radius: v.$radius-md;
+  border: 1px solid v.$color-accent;
+  background: transparent;
+  color: v.$color-text;
+  font-size: 0.95rem;
+  cursor: pointer;
+
+  &:hover {
+    background: v.$color-accent;
+    color: #05060a;
+  }
+}
