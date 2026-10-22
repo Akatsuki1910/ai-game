@@ -1,5 +1,5 @@
 import { expect, type Page, test } from "@playwright/test";
-import { MAX_STRIKES } from "../src/app/games/holding-pattern/engine/world";
+import { MAX_STRIKES, PLANE_SPEED } from "../src/app/games/holding-pattern/engine/world";
 import { collectPageErrors, dragOnStage, waitForFrames } from "./support/gameStory";
 
 const GAME_PATH = "/games/holding-pattern";
@@ -49,61 +49,135 @@ function angleDiff(a: number, b: number): number {
   return diff;
 }
 
+// 機体は画面の外(端から少し外側)に出現する。キャンバスの外を押しても掴めないため、
+// 機体がキャンバスの内側に入ってから掴む。
+const GRAB_MARGIN_PX = 20;
+
+interface UrgentPlane extends MarkerPoint {
+  heading: number;
+}
+
+interface SteeringState {
+  isOver: boolean;
+  score: number;
+  plane: UrgentPlane | null;
+}
+
 /**
- * マウスでドラッグして、最も燃料が少ない機体をビーコンの先まで狙いを引き延ばして誘導し、
- * 必ず1機を着陸させるまで続ける。誘導中の機体が衝突や燃料切れで失われたら、
- * そのときの最優先機体(マーカーが指す機体)へ自動的に乗り換えて狙い直す。
+ * ゲームオーバーかどうか・スコア・最優先機体の位置と向きを1回のラウンドトリップで読む。
+ * 遅い環境では1往復に100ms以上かかり、別々に読むと読み終わるまでに機体が大きく進む。
+ */
+async function readSteeringState(page: Page): Promise<SteeringState> {
+  return page.evaluate(() => {
+    const scoreText = document.querySelector('[data-testid="game-shell-score"]')?.textContent ?? "";
+    const marker = document.querySelector<HTMLElement>(
+      '[data-testid="holding-pattern-plane-marker"]',
+    );
+    let plane: { x: number; y: number; heading: number } | null = null;
+    if (marker && marker.style.display !== "none") {
+      const rect = marker.getBoundingClientRect();
+      plane = {
+        x: rect.left + rect.width / 2,
+        y: rect.top + rect.height / 2,
+        heading: Number(marker.dataset.heading),
+      };
+    }
+    return {
+      isOver: document.querySelector('[data-testid="holding-pattern-gameover"]') !== null,
+      score: Number(scoreText.replace(/[^\d]/g, "")),
+      plane,
+    };
+  });
+}
+
+function isInsideBox(
+  point: MarkerPoint,
+  box: { x: number; y: number; width: number; height: number },
+  margin: number,
+): boolean {
+  return (
+    point.x >= box.x + margin &&
+    point.x <= box.x + box.width - margin &&
+    point.y >= box.y + margin &&
+    point.y <= box.y + box.height - margin
+  );
+}
+
+// 東ランウェイ(ビーコン0)の軸はビーコンと同じ高さの水平線。機体の少し先の軸上の点を狙い続けると、
+// 方位が軸に揃ったまま滑走路へ入る(ビーコンそのものを狙うと、縦長の画面では下から急角度で
+// 入って軸とずれ、素通りしやすい)。画面の右寄りにいる機体は逆向き(西向き)に揃えても着陸できる。
+const AXIS_AIM_REACH_RATIO = 0.35;
+const AXIS_TURN_BACK_X_RATIO = 0.6;
+
+/**
+ * マウスでドラッグして、最も燃料が少ない機体を東ランウェイの軸に揃えて誘導し、必ず1機を
+ * 着陸させるまで続ける。狙いの方位は機体の位置から計算されるため、毎回いまの位置で掴み直して
+ * 狙い直す。誘導中の機体が失われたら、そのときの最優先機体(マーカーが指す機体)を掴む。
  * ゲームオーバーになった場合もリスタートして続行する(どこかで必ず着陸させる)。
  */
-async function landUrgentPlaneOnBeacon(page: Page, beaconTestId: string): Promise<void> {
+async function landUrgentPlaneOnEastRunway(page: Page): Promise<void> {
   let scoreBefore = await readScore(page);
-  let draggingPlaneId: string | null = null;
+  let isPointerDown = false;
+  const releasePointer = async () => {
+    if (!isPointerDown) return;
+    await page.mouse.up();
+    isPointerDown = false;
+  };
+  const beacon = await readMarkerCenter(page, "holding-pattern-beacon-0");
+  const canvas = await page.getByTestId("holding-pattern-canvas").boundingBox();
+  expect(beacon, "東ランウェイのビーコン位置が取得できる").not.toBeNull();
+  expect(canvas, "キャンバスの領域が取得できる").not.toBeNull();
+  if (!beacon || !canvas) return;
 
   await expect
     .poll(
       async () => {
-        if (
-          await page
-            .getByTestId("holding-pattern-gameover")
-            .isVisible()
-            .catch(() => false)
-        ) {
-          if (draggingPlaneId !== null) {
-            await page.mouse.up();
-            draggingPlaneId = null;
-          }
+        await releasePointer();
+        const readStartedAt = Date.now();
+        const { isOver, score, plane } = await readSteeringState(page);
+        const readMs = Date.now() - readStartedAt;
+        if (score > scoreBefore) return true;
+        if (isOver) {
           await page.getByTestId("holding-pattern-restart").click();
           scoreBefore = 0;
           return false;
         }
-
-        const plane = await readMarkerCenter(page, "holding-pattern-plane-marker");
-        const beacon = await readMarkerCenter(page, beaconTestId);
-        if (!plane || !beacon) return false;
-
-        const currentPlaneId = await page
-          .getByTestId("holding-pattern-plane-marker")
-          .getAttribute("data-plane-id");
-        if (draggingPlaneId !== currentPlaneId) {
-          if (draggingPlaneId !== null) await page.mouse.up();
-          await page.mouse.move(plane.x, plane.y);
-          await page.mouse.down();
-          draggingPlaneId = currentPlaneId;
+        if (!plane || !isInsideBox(plane, canvas, GRAB_MARGIN_PX)) {
+          await waitForFrames(page, 1);
+          return false;
         }
 
-        await page.mouse.move(beacon.x, beacon.y, { steps: 2 });
-        await waitForFrames(page, 4);
-        return (await readScore(page)) > scoreBefore;
+        // 位置を読んでから押すまでに(遅い環境では数百ms)機体は進み、当たり判定から外れる。
+        // 読み取り1往復ぶんの時間から押すまでの遅れを見積もり、その分だけ進行方向の先を押す。
+        const leadPx = (PLANE_SPEED * readMs * 2) / 1000;
+        await page.mouse.move(
+          plane.x + Math.cos(plane.heading) * leadPx,
+          plane.y + Math.sin(plane.heading) * leadPx,
+        );
+        await page.mouse.down();
+        isPointerDown = true;
+
+        const direction = plane.x < canvas.x + canvas.width * AXIS_TURN_BACK_X_RATIO ? 1 : -1;
+        const aimX = Math.min(
+          canvas.x + canvas.width - GRAB_MARGIN_PX,
+          Math.max(
+            canvas.x + GRAB_MARGIN_PX,
+            plane.x + direction * canvas.width * AXIS_AIM_REACH_RATIO,
+          ),
+        );
+        await page.mouse.move(aimX, beacon.y);
+        await waitForFrames(page, 1);
+        return false;
       },
       {
         message: "機体を誘導して着陸させる(失ったら次の機体に乗り換えて再挑戦する)",
         timeout: 45000,
-        intervals: [50],
+        intervals: [0],
       },
     )
     .toBe(true);
 
-  await page.mouse.up();
+  await releasePointer();
 }
 
 /**
@@ -129,7 +203,7 @@ async function nudgeUrgentPlaneTowardBeaconOnce(page: Page, beaconTestId: string
 }
 
 test.describe("Holding Pattern のストーリー", () => {
-  test("ビーコンまで狙いを引き延ばして誘導すると着陸でき、スコアとストリークが増える。一時停止・再開もできる", async ({
+  test("滑走路の軸に方位を揃えて誘導すると着陸でき、スコアとストリークが増える。一時停止・再開もできる", async ({
     page,
   }) => {
     test.setTimeout(120_000);
@@ -144,7 +218,7 @@ test.describe("Holding Pattern のストーリー", () => {
 
     // 他の機体が同時に飛んでいるため、着陸直後に別の機体が警告(ストリークリセット)を
     // 起こすこともある。ここではストリークの厳密な値は問わず、着陸(スコア増加)自体を確認する。
-    await landUrgentPlaneOnBeacon(page, "holding-pattern-beacon-0");
+    await landUrgentPlaneOnEastRunway(page);
     expect(await readScore(page), "着陸でスコアが増える").toBeGreaterThan(0);
 
     // 一時停止するとオーバーレイが出て、状態が変化しなくなる。
@@ -164,10 +238,10 @@ test.describe("Holding Pattern のストーリー", () => {
     // 再開すると進行を再開する。
     await page.getByTestId("game-shell-pause").click();
     await expect(page.getByTestId("game-shell-pause-overlay")).toBeHidden();
-    // landUrgentPlaneOnBeaconはゲームオーバーになった場合リスタートして続けるため、
+    // landUrgentPlaneOnEastRunwayはゲームオーバーになった場合リスタートして続けるため、
     // (そのときスコアは0から積み直しになる)再開後の絶対スコアをpausedScoreと比較するのではなく、
     // 「もう一度どこかで着陸できた」ことをスコアの正値で確認する。
-    await landUrgentPlaneOnBeacon(page, "holding-pattern-beacon-0");
+    await landUrgentPlaneOnEastRunway(page);
     expect(await readScore(page), "再開後も着陸でスコアが増える").toBeGreaterThan(0);
 
     expect(errors, "操作中にエラーが出ていない").toEqual([]);

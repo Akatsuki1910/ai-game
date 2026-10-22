@@ -242,9 +242,13 @@ test.describe("Homing Arc のストーリー", () => {
 
     await page.getByTestId("homing-arc-restart").click();
     await expect(gameOver).toBeHidden();
-    expect(await readScore(page), "リスタートでスコアが0に戻る").toBe(0);
-    expect(await readLives(page), "リスタートでライフが満タンに戻る").toBe(EXPECTED_START_LIVES);
-    expect(await readStatus(page), "リスタートでねらう状態に戻る").toBe("ねらう");
+    await expect.poll(() => readScore(page), { message: "リスタートでスコアが0に戻る" }).toBe(0);
+    await expect
+      .poll(() => readLives(page), { message: "リスタートでライフが満タンに戻る" })
+      .toBe(EXPECTED_START_LIVES);
+    await expect
+      .poll(() => readStatus(page), { message: "リスタートでねらう状態に戻る" })
+      .toBe("ねらう");
 
     expect(errors, "ゲームオーバーからリスタートまででエラーが出ていない").toEqual([]);
   });

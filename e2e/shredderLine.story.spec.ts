@@ -192,9 +192,11 @@ test.describe("Shredder Line のストーリー", () => {
     // リスタートすると最初の状態に戻る。
     await page.getByTestId("shredder-line-restart").click();
     await expect(page.getByTestId("shredder-line-gameover")).toBeHidden();
-    expect(await readLives(page), "リスタートでライフが全回復する").toBe(STARTING_LIVES);
-    expect(await readScore(page), "リスタートでスコアが0に戻る").toBe(0);
-    expect(await readCombo(page), "リスタートでコンボが0に戻る").toBe(0);
+    await expect
+      .poll(() => readLives(page), { message: "リスタートでライフが全回復する" })
+      .toBe(STARTING_LIVES);
+    await expect.poll(() => readScore(page), { message: "リスタートでスコアが0に戻る" }).toBe(0);
+    await expect.poll(() => readCombo(page), { message: "リスタートでコンボが0に戻る" }).toBe(0);
 
     expect(errors, "ライフ減少・リスタート中にエラーが出ていない").toEqual([]);
   });

@@ -223,9 +223,11 @@ test.describe("Bellows Forge のストーリー", () => {
 
     await page.getByTestId("bellows-forge-restart").click();
     await expect(gameOver).toBeHidden();
-    expect(await readScore(page), "リスタートでスコアが0に戻る").toBe(0);
-    expect(await readRound(page), "リスタートで1作目に戻る").toBe(1);
-    expect(await readQuality(page), "リスタートで品質が満タンに戻る").toBe(EXPECTED_START_QUALITY);
+    await expect.poll(() => readScore(page), { message: "リスタートでスコアが0に戻る" }).toBe(0);
+    await expect.poll(() => readRound(page), { message: "リスタートで1作目に戻る" }).toBe(1);
+    await expect
+      .poll(() => readQuality(page), { message: "リスタートで品質が満タンに戻る" })
+      .toBe(EXPECTED_START_QUALITY);
 
     expect(errors, "ゲームオーバーまでの操作でエラーが出ていない").toEqual([]);
   });

@@ -144,9 +144,11 @@ test.describe("Pulse Lock のストーリー", () => {
 
     await page.getByTestId("pulse-lock-restart").click();
     await expect(gameOver).toBeHidden();
-    expect(await readScore(page), "リスタートでスコアが0に戻る").toBe(0);
-    expect(await readLives(page), "リスタートでライフが満タンに戻る").toBe(EXPECTED_START_LIVES);
-    expect(await readLevel(page), "リスタートでレベルが1に戻る").toBe(1);
+    await expect.poll(() => readScore(page), { message: "リスタートでスコアが0に戻る" }).toBe(0);
+    await expect
+      .poll(() => readLives(page), { message: "リスタートでライフが満タンに戻る" })
+      .toBe(EXPECTED_START_LIVES);
+    await expect.poll(() => readLevel(page), { message: "リスタートでレベルが1に戻る" }).toBe(1);
 
     expect(errors, "ゲームオーバーまでの操作でエラーが出ていない").toEqual([]);
   });

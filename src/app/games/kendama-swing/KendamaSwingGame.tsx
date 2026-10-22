@@ -34,14 +34,24 @@ export function KendamaSwingGame() {
     setIsPaused(loopRef.current.togglePause());
   }, []);
 
+  const syncHud = useCallback((world: KendamaWorld) => {
+    setScore(Math.floor(world.score));
+    setCombo(world.combo);
+    setLives(world.lives);
+  }, []);
+
   const handleRestart = useCallback(() => {
-    worldRef.current?.reset();
+    const world = worldRef.current;
+    if (!world) return;
+    world.reset();
+    // 次フレームを待たずにHUDも戻す(オーバーレイだけ消えて前回の得点が残る瞬間を作らない)。
+    syncHud(world);
     setIsOver(false);
     if (loopRef.current?.isPaused) {
       loopRef.current.resume();
       setIsPaused(false);
     }
-  }, []);
+  }, [syncHud]);
 
   useEffect(() => {
     const host = canvasHostRef.current;
@@ -119,9 +129,7 @@ export function KendamaSwingGame() {
         }
 
         world.step(deltaSeconds);
-        setScore(Math.floor(world.score));
-        setCombo(world.combo);
-        setLives(world.lives);
+        syncHud(world);
         if (world.isOver) setIsOver(true);
 
         const floorY = world.height - 18;
@@ -194,6 +202,7 @@ export function KendamaSwingGame() {
             setIsPaused(loop.togglePause());
           } else if (key === "r") {
             world.reset();
+            syncHud(world);
             setIsOver(false);
           }
         },
@@ -214,7 +223,7 @@ export function KendamaSwingGame() {
         appRef.current = null;
       }
     };
-  }, []);
+  }, [syncHud]);
 
   useEffect(() => {
     if (size.width === 0 || size.height === 0) return;

@@ -120,9 +120,13 @@ test.describe("Pagoda Stack のストーリー", () => {
 
     await page.getByTestId("pagoda-stack-restart").click();
     await expect(gameOver).toBeHidden();
-    expect(await readHeight(page), "リスタートすると高さが0に戻る").toBe(0);
-    expect(await readScore(page), "リスタートするとスコアが0に戻る").toBe(0);
-    expect(await readCombo(page), "リスタートするとコンボが0に戻る").toBe(0);
+    await expect.poll(() => readHeight(page), { message: "リスタートすると高さが0に戻る" }).toBe(0);
+    await expect
+      .poll(() => readScore(page), { message: "リスタートするとスコアが0に戻る" })
+      .toBe(0);
+    await expect
+      .poll(() => readCombo(page), { message: "リスタートするとコンボが0に戻る" })
+      .toBe(0);
 
     expect(errors, "一連の操作中にエラーが出ていない").toEqual([]);
   });
@@ -188,6 +192,9 @@ test.describe("Pagoda Stack のストーリー", () => {
     if (await gameOver.isVisible()) {
       await page.getByTestId("pagoda-stack-restart").click();
       await expect(gameOver).toBeHidden();
+      // 高さの表示は次のフレームで反映されるため、0に戻るのを待ってから比較の基準を読む
+      // (すぐ読むと前のゲームの高さを基準にしてしまい、1段積んでも増えていないように見える)。
+      await expect.poll(() => readHeight(page), { message: "リスタートで高さが0に戻る" }).toBe(0);
     }
 
     // リサイズ後も操作を受け付ける(積むか崩れるかのどちらかが起きる)。

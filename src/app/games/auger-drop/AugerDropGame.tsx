@@ -28,6 +28,7 @@ export function AugerDropGame() {
   const { ref: stageRef, size } = useElementSize<HTMLDivElement>();
   const [score, setScore] = useState(0);
   const [catches, setCatches] = useState(0);
+  const [losses, setLosses] = useState(0);
   const [warmth, setWarmth] = useState(WARMTH_MAX);
   const [tension, setTension] = useState(0);
   const [reelProgress, setReelProgress] = useState(0);
@@ -140,6 +141,7 @@ export function AugerDropGame() {
         world.step(deltaSeconds);
         setScore(world.score);
         setCatches(world.catches);
+        setLosses(world.losses);
         setWarmth(world.warmth);
         setTension(world.tension);
         setReelProgress(world.reelProgress);
@@ -306,7 +308,7 @@ export function AugerDropGame() {
           />
         ))}
         <div className={styles.hud}>
-          <div className={styles.catches} data-testid="auger-drop-catches">
+          <div className={styles.catches} data-testid="auger-drop-catches" data-losses={losses}>
             釣果 {catches}
           </div>
           <span className={styles.hudLabel}>あたたかさ</span>

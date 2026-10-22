@@ -225,11 +225,13 @@ test.describe("Rapids Slalom のストーリー", () => {
     await page.keyboard.up("ArrowLeft");
     const afterLeft = await readKayakX(page);
 
+    // カヤックには慣性があり、左へ流れている最中に→を押してもすぐには止まらないため、
+    // 固定フレーム数ではなく「押し続けている間に右へ戻ってくる」ことを条件付きで待つ。
     await page.keyboard.down("ArrowRight");
-    await waitForFrames(page, 30);
+    await expect
+      .poll(() => readKayakX(page), { message: "→キーでカヤックが右へ動く", timeout: 5_000 })
+      .toBeGreaterThan(afterLeft);
     await page.keyboard.up("ArrowRight");
-    const afterRight = await readKayakX(page);
-    expect(afterRight, "→キーでカヤックが右へ動く").toBeGreaterThan(afterLeft);
 
     await page.keyboard.press("Enter");
     await waitForFrames(page, 5);

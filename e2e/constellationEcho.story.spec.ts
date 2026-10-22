@@ -212,9 +212,11 @@ test.describe("Constellation Echo のストーリー", () => {
 
     await page.getByTestId("constellation-echo-restart").click();
     await expect(gameOver).toBeHidden();
-    expect(await readScore(page), "リスタートでスコアが0に戻る").toBe(0);
-    expect(await readLives(page), "リスタートでライフが満タンに戻る").toBe(START_LIVES);
-    expect(await readRound(page), "リスタートでラウンドが1に戻る").toBe(1);
+    await expect.poll(() => readScore(page), { message: "リスタートでスコアが0に戻る" }).toBe(0);
+    await expect
+      .poll(() => readLives(page), { message: "リスタートでライフが満タンに戻る" })
+      .toBe(START_LIVES);
+    await expect.poll(() => readRound(page), { message: "リスタートでラウンドが1に戻る" }).toBe(1);
 
     expect(errors, "ゲームオーバーまでの操作でエラーが出ていない").toEqual([]);
   });
