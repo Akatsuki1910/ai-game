@@ -31,12 +31,17 @@ test.describe("Beigoma Duel のストーリー", () => {
     const errors = collectPageErrors(page);
     await page.goto(GAME_PATH);
 
-    // 立ち上がり: 両者満タンのスピンでラウンド1、ライフ3から始まる
+    // 立ち上がり: 両者ほぼ満タンのスピンでラウンド1、ライフ3から始まる。
+    // スピンはページ読み込み直後から実時間で減り続けるため、読み取りまでの
+    // 僅かな遅延(特にモバイル相当では顕著)を許容し、厳密に100とは比較しない。
     await expect(page.getByTestId("game-shell-score")).toBeVisible();
-    expect(await readPlayerSpin(page), "開始時は自分のスピンが満タン").toBe(100);
-    expect(await readSpinPercent(page, "beigoma-duel-opponent-spin"), "相手のスピンも満タン").toBe(
-      100,
+    expect(await readPlayerSpin(page), "開始時は自分のスピンがほぼ満タン").toBeGreaterThanOrEqual(
+      95,
     );
+    expect(
+      await readSpinPercent(page, "beigoma-duel-opponent-spin"),
+      "相手のスピンもほぼ満タン",
+    ).toBeGreaterThanOrEqual(95);
     expect(await readRound(page), "ラウンド1から始まる").toBe(1);
     expect(await readLivesCount(page), "ライフは3つ").toBe(3);
 
