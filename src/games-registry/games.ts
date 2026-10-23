@@ -1096,4 +1096,20 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "beigoma-duel",
+    title: "Beigoma Duel",
+    description:
+      "土俵の中でベーゴマを削り合うリアルタイム対戦物理シム。ドラッグで引いて離すと自分のベーゴマが加速するが、発射も衝突もすべて「スピン」を削る諸刃の剣。相手のスピンを先に0にすれば勝ち、自分のスピンが尽きるとライフが減る。",
+    tags: ["arcade", "duel", "physics", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-10-23",
+    controls: {
+      mouse: "ドラッグして引っ張り、離すと逆方向へ発射",
+      touch: "ドラッグして引っ張り、離すと逆方向へ発射",
+      keyboard: "矢印キー/WASD: 照準回転・パワー調整 / Enter: 発射 / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
