@@ -1112,4 +1112,20 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "moth-lantern",
+    title: "Moth Lantern",
+    description:
+      "夜の庭園で蛾の群れをランタンの光で祠まで導くリアルタイム群導パズル。一度でも光に当てた蛾は以後自分で祠へ進んでくれるが、まだ当てていない蛾は闇をうろつき、鬼火に捕まるか迷い続けるかで失われてしまう。迷う蛾が一定数を超えると終了、時間が経つほど蛾の出現も鬼火も増えていく。",
+    tags: ["arcade", "survival", "herding", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-10-24",
+    controls: {
+      mouse: "ドラッグ/長押しした位置へランタンを移動",
+      touch: "ドラッグ/長押しした位置へランタンを移動",
+      keyboard: "矢印キー/WASD: ランタンを移動 / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
