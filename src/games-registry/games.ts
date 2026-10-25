@@ -1128,4 +1128,21 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "soroban-rush",
+    title: "Soroban Rush",
+    description:
+      "そろばんの珠を操って目標の数にぴったり合わせるリアルタイム速算パズル。梁の上をタップで5珠、下をドラッグで1珠を調整し、タイムアップ前に「決定」で答えよう。正解するたびに桁は増え、制限時間は短くなる。",
+    tags: ["arcade", "puzzle", "math", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-10-25",
+    controls: {
+      mouse: "梁より上をクリックで5珠を切替、下をドラッグで1珠の数を調整、「決定」で答える",
+      touch: "梁より上をタップで5珠を切替、下をドラッグで1珠の数を調整、「決定」で答える",
+      keyboard:
+        "←→・AD: 桁を選択 / ↑↓・WS: 選択中の桁を+1/-1 / Enter: 決定 / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
