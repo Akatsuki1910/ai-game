@@ -1145,4 +1145,20 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "truffle-trail",
+    title: "Truffle Trail",
+    description:
+      "愛犬と森でトリュフを探すリアルタイム捜索パズル。犬をドラッグで誘導し、匂いの強さだけを頼りに埋まったトリュフへ近づいて掘り出そう。見つけても掘り出す前に新鮮さが尽きると腐ってしまい、腐らせすぎると狩りは終わる。掘るほど同時に探すトリュフが増え、新鮮さが保てる時間も短くなる。",
+    tags: ["arcade", "search", "puzzle", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-10-26",
+    controls: {
+      mouse: "ドラッグ/クリックした位置へ犬を誘導、長押しで掘る",
+      touch: "ドラッグ/タップした位置へ犬を誘導、長押しで掘る",
+      keyboard: "矢印キー/WASD: 犬を移動 / Enter長押し: 掘る / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
