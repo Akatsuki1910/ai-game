@@ -1161,4 +1161,21 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "karuta-dash",
+    title: "Karuta Dash",
+    description:
+      "読まれた文字の札をライバルより先に見つけて取るリアルタイム速取りかるた。盤面に散らばった札から正しい一枚を探し、ライバルの手が届く前にクリック/タップで奪え。取り切るたびに札は増え、ライバルは速くなる。",
+    tags: ["arcade", "reflex", "word", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-10-27",
+    controls: {
+      mouse: "正しい札をクリックして取る",
+      touch: "正しい札をタップして取る",
+      keyboard:
+        "矢印キー/WASD: 手を移動 / Enter: 手の位置の札を取る / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
