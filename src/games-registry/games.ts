@@ -1178,4 +1178,21 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "daruma-drop",
+    title: "Daruma Drop",
+    description:
+      "だるま落とし風のリアルタイム木槌パズル。引いて離すパワーをウィンドウにぴったり合わせて最下段の積み木を抜こう。弱すぎても強すぎても安定度が減り、抜き切るたびに段数は増えてウィンドウは狭くなる。",
+    tags: ["arcade", "puzzle", "precision", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-10-28",
+    controls: {
+      mouse: "ドラッグ/長押しで木槌を引き、離すと振り下ろす",
+      touch: "ドラッグ/長押しで木槌を引き、離すと振り下ろす",
+      keyboard:
+        "↑・W: 長押しで引く / ↓・S: 戻す / Enter: 振り下ろす / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
