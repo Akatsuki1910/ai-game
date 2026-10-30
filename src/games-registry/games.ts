@@ -1212,4 +1212,20 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "wok-toss",
+    title: "Wok Toss",
+    description:
+      "具材を弾ませ続けるリアルタイム中華鍋さばきアクション。ウォックを傾けて落ちてくる具材をバウンドさせ続け、縁からこぼさずにコンボを稼げ。弾ませるほど出現は速くなり、3回こぼすと終了。",
+    tags: ["arcade", "physics", "cooking", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-10-30",
+    controls: {
+      mouse: "ドラッグした方向へウォックを傾ける",
+      touch: "ドラッグした方向へウォックを傾ける",
+      keyboard: "矢印キー/AD: ウォックを傾ける / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
