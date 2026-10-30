@@ -7,9 +7,9 @@ on:
   workflow_dispatch:
 
 jobs:
-  verify:
+  lint-and-unit:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v5
 
@@ -27,16 +27,38 @@ jobs:
       - name: Unit tests
         run: npm run test
 
+  # ストーリーテストは全ゲーム×PC/スマホで600件を超え、1ジョブで流すと約1時間かかる。
+  # ランナーにGPUは無くWebGLはソフトウェア描画になるため、同じジョブで2つ並べるだけでも
+  # CPUの奪い合いでフレームレートが落ち、待ち合わせが時間切れになる。そこで1ジョブ1ワーカーにし、
+  # ジョブを分割(シャーディング)して並べることで所要時間を抑える。
+  story:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
       - name: Install Playwright browser
         run: npx playwright install --with-deps chromium
 
-      - name: Story tests (PC / スマホ想定の通し操作)
-        run: npm run test:story
+      - name: Story tests (PC / スマホ想定の通し操作) shard ${{ matrix.shard }}/12
+        run: npm run test:story -- --shard=${{ matrix.shard }}/12 --workers=1
 
-      - name: Upload story test report on failure
+      - name: Upload story test traces on failure
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-report
-          path: playwright-report/
+          name: story-test-results-${{ matrix.shard }}
+          path: test-results/
           retention-days: 7

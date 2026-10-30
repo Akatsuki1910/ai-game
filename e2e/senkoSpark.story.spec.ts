@@ -180,8 +180,12 @@ test.describe("Senko Spark のストーリー", () => {
     // クリック直後の表示更新タイミング次第でごくわずかに進んでいる可能性を許容する。
     await page.getByTestId("senko-spark-restart").click();
     await expect(page.getByTestId("senko-spark-gameover")).toBeHidden();
-    expect(await readScore(page), "リスタートでスコアが0近くに戻る").toBeLessThan(5);
-    expect(await readStabilityPercent(page), "リスタートで安定度が満タンに戻る").toBe(100);
+    await expect
+      .poll(() => readScore(page), { message: "リスタートでスコアが0近くに戻る" })
+      .toBeLessThan(5);
+    await expect
+      .poll(() => readStabilityPercent(page), { message: "リスタートで安定度が満タンに戻る" })
+      .toBe(100);
 
     expect(errors, "揺さぶり中にエラーが出ていない").toEqual([]);
   });

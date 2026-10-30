@@ -148,8 +148,12 @@ test.describe("Topiary Trim のストーリー", () => {
     await expect(page.getByTestId("topiary-trim-gameover")).toBeHidden();
     // 枝は再開後すぐに育ち始めるため、充填率は「低い値に戻っている」ことだけを確かめる
     // (ちょうど0%になる一瞬を狙うのはタイミング依存になり不安定なため)。
-    expect(await readCoveragePercent(page), "やり直すと充填率が低い値に戻る").toBeLessThan(40);
-    expect(await readHealthPercent(page), "やり直すと体力が満タンに戻る").toBe(100);
+    await expect
+      .poll(() => readCoveragePercent(page), { message: "やり直すと充填率が低い値に戻る" })
+      .toBeLessThan(40);
+    await expect
+      .poll(() => readHealthPercent(page), { message: "やり直すと体力が満タンに戻る" })
+      .toBe(100);
     await expect(page.getByTestId("topiary-trim-prunes")).toHaveText("剪定 0回");
 
     expect(errors, "一連の操作でエラーが出ていない").toEqual([]);

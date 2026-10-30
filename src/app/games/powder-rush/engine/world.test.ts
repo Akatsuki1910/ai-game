@@ -6,6 +6,11 @@ const WIDTH = 480;
 const HEIGHT = 720;
 const FRAME = 1 / 60;
 
+/** テストを決定的にするための固定乱数(常に同じ値を返す)。 */
+function fixedRandom(value: number): () => number {
+  return () => value;
+}
+
 function assertFinite(world: PowderRushWorld, label: string): void {
   assert.ok(Number.isFinite(world.ballX), `${label}: ballX`);
   assert.ok(Number.isFinite(world.ballRadius), `${label}: ballRadius`);
@@ -185,7 +190,9 @@ test("半径が溶ける閾値まで縮むとゲームオーバーになり、�
 });
 
 test("何も操作せず放置しても、陽射しによる自然減少だけでいずれ溶けてゲームオーバーになる", () => {
-  const world = new PowderRushWorld(WIDTH, HEIGHT);
+  // 乱数次第では雪パッチが中央のボールの通り道に続けて湧き、育ち続けて溶けなくなるため、
+  // 乱数を固定してアイテムは画面左端(ボールに触れない位置)にだけ湧くようにする。
+  const world = new PowderRushWorld(WIDTH, HEIGHT, fixedRandom(0));
   let melted: { distance: number; score: number } | null = null;
   world.onMelted = (event) => {
     melted = event;

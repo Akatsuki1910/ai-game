@@ -78,14 +78,25 @@ export function KoiClimbGame() {
     setIsPaused(loopRef.current.togglePause());
   }, []);
 
+  const syncHud = useCallback((world: KoiClimbWorld) => {
+    setScore(Math.floor(world.score));
+    setDistanceClimbed(Math.floor(world.distanceClimbed));
+    setStamina(Math.round(world.stamina));
+    setCombo(world.combo);
+  }, []);
+
   const handleRestart = useCallback(() => {
-    worldRef.current?.reset();
+    const world = worldRef.current;
+    if (!world) return;
+    world.reset();
+    // 次フレームを待たずにHUDも戻す(オーバーレイだけ消えて前回の距離が残る瞬間を作らない)。
+    syncHud(world);
     setIsOver(false);
     if (loopRef.current?.isPaused) {
       loopRef.current.resume();
       setIsPaused(false);
     }
-  }, []);
+  }, [syncHud]);
 
   useEffect(() => {
     const host = canvasHostRef.current;
@@ -165,10 +176,7 @@ export function KoiClimbGame() {
 
       const loop = new GameLoop((deltaSeconds, elapsedSeconds) => {
         world.step(deltaSeconds);
-        setScore(Math.floor(world.score));
-        setDistanceClimbed(Math.floor(world.distanceClimbed));
-        setStamina(Math.round(world.stamina));
-        setCombo(world.combo);
+        syncHud(world);
         if (world.isOver) setIsOver(true);
 
         flowGraphics.clear();
@@ -235,6 +243,7 @@ export function KoiClimbGame() {
           }
           if (key === "r") {
             world.reset();
+            syncHud(world);
             setIsOver(false);
             return;
           }
@@ -266,7 +275,7 @@ export function KoiClimbGame() {
         appRef.current = null;
       }
     };
-  }, []);
+  }, [syncHud]);
 
   useEffect(() => {
     if (size.width === 0 || size.height === 0) return;
