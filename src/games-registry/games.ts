@@ -1195,4 +1195,21 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "flow-tap",
+    title: "Flow Tap",
+    description:
+      "配管を回転させて水を source から sink へ届け続けるリアルタイム配管パズル。タップでパイプを90度ずつ回して経路を繋ごう。時々どこかのパイプが自動で回ってしまう「ジャム」が起き続けるので、直し続けないと決壊する。届けるたびにウェーブが進み、流れは速く・ジャムは頻繁になる。",
+    tags: ["arcade", "puzzle", "routing", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-10-29",
+    controls: {
+      mouse: "パイプをクリックして90度回転",
+      touch: "パイプをタップして90度回転",
+      keyboard:
+        "矢印キー/WASD: カーソル移動 / Enter: カーソル位置のパイプを回転 / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
