@@ -1228,4 +1228,20 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "sumi-trace",
+    title: "Sumi Trace",
+    description:
+      "ガイドの折れ線を筆でなぞって墨を入れるリアルタイム書道パズル。起点から終点まで線に沿って引き切れば1画完成。外れたまま粘ると墨がかすれてミスになり、時間切れでも同様。筆を上げて放置すると乾いて線が戻ってしまう。1画ごとに線は細く速くなる。",
+    tags: ["arcade", "puzzle", "precision", "craft", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-10-31",
+    controls: {
+      mouse: "起点付近でクリック/ドラッグしてガイドをなぞる",
+      touch: "起点付近をタップ/ドラッグしてガイドをなぞる",
+      keyboard: "Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];

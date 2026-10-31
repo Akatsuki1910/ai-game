@@ -1,0 +1,126 @@
+@use "../../../shared/styles/variables" as v;
+@use "../../../shared/styles/mixins" as m;
+
+.stageInner {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 30%, #f7f0e1 0%, #e9ddc4 100%);
+  @include m.touch-safe;
+}
+
+.canvasHost {
+  position: absolute;
+  inset: 0;
+
+  canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.hud {
+  position: absolute;
+  top: v.$space-3;
+  left: v.$space-3;
+  display: flex;
+  flex-direction: column;
+  gap: v.$space-2;
+  pointer-events: none;
+}
+
+.lives {
+  display: flex;
+  gap: v.$space-1;
+  font-size: 1.1rem;
+  padding: v.$space-1 v.$space-2;
+  border-radius: v.$radius-sm;
+  background: rgb(28 26 24 / 55%);
+}
+
+.liveDrop {
+  color: #1c1a18;
+}
+
+.spentDrop {
+  color: #9aa0ac;
+  opacity: 0.35;
+}
+
+.livesCount {
+  font-family: v.$font-family-mono;
+  font-size: 0.75rem;
+  color: #3a332a;
+  align-self: center;
+  margin-left: v.$space-1;
+}
+
+.combo {
+  font-family: v.$font-family-mono;
+  font-size: 0.85rem;
+  padding: v.$space-1 v.$space-3;
+  border-radius: v.$radius-sm;
+  background: rgb(184 69 12 / 75%);
+  color: #fff;
+  letter-spacing: 0.05em;
+  align-self: flex-start;
+}
+
+.hint {
+  position: absolute;
+  left: v.$space-3;
+  bottom: v.$space-3;
+  font-size: 0.75rem;
+  color: #3a332a;
+  background: rgb(255 255 255 / 55%);
+  padding: v.$space-1 v.$space-2;
+  border-radius: v.$radius-sm;
+  pointer-events: none;
+  max-width: min(360px, 70vw);
+  line-height: 1.5;
+
+  @include m.mobile {
+    font-size: 0.7rem;
+  }
+}
+
+.gameOver {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: v.$space-3;
+  background: rgb(28 26 24 / 82%);
+  color: v.$color-text;
+  z-index: 5;
+}
+
+.gameOverTitle {
+  font-size: 1.6rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+}
+
+.gameOverScore {
+  font-family: v.$font-family-mono;
+  color: #ffb454;
+  font-size: 1.1rem;
+}
+
+.restartButton {
+  margin-top: v.$space-3;
+  padding: v.$space-2 v.$space-5;
+  border-radius: v.$radius-md;
+  border: 1px solid #ffb454;
+  background: transparent;
+  color: v.$color-text;
+  font-size: 0.95rem;
+  cursor: pointer;
+
+  &:hover {
+    background: #ffb454;
+    color: #1c1a18;
+  }
+}
