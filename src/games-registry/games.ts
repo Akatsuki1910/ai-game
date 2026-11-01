@@ -1244,4 +1244,20 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "coin-tide",
+    title: "Coin Tide",
+    description:
+      "規則的に往復するプッシャーと緩やかな流れがコインを前縁へ押し流す、リアルタイム・コインプッシャー(メダルゲーム)シミュレーター。狙った位置へコインを投入し、連鎖的に押し出して縁から落とし続けよう。時間が経つほどプッシャーの動きは速くなる。",
+    tags: ["arcade", "physics", "medal", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-11-01",
+    controls: {
+      mouse: "クリックした位置へコインを投入(ドラッグで狙いを調整)",
+      touch: "タップした位置へコインを投入(ドラッグで狙いを調整)",
+      keyboard: "←→・A/D: 投入位置を調整 / Enter: 投入 / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
