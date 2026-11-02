@@ -9,6 +9,7 @@ import {
   directionFromPoint,
   GravitySnapWorld,
   type OrbCollectedEvent,
+  START_LIVES,
 } from "./engine/world";
 import styles from "./GravitySnapGame.module.scss";
 
@@ -51,7 +52,7 @@ const ARENA_BORDER_COLOR = 0x2b2f3a;
 export function GravitySnapGame() {
   const { ref: stageRef, size } = useElementSize<HTMLDivElement>();
   const [score, setScore] = useState(0);
-  const [lives, setLives] = useState(0);
+  const [lives, setLives] = useState(START_LIVES);
   const [direction, setDirection] = useState<Direction>("down");
   const [isPaused, setIsPaused] = useState(false);
   const [isOver, setIsOver] = useState(false);
