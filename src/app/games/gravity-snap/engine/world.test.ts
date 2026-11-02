@@ -144,6 +144,23 @@ test("画面サイズが変わってもボール・的・ハザードが画面�
   assert.ok(world.ball.y >= 0 && world.ball.y <= 720);
 });
 
+test("コンポーネント初回マウント時の仮サイズ(1x1)から実サイズへ拡大しても的が画面内に留まる", () => {
+  // React コンポーネントは `new GravitySnapWorld(1, 1)` で組み立ててから、
+  // useElementSize で測った実サイズへ resize() する。この最初の遷移で
+  // 的の座標が比率拡大によって画面外へ飛んでしまう不具合があった(壁際の
+  // 絶対座標オフセットは仮サイズ基準では成立しないため)。
+  const world = new GravitySnapWorld(1, 1);
+  world.resize(1280, 720);
+
+  assert.ok(world.ball.x >= 0 && world.ball.x <= 1280, "ボールが画面内");
+  assert.ok(world.ball.y >= 0 && world.ball.y <= 720, "ボールが画面内");
+  assert.ok(world.orb.x >= 0 && world.orb.x <= 1280, "的が画面内に収まる");
+  assert.ok(world.orb.y >= 0 && world.orb.y <= 720, "的が画面内に収まる");
+
+  const minWallDistance = Math.min(world.orb.x, 1280 - world.orb.x, world.orb.y, 720 - world.orb.y);
+  assert.ok(minWallDistance < 15, "的は壁際にある");
+});
+
 test("的は常に壁際(いずれかの辺)に出現する", () => {
   const world = new GravitySnapWorld(WIDTH, HEIGHT);
   for (let i = 0; i < 50; i++) {

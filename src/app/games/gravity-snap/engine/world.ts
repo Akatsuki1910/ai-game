@@ -156,17 +156,31 @@ export class GravitySnapWorld {
 
   resize(width: number, height: number): void {
     if (width <= 0 || height <= 0) return;
-    const scaleX = this.width > 0 ? width / this.width : 1;
-    const scaleY = this.height > 0 ? height / this.height : 1;
-    if (this.width > 0 && this.height > 0) {
-      this.ball.x *= scaleX;
-      this.ball.y *= scaleY;
-      this.orb.x *= scaleX;
-      this.orb.y *= scaleY;
-      for (const hazard of this.hazards) {
-        hazard.x *= scaleX;
-        hazard.y *= scaleY;
-      }
+
+    // コンポーネント初回マウント時は `new GravitySnapWorld(1, 1)` のような
+    // 仮サイズで組み立てられ、直後に実サイズへ resize() される。この仮サイズは
+    // 的・ハザードの絶対座素(壁際からの半径オフセット)を求めるには小さすぎ、
+    // そこから実サイズへ比率で引き伸ばすと画面外へ飛んでしまう。
+    // 実サイズと呼べないほど小さい状態からの遷移は、引き伸ばさずに作り直す。
+    const hadRealSize = this.width > BALL_RADIUS * 2 && this.height > BALL_RADIUS * 2;
+    if (!hadRealSize) {
+      this.width = width;
+      this.height = height;
+      this.ball.x = this.width / 2;
+      this.ball.y = this.height / 2;
+      this.orb = this.spawnOrbPosition();
+      return;
+    }
+
+    const scaleX = width / this.width;
+    const scaleY = height / this.height;
+    this.ball.x *= scaleX;
+    this.ball.y *= scaleY;
+    this.orb.x *= scaleX;
+    this.orb.y *= scaleY;
+    for (const hazard of this.hazards) {
+      hazard.x *= scaleX;
+      hazard.y *= scaleY;
     }
     this.width = width;
     this.height = height;
