@@ -1276,4 +1276,21 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "glyph-flash",
+    title: "Glyph Flash",
+    description:
+      "一瞬だけ光って消える図形を記憶し、消えた後にその軌跡をなぞって再現するリアルタイム記憶トレーシングパズル。形の近さと長さの両方で採点され、合格するたびにお題は複雑に、記憶できる時間は短くなる。",
+    tags: ["arcade", "memory", "precision", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-11-03",
+    controls: {
+      mouse: "ドラッグで、覚えた形をなぞって再現する",
+      touch: "ドラッグで、覚えた形をなぞって再現する",
+      keyboard:
+        "矢印キー/WASD: ペンカーソルを移動 / Enter: ペンを下ろす・上げる / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
