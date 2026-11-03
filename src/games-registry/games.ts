@@ -1260,4 +1260,20 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "gravity-snap",
+    title: "Gravity Snap",
+    description:
+      "常に4方向のどれかへ引かれ続けるボールを操るリアルタイム重力スイッチパズル。画面の上下左右をタップ/クリックして重力の向きを切り替え、慣性を乗りこなして緑の的を追い続けよう。赤いハザードに触れるとライフが減り、生き延びるほど重力は強く操作がシビアになる。",
+    tags: ["arcade", "physics", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-11-02",
+    controls: {
+      mouse: "キャンバスの上下左右の領域をクリックしてその方向へ重力を切り替える",
+      touch: "キャンバスの上下左右の領域をタップしてその方向へ重力を切り替える",
+      keyboard: "矢印キー/WASD: 重力方向を切替 / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
