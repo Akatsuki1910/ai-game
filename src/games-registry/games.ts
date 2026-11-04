@@ -1293,4 +1293,20 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "slope-sketch",
+    title: "Slope Sketch",
+    description:
+      "自動で前進するボールの先にチョークで地面を描き続けるリアルタイム地形スケッチサバイバル。描くほど減るチョークをやりくりしながら宝石を回収し、トゲを避けて進もう。描かずに放置すると地面が途切れて滑落する。",
+    tags: ["arcade", "survival", "drawing", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-11-04",
+    controls: {
+      mouse: "ドラッグでボールの少し先に地面を描いて支える",
+      touch: "ドラッグでボールの少し先に地面を描いて支える",
+      keyboard: "↑↓・W/S: 前方に地面を描く高さを調整 / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
