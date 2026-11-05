@@ -1309,4 +1309,20 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "strata-drill",
+    title: "Strata Drill",
+    description:
+      "熱を管理しながら地層を掘り進むリアルタイム採掘サバイバル。押しっぱなしで前進しつつ左右に操舵し、緑の鉱脈は取りに行き、赤い障害物は避けよう。熱が上限に達するとドリルが自壊してしまう。",
+    tags: ["arcade", "survival", "mining", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-11-05",
+    controls: {
+      mouse: "押しっぱなしでドリル前進、左右にドラッグして操舵",
+      touch: "押しっぱなしでドリル前進、左右にドラッグして操舵",
+      keyboard: "Space/↓: ドリル / ←→: 操舵 / P: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
