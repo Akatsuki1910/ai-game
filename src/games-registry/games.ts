@@ -1309,4 +1309,20 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "vinyl-scratch",
+    title: "Vinyl Scratch",
+    description:
+      "ターンテーブルを操るリアルタイム・スクラッチDJパズル。判定リングに重なったキューの矢印が指す方向(FORWARD/BACK)へ正しく擦り、観客のハイプを満タンに保ち続けろ。コンボが伸びるほどテンポは速くなる。",
+    tags: ["arcade", "music", "timing", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-11-06",
+    controls: {
+      mouse: "キャンバスを左右にドラッグしてスクラッチ、またはBACK/FORWARDボタンをクリック",
+      touch: "キャンバスを左右にスワイプしてスクラッチ、またはBACK/FORWARDボタンをタップ",
+      keyboard: "←・A: BACK / →・D: FORWARD / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
