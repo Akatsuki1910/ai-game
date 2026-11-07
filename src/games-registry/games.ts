@@ -1325,4 +1325,20 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "tsunahiki",
+    title: "Tsunahiki",
+    description:
+      "掛け声のリズムに合わせてPULL!するリアルタイム綱引き祭りパズル。判定リングに玉が重なった瞬間に引けば綱は自陣側へ進み、外すか見逃すと相手側へ戻る。引き切るたびに次のラウンドは掛け声が速くなる。",
+    tags: ["arcade", "timing", "festival", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-11-07",
+    controls: {
+      mouse: "判定リングに玉が重なった瞬間にPULL!ボタンをクリック、またはキャンバスをクリック",
+      touch: "判定リングに玉が重なった瞬間にPULL!ボタンをタップ、またはキャンバスをタップ",
+      keyboard: "Enter: PULL! / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
