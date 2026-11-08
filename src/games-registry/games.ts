@@ -1341,4 +1341,20 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "hane-rally",
+    title: "Hane Rally",
+    description:
+      "羽子板で落ちてくる羽根を打ち返し続けるリアルタイム羽根つきラリー。打ち返すほど風が強まり、羽根が風で流されても追いきれなければ地面に落ちてライフが減る。ライフが尽きる前にラリーを伸ばせ。",
+    tags: ["arcade", "sports", "physics", "festival", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-11-08",
+    controls: {
+      mouse: "ドラッグで羽子板を移動し、羽根を打ち返す",
+      touch: "ドラッグで羽子板を移動し、羽根を打ち返す",
+      keyboard: "矢印キー/WASD: 羽子板を移動 / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
