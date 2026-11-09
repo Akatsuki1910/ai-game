@@ -1357,4 +1357,21 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "scent-trail",
+    title: "Scent Trail",
+    description:
+      "フェロモンの道を描いて蟻の餌運びを導くリアルタイム・コロニーシミュレーション。道の上では蟻が素早く進めるが時間で消えるので描き直し続け、徘徊する捕食者から守りながら餌を巣へ届けさせよう。届けるほど餌は遠くなり、捕食者も速くなる。",
+    tags: ["arcade", "simulation", "routing", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-11-09",
+    controls: {
+      mouse: "ドラッグ/長押しでフェロモンの道を描く",
+      touch: "ドラッグ/長押しでフェロモンの道を描く",
+      keyboard:
+        "矢印キー/WASD: ブラシを移動 / Enter長押し: 道を描く / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
