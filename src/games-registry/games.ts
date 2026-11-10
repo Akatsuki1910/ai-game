@@ -1374,4 +1374,21 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "kingyo-scoop",
+    title: "Kingyo Scoop",
+    description:
+      "夏祭りの金魚すくい。紙のポイを水に浸けて金魚に重ねたまま動かさずに待つとすくえるが、浸けている時間と動かす速さに応じて紙が傷んでいく。すくうほど紙は薄くなり、破れたらそこで終わり。何匹すくえるか挑戦しよう。",
+    tags: ["arcade", "festival", "realtime", "skill"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-11-10",
+    controls: {
+      mouse: "ドラッグでポイを移動し、押したまま金魚に重ねて静止させるとすくえる",
+      touch: "ドラッグでポイを移動し、押したまま金魚に重ねて静止させるとすくえる",
+      keyboard:
+        "矢印キー/WASD: ポイを移動 / Spaceを押し続ける: 水に浸けてすくう / P: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
