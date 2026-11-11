@@ -4,7 +4,12 @@ import { Application, Container, Graphics, Text } from "pixi.js";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { GameLoop, InputManager, useElementSize } from "@/shared/engine";
 import { GameShell } from "@/shared/ui";
-import { type CoreHitEvent, FlailWardWorld, type MeteorDeflectedEvent } from "./engine/world";
+import {
+  type CoreHitEvent,
+  FlailWardWorld,
+  type Meteor,
+  type MeteorDeflectedEvent,
+} from "./engine/world";
 import styles from "./FlailWardGame.module.scss";
 
 interface FloatingPopup {
@@ -19,6 +24,10 @@ const BALL_COLOR = 0xffe066;
 const CHAIN_COLOR = 0xf2f3f5;
 const METEOR_COLOR = 0xff9d7a;
 const CORE_FLASH_LIFETIME = 0.3;
+// メテオは画面外で生まれるため、最初の1体が見えるまでは画面に動くものが何もなくなる。
+// コアの外周をゆっくり脈動させ、開始直後から生きている画面だと分かるようにする。
+const CORE_PULSE_AMPLITUDE = 0.12;
+const CORE_PULSE_SPEED = 3;
 
 export function FlailWardGame() {
   const { ref: stageRef, size } = useElementSize<HTMLDivElement>();
@@ -31,6 +40,7 @@ export function FlailWardGame() {
   const [isOver, setIsOver] = useState(false);
 
   const canvasHostRef = useRef<HTMLDivElement | null>(null);
+  const nextMeteorMarkerRef = useRef<HTMLDivElement | null>(null);
   const worldRef = useRef<FlailWardWorld | null>(null);
   const appRef = useRef<Application | null>(null);
   const loopRef = useRef<GameLoop | null>(null);
@@ -106,7 +116,7 @@ export function FlailWardGame() {
       const input = new InputManager(app.canvas);
       inputRef.current = input;
 
-      const loop = new GameLoop((deltaSeconds) => {
+      const loop = new GameLoop((deltaSeconds, elapsedSeconds) => {
         const pointer = input.getPrimaryPointer();
         if (pointer) {
           world.aimAt(pointer.x, pointer.y);
@@ -129,8 +139,9 @@ export function FlailWardGame() {
         const coreColor = flashT > 0 ? CORE_FLASH_COLOR : CORE_COLOR;
 
         coreGraphics.clear();
+        const pulse = CORE_PULSE_AMPLITUDE * Math.sin(elapsedSeconds * CORE_PULSE_SPEED);
         coreGraphics
-          .circle(world.centerX, world.centerY, world.coreRadius * 1.4)
+          .circle(world.centerX, world.centerY, world.coreRadius * (1.4 + pulse))
           .stroke({ width: 2, color: coreColor, alpha: 0.2 + flashT * 0.5 })
           .circle(world.centerX, world.centerY, world.coreRadius)
           .fill({ color: coreColor, alpha: 0.9 })
@@ -150,12 +161,24 @@ export function FlailWardGame() {
           .stroke({ width: 2, color: 0xffffff, alpha: 0.6 });
 
         meteorGraphics.clear();
+        let nearestMeteor: Meteor | null = null;
         for (const meteor of world.meteors) {
           const pos = world.meteorPosition(meteor);
           meteorGraphics
             .circle(pos.x, pos.y, meteor.size)
             .fill({ color: METEOR_COLOR, alpha: 0.9 })
             .stroke({ width: 1.5, color: 0x05060a, alpha: 0.5 });
+          if (!nearestMeteor || meteor.distance < nearestMeteor.distance) nearestMeteor = meteor;
+        }
+        if (nextMeteorMarkerRef.current) {
+          if (nearestMeteor) {
+            const pos = world.meteorPosition(nearestMeteor);
+            nextMeteorMarkerRef.current.style.left = `${pos.x}px`;
+            nextMeteorMarkerRef.current.style.top = `${pos.y}px`;
+            nextMeteorMarkerRef.current.style.display = "block";
+          } else {
+            nextMeteorMarkerRef.current.style.display = "none";
+          }
         }
 
         for (let i = floatingPopups.length - 1; i >= 0; i--) {
@@ -213,6 +236,11 @@ export function FlailWardGame() {
     >
       <div ref={stageRef} className={styles.stageInner} data-testid="flail-ward-stage">
         <div ref={canvasHostRef} className={styles.canvasHost} data-testid="flail-ward-canvas" />
+        <div
+          ref={nextMeteorMarkerRef}
+          className={styles.meteorMarker}
+          data-testid="flail-ward-next-meteor-marker"
+        />
         <div className={styles.hud}>
           <span className={styles.lives} data-testid="flail-ward-lives">
             ♥ {lives}

@@ -79,8 +79,8 @@ function clamp(value: number, min: number, max: number): number {
   return Math.min(Math.max(value, min), max);
 }
 
-function randRange(min: number, max: number): number {
-  return min + Math.random() * (max - min);
+function randRange(min: number, max: number, randomFn: () => number): number {
+  return min + randomFn() * (max - min);
 }
 
 /**
@@ -117,7 +117,11 @@ export class PowderRushWorld {
   onObstacleResolved: ((event: ObstacleResolvedEvent) => void) | null = null;
   onMelted: ((event: MeltedEvent) => void) | null = null;
 
-  constructor(width: number, height: number) {
+  private readonly randomFn: () => number;
+
+  /** randomFn を差し替えられるのはテストで決定的なコースを再現するため(本番は Math.random)。 */
+  constructor(width: number, height: number, randomFn: () => number = Math.random) {
+    this.randomFn = randomFn;
     this.width = width > 0 ? width : 1;
     this.height = height > 0 ? height : 1;
     this.reset();
@@ -150,11 +154,7 @@ export class PowderRushWorld {
     }
     this.width = width;
     this.height = height;
-    this.ballX = clamp(
-      this.ballX,
-      this.ballRadius,
-      Math.max(this.ballRadius, this.width - this.ballRadius),
-    );
+    this.clampBallX();
   }
 
   /** キーボード等の連続的な左右入力(-1=左, 0=停止, 1=右)。押している間、毎フレーム呼ぶ想定。 */
@@ -212,6 +212,10 @@ export class PowderRushWorld {
       this.ballX += this.lateralVelocity * deltaSeconds;
     }
 
+    this.clampBallX();
+  }
+
+  private clampBallX(): void {
     this.ballX = clamp(
       this.ballX,
       this.ballRadius,
@@ -227,7 +231,7 @@ export class PowderRushWorld {
       OBSTACLE_CHANCE_MAX,
       OBSTACLE_CHANCE_START + this.elapsedSeconds * OBSTACLE_CHANCE_GROWTH_PER_SECOND,
     );
-    if (Math.random() < obstacleChance) {
+    if (this.randomFn() < obstacleChance) {
       this.spawnObstacle();
     } else {
       this.spawnPatch();
@@ -244,19 +248,20 @@ export class PowderRushWorld {
     const margin = PATCH_RADIUS + 4;
     this.patches.push({
       id: nextItemId++,
-      x: randRange(margin, Math.max(margin, this.width - margin)),
+      x: randRange(margin, Math.max(margin, this.width - margin), this.randomFn),
       z: this.distanceTraveled + SPAWN_AHEAD_DISTANCE,
       radius: PATCH_RADIUS,
     });
   }
 
   private spawnObstacle(): void {
-    const kind: ObstacleKind = Math.random() < 0.5 ? "rock" : "tree";
-    const radius = kind === "rock" ? randRange(ROCK_RADIUS_MIN, ROCK_RADIUS_MAX) : TREE_RADIUS;
+    const kind: ObstacleKind = this.randomFn() < 0.5 ? "rock" : "tree";
+    const radius =
+      kind === "rock" ? randRange(ROCK_RADIUS_MIN, ROCK_RADIUS_MAX, this.randomFn) : TREE_RADIUS;
     const margin = radius + 4;
     this.obstacles.push({
       id: nextItemId++,
-      x: randRange(margin, Math.max(margin, this.width - margin)),
+      x: randRange(margin, Math.max(margin, this.width - margin), this.randomFn),
       z: this.distanceTraveled + SPAWN_AHEAD_DISTANCE,
       radius,
       kind,
@@ -273,6 +278,8 @@ export class PowderRushWorld {
         if (lateralOverlap) {
           this.patches.splice(i, 1);
           this.ballRadius = Math.min(BALL_RADIUS_MAX, this.ballRadius + GROWTH_PER_PATCH);
+          // 端に寄った状態で育つと、その分だけ画面外へはみ出してしまうため収め直す。
+          this.clampBallX();
           this.combo += 1;
           const points = PATCH_BASE_SCORE + this.combo * COMBO_BONUS_PER_STREAK;
           this.score += points;

@@ -27,9 +27,16 @@ async function readNight(page: Page): Promise<number> {
   return Number(value);
 }
 
-/** ステージの中央をクリックしてパルスを送る。 */
+/**
+ * ステージの中央をタップしてパルスを送る。locator.click() は実行前の安定待ちに遅い環境で
+ * 1回1〜3秒かかり、その間隔だと群れが揃い切る前に1夜目の制限時間(40秒)が尽きてしまうため、
+ * 座標へ直接タップする(1秒に1回程度送れればほぼ確実に揃う)。
+ */
 async function tapCenter(page: Page): Promise<void> {
-  await page.getByTestId("firefly-sync-stage").click();
+  const box = await page.getByTestId("firefly-sync-stage").boundingBox();
+  expect(box, "ステージの領域が取得できる").not.toBeNull();
+  if (!box) return;
+  await page.mouse.click(box.x + box.width / 2, box.y + box.height / 2);
 }
 
 test.describe("Firefly Sync のストーリー", () => {
@@ -97,8 +104,10 @@ test.describe("Firefly Sync のストーリー", () => {
 
     await page.getByTestId("firefly-sync-restart").click();
     await expect(gameOver).toBeHidden();
-    expect(await readNight(page), "リスタートで1夜目に戻る").toBe(1);
-    expect(await readChorus(page), "リスタートで合唱計もリセットされる").toBeLessThan(5);
+    await expect.poll(() => readNight(page), { message: "リスタートで1夜目に戻る" }).toBe(1);
+    await expect
+      .poll(() => readChorus(page), { message: "リスタートで合唱計もリセットされる" })
+      .toBeLessThan(5);
 
     expect(errors, "終了・リスタート中にエラーが出ていない").toEqual([]);
   });
@@ -126,16 +135,18 @@ test.describe("Firefly Sync のストーリー", () => {
     await waitForFrames(page, 20);
     await expect(stage.locator("canvas"), "横長でもキャンバスが生きている").toBeVisible();
 
-    // リサイズ後もパルスを受け付ける(エネルギーが回復しているはず)。
-    await waitForFrames(page, 60);
-    const before = await readChorus(page);
-    for (let i = 0; i < 8; i++) {
-      await tapCenter(page);
-      await waitForFrames(page, 6);
-    }
+    // リサイズ後もパルスを受け付ける。合唱計は群れの揃い方で自然に下がることも、
+    // 夜をクリアして0に戻ることもあるため、パルスを送ったときだけ減るエネルギーで確かめる。
     await expect
-      .poll(() => readChorus(page), { message: "リサイズ後も合唱計が進む" })
-      .toBeGreaterThanOrEqual(before);
+      .poll(() => readEnergy(page), { message: "エネルギーが満タンまで回復する" })
+      .toBe(100);
+    await tapCenter(page);
+    await expect
+      .poll(() => readEnergy(page), {
+        message: "リサイズ後もパルスを受け付けてエネルギーを消費する",
+        intervals: [16],
+      })
+      .toBeLessThan(100);
 
     expect(errors, "連打・リサイズ中にエラーが出ていない").toEqual([]);
   });

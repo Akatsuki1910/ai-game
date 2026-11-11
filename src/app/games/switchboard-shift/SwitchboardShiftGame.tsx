@@ -182,7 +182,6 @@ export function SwitchboardShiftGame() {
     const floatingPopups: FloatingPopup[] = [];
     const cableFlashes: CableFlash[] = [];
     const draggingByPointer = new Map<number, DragState>();
-    let heldSourceIndex: number | null = null;
     let sourceSignature = "";
 
     const spawnPopup = (label: string, color: number, x: number, y: number): void => {
@@ -314,7 +313,7 @@ export function SwitchboardShiftGame() {
                 .fill({ color: JACK_HEX[jack.color], alpha: 0.25 })
                 .stroke({ width: 2, color: 0xffffff, alpha: 0.25 });
             }
-            if (heldSourceIndex === jack.index) {
+            if (world.heldSourceIndex === jack.index) {
               sourceGraphics
                 .circle(pos.x, pos.y, radius + 14)
                 .stroke({ width: 3, color: 0xffffff, alpha: 0.8 });
@@ -371,7 +370,7 @@ export function SwitchboardShiftGame() {
           const sourceIndex = findLiveSourceAt(world, pointer.x, pointer.y, width, height);
           if (sourceIndex !== null) {
             draggingByPointer.set(pointer.id, { sourceIndex, x: pointer.x, y: pointer.y });
-            heldSourceIndex = null;
+            world.releaseHeldSource();
           }
         },
         onPointerMove: (pointer) => {
@@ -400,20 +399,11 @@ export function SwitchboardShiftGame() {
           if (key === "r") {
             world.reset();
             setDestinationColors(world.destinationJacks.map((jack) => jack.color));
-            heldSourceIndex = null;
             setIsOver(false);
             return;
           }
           if (/^[1-5]$/.test(key)) {
-            const index = Number(key) - 1;
-            if (heldSourceIndex === null) {
-              if (world.sourceJacks[index]?.state === "live") heldSourceIndex = index;
-            } else if (heldSourceIndex === index) {
-              heldSourceIndex = null;
-            } else {
-              world.attemptConnect(heldSourceIndex, index);
-              heldSourceIndex = null;
-            }
+            world.pressSlotKey(Number(key) - 1);
           }
         },
       });

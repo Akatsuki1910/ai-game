@@ -237,8 +237,8 @@ test.describe("Kana Trail のストーリー", () => {
     }
 
     await page.keyboard.press("r");
-    expect(await readScore(page), "Rキーでスコアが0に戻る").toBe(0);
-    expect(await readFoundCount(page), "Rキーで発見数も0に戻る").toBe(0);
+    await expect.poll(() => readScore(page), { message: "Rキーでスコアが0に戻る" }).toBe(0);
+    await expect.poll(() => readFoundCount(page), { message: "Rキーで発見数も0に戻る" }).toBe(0);
 
     // スマホ縦持ち相当 → 横向き相当へ。
     const stage = page.getByTestId("game-shell-stage");

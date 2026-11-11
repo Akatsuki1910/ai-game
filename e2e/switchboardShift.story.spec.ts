@@ -207,8 +207,8 @@ test.describe("Switchboard Shift のストーリー", () => {
     // リスタートすると最初の状態に戻る。
     await page.getByTestId("switchboard-shift-restart").click();
     await expect(page.getByTestId("switchboard-shift-gameover")).toBeHidden();
-    expect(await readLives(page), "リスタートでライフが全回復する").toBe(3);
-    expect(await readScore(page), "リスタートでスコアが0に戻る").toBe(0);
+    await expect.poll(() => readLives(page), { message: "リスタートでライフが全回復する" }).toBe(3);
+    await expect.poll(() => readScore(page), { message: "リスタートでスコアが0に戻る" }).toBe(0);
 
     expect(errors, "ライフ減少・リスタート中にエラーが出ていない").toEqual([]);
   });
@@ -223,13 +223,17 @@ test.describe("Switchboard Shift のストーリー", () => {
     // 点灯時間はごく短いため、たまたまその瞬間にタイムアウトへ入れ替わることがある。
     // その場合は次に点灯したジャックで取り直して接続を試みる(ゲーム側のロジックではなく、
     // 実時間で動くゲームに対するテスト操作タイミングの揺れを吸収するためのリトライ)。
+    // スコア表示は次のフレームで反映されるため、接続できたかは少し待って確かめる
+    // (すぐ読んで取り直すと、接続済みでまだ「点灯中」と表示されているジャックを押し直してしまう)。
     const scoreBeforeKeyboard = await readScore(page);
     await expect(async () => {
       const live = await waitForLiveSource(page);
       const destinationIndex = await findDestinationIndexByColor(page, live.color);
       await page.keyboard.press(String(live.index + 1));
       await page.keyboard.press(String(destinationIndex + 1));
-      expect(await readScore(page)).toBeGreaterThan(scoreBeforeKeyboard);
+      await expect
+        .poll(() => readScore(page), { timeout: 3000 })
+        .toBeGreaterThan(scoreBeforeKeyboard);
     }).toPass({ timeout: 20000 });
 
     // ランダムな位置へのドラッグを連打しても表示が壊れない(ゲームオーバーなら都度リスタート)。

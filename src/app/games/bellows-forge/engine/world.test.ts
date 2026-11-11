@@ -4,6 +4,11 @@ import { BELLOWS_FORGE_START_QUALITY, BellowsForgeWorld } from "./world.ts";
 
 const TINY_FRAME = 1 / 240;
 
+/** テストを決定的にするための固定乱数(常に同じ値を返す)。 */
+function fixedRandom(value: number): () => number {
+  return () => value;
+}
+
 function assertFinite(world: BellowsForgeWorld, label: string): void {
   assert.ok(Number.isFinite(world.temperature), `${label}: temperature`);
   assert.ok(Number.isFinite(world.score), `${label}: score`);
@@ -82,7 +87,9 @@ test("目標帯の中心で打つと成功し、精度ボーナスが最大に�
 });
 
 test("温度が低すぎるうちに打つと失敗するが、まだ形にならないだけで品質は減らない", () => {
-  const world = new BellowsForgeWorld();
+  // 目標帯の位置は乱数で決まり、低めに出ると開始温度が帯の中に入ってしまうため、
+  // 帯を中ほど(中心56)に固定して「開始温度は帯より低い」状況を確実に作る。
+  const world = new BellowsForgeWorld(fixedRandom(0.5));
   const strikes: Array<{ isSuccess: boolean; isTooCold: boolean }> = [];
   world.onStrike = (event) => strikes.push(event);
   const qualityBefore = world.quality;

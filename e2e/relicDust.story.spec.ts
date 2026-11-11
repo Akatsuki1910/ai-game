@@ -209,9 +209,9 @@ test.describe("Relic Dust のストーリー", () => {
     await page.getByTestId("relic-dust-restart").click();
 
     await expect(page.getByTestId("relic-dust-gameover"), "リスタートで表示が消える").toBeHidden();
-    expect(await readLives(page), "リスタートでライフが3に戻る").toBe(3);
-    expect(await readRound(page), "リスタートで発掘1に戻る").toBe(1);
-    expect(await readScore(page), "リスタートでスコアが0に戻る").toBe(0);
+    await expect.poll(() => readLives(page), { message: "リスタートでライフが3に戻る" }).toBe(3);
+    await expect.poll(() => readRound(page), { message: "リスタートで発掘1に戻る" }).toBe(1);
+    await expect.poll(() => readScore(page), { message: "リスタートでスコアが0に戻る" }).toBe(0);
 
     expect(errors, "ゲームオーバー/リスタート中にエラーが出ていない").toEqual([]);
   });
@@ -302,10 +302,12 @@ test.describe("Relic Dust のストーリー", () => {
 
     await page.keyboard.press("r");
 
-    expect(await readRound(page), "Rキーで発掘1に戻る").toBe(1);
-    expect(await readLives(page), "Rキーでライフが3に戻る").toBe(3);
-    expect(await readScore(page), "Rキーでスコアが0に戻る").toBe(0);
-    expect(await readPercent(page, "relic-dust-progress"), "Rキーで発掘率が0%に戻る").toBe(0);
+    await expect.poll(() => readRound(page), { message: "Rキーで発掘1に戻る" }).toBe(1);
+    await expect.poll(() => readLives(page), { message: "Rキーでライフが3に戻る" }).toBe(3);
+    await expect.poll(() => readScore(page), { message: "Rキーでスコアが0に戻る" }).toBe(0);
+    await expect
+      .poll(() => readPercent(page, "relic-dust-progress"), { message: "Rキーで発掘率が0%に戻る" })
+      .toBe(0);
     await expect(page.getByTestId("relic-dust-gameover")).toBeHidden();
 
     expect(errors, "リセット操作でエラーが出ていない").toEqual([]);

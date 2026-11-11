@@ -166,8 +166,10 @@ test.describe("Dandelion Gale のストーリー", () => {
 
     await page.getByTestId("dandelion-gale-restart").click();
     await expect(page.getByTestId("dandelion-gale-gameover")).toBeHidden();
-    expect(await readLivesCount(page), "リスタートでライフが回復する").toBe(STARTING_LIVES);
-    expect(await readCombo(page), "リスタートでコンボが0に戻る").toBe(0);
+    await expect
+      .poll(() => readLivesCount(page), { message: "リスタートでライフが回復する" })
+      .toBe(STARTING_LIVES);
+    await expect.poll(() => readCombo(page), { message: "リスタートでコンボが0に戻る" }).toBe(0);
 
     expect(errors, "雨粒に当たってもエラーが出ていない").toEqual([]);
   });

@@ -104,6 +104,8 @@ export class AugerDropWorld {
   warmth = WARMTH_MAX;
   score = 0;
   catches = 0;
+  /** テンション超過で糸が切れて逃がした回数。 */
+  losses = 0;
   isOver = false;
 
   private isHolding = false;
@@ -134,6 +136,7 @@ export class AugerDropWorld {
     this.warmth = WARMTH_MAX;
     this.score = 0;
     this.catches = 0;
+    this.losses = 0;
     this.isOver = false;
     this.isHolding = false;
     this.elapsedSeconds = 0;
@@ -325,6 +328,7 @@ export class AugerDropWorld {
     }
 
     if (this.tension >= TENSION_MAX) {
+      this.losses += 1;
       this.onLost?.({ kind: fish.kind });
       this.warmth = Math.max(0, this.warmth - WARMTH_LOSS_ON_SNAP);
       this.fish[index] = this.spawnFish();

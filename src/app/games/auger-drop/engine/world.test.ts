@@ -198,6 +198,7 @@ test("大物を長押しし続けるとテンションが上限に達して糸�
   for (let i = 0; i < 300 && world.hookedIndex !== null; i++) world.step(FRAME);
 
   assert.equal(lostCount, 1, "糸切れイベントが発火する");
+  assert.equal(world.losses, 1, "逃がした回数が数えられる");
   assert.equal(caughtCount, 0, "釣り上げには成功していない");
   assert.equal(world.hookedIndex, null);
   assert.ok(world.warmth < warmthAfterBite, "糸切れで暖かさが減る");

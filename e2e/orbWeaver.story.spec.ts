@@ -202,9 +202,11 @@ test.describe("Orb Weaver のストーリー", () => {
     // リスタートすると最初の状態に戻る。
     await page.getByTestId("orb-weaver-restart").click();
     await expect(gameOver).toBeHidden();
-    expect(await readIntegrity(page), "リスタートで耐久が全回復する").toBe(INTEGRITY_MAX);
-    expect(await readScore(page), "リスタートでスコアが0に戻る").toBe(0);
-    expect(await readCombo(page), "リスタートでコンボが0に戻る").toBe(0);
+    await expect
+      .poll(() => readIntegrity(page), { message: "リスタートで耐久が全回復する" })
+      .toBe(INTEGRITY_MAX);
+    await expect.poll(() => readScore(page), { message: "リスタートでスコアが0に戻る" }).toBe(0);
+    await expect.poll(() => readCombo(page), { message: "リスタートでコンボが0に戻る" }).toBe(0);
 
     // キー連打やランダムクリックをしても表示が壊れない(ゲームオーバーになれば都度リスタート)。
     for (let i = 0; i < 15; i++) {

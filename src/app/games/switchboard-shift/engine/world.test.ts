@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { JACK_COLORS, LIVES_MAX, SwitchboardWorld } from "./world.ts";
+import { type ConnectEvent, JACK_COLORS, LIVES_MAX, SwitchboardWorld } from "./world.ts";
 
 function liveIndex(world: SwitchboardWorld): number {
   const jack = world.sourceJacks.find((j) => j.state === "live");
@@ -190,4 +190,48 @@ test("同時点灯数が増えると複数のジャックが同時に点灯し�
   const liveCount = world.sourceJacks.filter((jack) => jack.state === "live").length;
   assert.ok(liveCount >= 1, "少なくとも1つは点灯している");
   assert.ok(liveCount <= world.maxConcurrent, "同時点灯数の上限を超えない");
+});
+
+test("キーボードで光っている発信ジャック→同じ色の受信ジャックの順に押すと接続できる", () => {
+  const world = new SwitchboardWorld();
+  world.step(1 / 60);
+  const sourceIndex = liveIndex(world);
+  const idleIndex = world.sourceJacks.find((jack) => jack.state !== "live")?.index ?? -1;
+
+  world.pressSlotKey(idleIndex);
+  assert.equal(world.heldSourceIndex, null, "光っていない発信ジャックは持てない");
+
+  world.pressSlotKey(sourceIndex);
+  assert.equal(world.heldSourceIndex, sourceIndex);
+  world.pressSlotKey(correctDestinationIndex(world, sourceIndex));
+
+  assert.equal(world.heldSourceIndex, null);
+  assert.equal(world.score, 100);
+});
+
+test("キーボードで2回目に発信ジャックと同じ番号を押すと、同じ段の受信ジャックへ接続する", () => {
+  const world = new SwitchboardWorld();
+  world.step(1 / 60);
+  const sourceIndex = liveIndex(world);
+  const events: ConnectEvent[] = [];
+  world.onConnect = (event) => events.push(event);
+
+  world.pressSlotKey(sourceIndex);
+  world.pressSlotKey(sourceIndex);
+
+  assert.equal(world.heldSourceIndex, null);
+  assert.equal(events.length, 1, "取り消しではなく接続として扱われる");
+  assert.equal(events[0].sourceIndex, sourceIndex);
+  assert.equal(events[0].destinationIndex, sourceIndex);
+  assert.notEqual(events[0].result, "invalid");
+});
+
+test("リセットするとキーボードで持っていた発信ジャックを手放す", () => {
+  const world = new SwitchboardWorld();
+  world.step(1 / 60);
+  world.pressSlotKey(liveIndex(world));
+
+  world.reset();
+
+  assert.equal(world.heldSourceIndex, null);
 });

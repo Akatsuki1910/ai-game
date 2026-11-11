@@ -54,32 +54,68 @@ async function pulseAimAtSatelliteOnce(page: Page): Promise<void> {
   await page.mouse.up();
 }
 
-async function readAngle(page: Page, testId: string, attr: "data-az" | "data-el"): Promise<number> {
-  const value = await page.getByTestId(testId).getAttribute(attr);
-  expect(value, `${testId} の${attr}が読み取れる`).not.toBeNull();
-  return Number(value);
+interface AimState {
+  dishAz: number;
+  dishEl: number;
+  satAz: number;
+  satEl: number;
+  score: number;
 }
+
+/**
+ * アンテナと衛星の向き、データ量を1回のラウンドトリップでまとめて読む。遅い環境では1回の
+ * 読み取りに100ms以上かかり、別々に読むと読み終わるまでにアンテナが大きく回り過ぎる。
+ */
+async function readAimState(page: Page): Promise<AimState> {
+  return page.evaluate(() => {
+    const readAttr = (testId: string, attr: string) =>
+      Number(document.querySelector(`[data-testid="${testId}"]`)?.getAttribute(attr) ?? Number.NaN);
+    const scoreText = document.querySelector('[data-testid="game-shell-score"]')?.textContent ?? "";
+    return {
+      dishAz: readAttr("satellite-uplink-dish-marker", "data-az"),
+      dishEl: readAttr("satellite-uplink-dish-marker", "data-el"),
+      satAz: readAttr("satellite-uplink-satellite-marker", "data-az"),
+      satEl: readAttr("satellite-uplink-satellite-marker", "data-el"),
+      score: Number(scoreText.replace(/[^\d]/g, "")),
+    };
+  });
+}
+
+// 照準が合う範囲(LOCK_TOLERANCE_DEG)より十分内側で止め、細かな行き来でキーを押し直さない。
+const AIM_DEADBAND_DEG = 3;
 
 /** 方位角の最短方向(-180〜180)。正なら右(増やす)方向、負なら左(減らす)方向。 */
 function shortestAzDiff(fromDeg: number, toDeg: number): number {
   return ((((toDeg - fromDeg) % 360) + 540) % 360) - 180;
 }
 
-/** キーボードで衛星の方向へ少しだけアンテナを向ける(1ステップ分、押して少し待って離す)。 */
-async function keyboardStepTowardSatelliteOnce(page: Page): Promise<void> {
-  const dishAz = await readAngle(page, "satellite-uplink-dish-marker", "data-az");
-  const dishEl = await readAngle(page, "satellite-uplink-dish-marker", "data-el");
-  const satAz = await readAngle(page, "satellite-uplink-satellite-marker", "data-az");
-  const satEl = await readAngle(page, "satellite-uplink-satellite-marker", "data-el");
+/**
+ * キーボードで衛星の方向へアンテナを向ける。押す向きが変わるまでキーは押したままにする
+ * (毎回押して離すと、角度を読み取っている間は回らないため、遅い環境では押している時間の
+ * 割合が2割ほどに落ち、動き続ける衛星に追いつけないまま回線切断になる)。
+ */
+async function keyboardSteerTowardSatellite(
+  page: Page,
+  heldKeys: Set<string>,
+  aim: AimState,
+): Promise<void> {
+  const azDiff = shortestAzDiff(aim.dishAz, aim.satAz);
+  const elDiff = aim.satEl - aim.dishEl;
+  const wantedKeys = new Set<string>();
+  if (Math.abs(azDiff) > AIM_DEADBAND_DEG) wantedKeys.add(azDiff > 0 ? "ArrowRight" : "ArrowLeft");
+  if (Math.abs(elDiff) > AIM_DEADBAND_DEG) wantedKeys.add(elDiff > 0 ? "ArrowUp" : "ArrowDown");
 
-  const azDiff = shortestAzDiff(dishAz, satAz);
-  const keysDown: string[] = [];
-  if (Math.abs(azDiff) > 1) keysDown.push(azDiff > 0 ? "ArrowRight" : "ArrowLeft");
-  if (Math.abs(satEl - dishEl) > 1) keysDown.push(satEl > dishEl ? "ArrowUp" : "ArrowDown");
-
-  for (const key of keysDown) await page.keyboard.down(key);
-  await waitForFrames(page, 4);
-  for (const key of keysDown) await page.keyboard.up(key);
+  for (const key of [...heldKeys]) {
+    if (wantedKeys.has(key)) continue;
+    await page.keyboard.up(key);
+    heldKeys.delete(key);
+  }
+  for (const key of wantedKeys) {
+    if (heldKeys.has(key)) continue;
+    await page.keyboard.down(key);
+    heldKeys.add(key);
+  }
+  await waitForFrames(page, 1);
 }
 
 test.describe("Satellite Uplink のストーリー", () => {
@@ -149,19 +185,30 @@ test.describe("Satellite Uplink のストーリー", () => {
     await expect(page.getByTestId("satellite-uplink-gameover")).toBeVisible({ timeout: 20_000 });
     expect(await readStaticLevel(page), "ノイズが上限に達している").toBe(100);
 
-    // ゲームオーバー後にアンテナを操作しても状態は変化しない。
+    // ゲームオーバー後にステージを操作しても状態は変化しない。回線切断の表示はステージ全体を覆い
+    // 中央にリスタートボタンがあるため、衛星の位置を押すとたまたまボタンと重なってやり直してしまう。
+    // ボタンから離れた隅を操作する。
     const scoreAtGameOver = await readScore(page);
-    await pulseAimAtSatelliteOnce(page);
+    const stageBox = await page.getByTestId("satellite-uplink-stage").boundingBox();
+    expect(stageBox, "ステージの領域が取得できる").not.toBeNull();
+    if (stageBox) {
+      await page.mouse.move(stageBox.x + stageBox.width * 0.1, stageBox.y + stageBox.height * 0.1);
+      await page.mouse.down();
+      await waitForFrames(page, 3);
+      await page.mouse.up();
+    }
     await waitForFrames(page, 10);
     expect(await readScore(page), "回線切断後の操作でデータが変化しない").toBe(scoreAtGameOver);
     expect(await readStaticLevel(page), "回線切断後の操作でノイズが変化しない").toBe(100);
 
     await page.getByTestId("satellite-uplink-restart").click();
     await expect(page.getByTestId("satellite-uplink-gameover")).toBeHidden();
-    expect(await readScore(page), "リスタートでデータが0に戻る").toBe(0);
+    await expect.poll(() => readScore(page), { message: "リスタートでデータが0に戻る" }).toBe(0);
     // ノイズはリセット直後も無操作なら時間経過で増え続けるため、クリックからこの読み取りまでの
     // わずかな経過フレーム分だけはゼロを超える可能性がある。「ほぼゼロに戻った」ことを許容幅つきで確認する。
-    expect(await readStaticLevel(page), "リスタートでノイズがほぼ0に戻る").toBeLessThanOrEqual(5);
+    await expect
+      .poll(() => readStaticLevel(page), { message: "リスタートでノイズがほぼ0に戻る" })
+      .toBeLessThanOrEqual(5);
 
     expect(errors, "ノイズ蓄積・リスタート中にエラーが出ていない").toEqual([]);
   });
@@ -174,15 +221,18 @@ test.describe("Satellite Uplink のストーリー", () => {
 
     const stage = page.getByTestId("game-shell-stage");
 
+    const heldKeys = new Set<string>();
     await expect
       .poll(
         async () => {
-          await keyboardStepTowardSatelliteOnce(page);
-          return readScore(page);
+          const aim = await readAimState(page);
+          if (aim.score === 0) await keyboardSteerTowardSatellite(page, heldKeys, aim);
+          return aim.score;
         },
         { message: "キーボードでも追尾してデータが増える", timeout: 25_000, intervals: [50] },
       )
       .toBeGreaterThan(0);
+    for (const key of heldKeys) await page.keyboard.up(key);
 
     // 連打(ランダムな位置への一瞬のドラッグ)をしても画面が壊れない。回線切断ならその都度リスタートする。
     const gameOver = page.getByTestId("satellite-uplink-gameover");

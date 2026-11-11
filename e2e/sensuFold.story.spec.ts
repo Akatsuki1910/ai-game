@@ -57,12 +57,28 @@ async function pinAtPointer(page: Page): Promise<void> {
   await waitForFrames(page, 3);
 }
 
-/** 現在表示されている目標角度へポインタを合わせてピン留めを試みる(揺れ動くため必ず成功するとは限らない)。 */
+/**
+ * 目標帯が折り返す端の手前に先回りして待ち、帯が来たところでピン留めする角度。
+ * 帯は90度を中心に±55度で揺れ続け、真ん中では毎秒約33度で動くため、目標を読んでから
+ * ポインタを合わせに行くと、往復の遅れの間に許容幅(±22度)の外へ動いてしまうことがある。
+ * 端の付近(145度で折り返す)では帯の動きが遅いので、遅れの影響が小さい。
+ */
+const AIM_ANGLE_DEG = 140;
+const AIM_WINDOW_DEG = 8;
+
+/** 端の手前で押したまま待ち、目標帯が来たところで離してピン留めを試みる。 */
 async function attemptAlignedPin(page: Page, stage: Locator): Promise<void> {
-  const target = await readTarget(page);
-  await moveToAngle(page, stage, target);
-  await waitForFrames(page, 2);
-  await pinAtPointer(page);
+  await moveToAngle(page, stage, AIM_ANGLE_DEG);
+  await page.mouse.down();
+  await expect
+    .poll(async () => Math.abs((await readTarget(page)) - AIM_ANGLE_DEG), {
+      message: "目標帯が待ち構えている角度へ来る",
+      timeout: 20_000,
+      intervals: [20],
+    })
+    .toBeLessThanOrEqual(AIM_WINDOW_DEG);
+  await page.mouse.up();
+  await waitForFrames(page, 3);
 }
 
 test.describe("Sensu Fold のストーリー", () => {
@@ -98,7 +114,7 @@ test.describe("Sensu Fold のストーリー", () => {
     const wrinklesBefore = await readWrinkleCount(page);
     let progress = await readProgress(page);
 
-    for (let attempt = 0; attempt < 10 && progress.done === 0; attempt++) {
+    for (let attempt = 0; attempt < 3 && progress.done === 0; attempt++) {
       await attemptAlignedPin(page, stage);
       progress = await readProgress(page);
     }

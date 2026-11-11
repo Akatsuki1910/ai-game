@@ -200,9 +200,11 @@ test.describe("Prize Crane のストーリー", () => {
     // リスタートすると最初の状態に戻る。
     await page.getByTestId("prize-crane-restart").click();
     await expect(gameOver).toBeHidden();
-    expect(await readAttempts(page), "リスタートでアテンプトが全回復する").toBe(ATTEMPTS_MAX);
-    expect(await readScore(page), "リスタートでスコアが0に戻る").toBe(0);
-    expect(await readCombo(page), "リスタートでコンボが0に戻る").toBe(0);
+    await expect
+      .poll(() => readAttempts(page), { message: "リスタートでアテンプトが全回復する" })
+      .toBe(ATTEMPTS_MAX);
+    await expect.poll(() => readScore(page), { message: "リスタートでスコアが0に戻る" }).toBe(0);
+    await expect.poll(() => readCombo(page), { message: "リスタートでコンボが0に戻る" }).toBe(0);
 
     expect(errors, "ゲームオーバー・リスタート中にエラーが出ていない").toEqual([]);
   });

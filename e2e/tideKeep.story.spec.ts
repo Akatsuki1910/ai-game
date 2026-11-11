@@ -213,8 +213,12 @@ test.describe("Tide Keep のストーリー", () => {
     // 4. もう一度あそぶで最初からやり直せる
     await page.getByTestId("tide-keep-restart").click();
     await expect(page.getByTestId("tide-keep-gameover")).toBeHidden();
-    expect(await readIntegrityPercent(page), "やり直すと砦の健全度が満タンに戻る").toBe(100);
-    expect(await readWavesSurvived(page), "やり直すと突破した波の数も0に戻る").toBe(0);
+    await expect
+      .poll(() => readIntegrityPercent(page), { message: "やり直すと砦の健全度が満タンに戻る" })
+      .toBe(100);
+    await expect
+      .poll(() => readWavesSurvived(page), { message: "やり直すと突破した波の数も0に戻る" })
+      .toBe(0);
 
     expect(errors, "一連の操作でエラーが出ていない").toEqual([]);
   });

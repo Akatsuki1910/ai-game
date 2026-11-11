@@ -79,8 +79,10 @@ test.describe("Gyro Vault のストーリー", () => {
     await page.keyboard.up("KeyD");
     await page.keyboard.press("r");
     await expect(page.getByTestId("gyro-vault-goal-count")).toHaveText("🏆 0");
-    expect(await readScore(page), "リセットでスコアが0に戻る").toBe(0);
-    expect(await readTimerSeconds(page), "リセットで残り時間が戻る").toBeGreaterThan(85);
+    await expect.poll(() => readScore(page), { message: "リセットでスコアが0に戻る" }).toBe(0);
+    await expect
+      .poll(() => readTimerSeconds(page), { message: "リセットで残り時間が戻る" })
+      .toBeGreaterThan(85);
 
     expect(errors, "キー操作中にエラーが出ていない").toEqual([]);
   });

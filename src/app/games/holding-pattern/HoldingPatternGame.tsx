@@ -90,16 +90,24 @@ export function HoldingPatternGame() {
     setIsPaused(loopRef.current.togglePause());
   }, []);
 
+  const syncHud = useCallback((world: HoldingPatternWorld) => {
+    setScore(world.score);
+    setStreak(world.streak);
+    setStrikes(world.strikes);
+  }, []);
+
   const handleRestart = useCallback(() => {
     const world = worldRef.current;
     if (!world) return;
     world.reset();
+    // 次フレームを待たずにHUDも戻す(オーバーレイだけ消えて前回のスコアが残る瞬間を作らない)。
+    syncHud(world);
     setIsOver(false);
     if (loopRef.current?.isPaused) {
       loopRef.current.resume();
       setIsPaused(false);
     }
-  }, []);
+  }, [syncHud]);
 
   useEffect(() => {
     const host = canvasHostRef.current;
@@ -175,9 +183,7 @@ export function HoldingPatternGame() {
           selectedPlaneId = null;
         }
 
-        setScore(world.score);
-        setStreak(world.streak);
-        setStrikes(world.strikes);
+        syncHud(world);
         if (world.isOver) setIsOver(true);
 
         const { width, height } = sizeRef.current;
@@ -282,6 +288,7 @@ export function HoldingPatternGame() {
           }
           if (key === "r") {
             world.reset();
+            syncHud(world);
             draggingByPointer.clear();
             selectedPlaneId = null;
             setIsOver(false);
@@ -308,7 +315,7 @@ export function HoldingPatternGame() {
         appRef.current = null;
       }
     };
-  }, []);
+  }, [syncHud]);
 
   useEffect(() => {
     sizeRef.current = { width: size.width, height: size.height };

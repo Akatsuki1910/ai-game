@@ -9,14 +9,23 @@ export async function waitForFrames(page: Page, frames = 30): Promise<void> {
   }, frames);
 }
 
-/** 描画が実際に動いている（＝ゲームループが回っている）ことを、見た目の変化で確認する。 */
+/**
+ * 描画が実際に動いている（＝ゲームループが回っている）ことを、見た目の変化で確認する。
+ * ゲームによっては開始直後しばらく画面に動きがない(最初の敵が画面外から入ってくるまで等)ため、
+ * 1回の比較で決めつけず、変化が見えるまで条件付きで待つ(止まったままなら時間切れで失敗する)。
+ */
 export async function expectStageToAnimate(page: Page, stage: Locator): Promise<void> {
-  const before = await stage.screenshot();
-  await waitForFrames(page, 40);
-  const after = await stage.screenshot();
-  expect(before.equals(after), "画面が時間経過で変化している（ゲームループが動いている）").toBe(
-    false,
-  );
+  await expect
+    .poll(
+      async () => {
+        const before = await stage.screenshot();
+        await waitForFrames(page, 40);
+        const after = await stage.screenshot();
+        return before.equals(after);
+      },
+      { message: "画面が時間経過で変化している（ゲームループが動いている）", timeout: 20_000 },
+    )
+    .toBe(false);
 }
 
 /**

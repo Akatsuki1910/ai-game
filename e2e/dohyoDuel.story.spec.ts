@@ -156,9 +156,11 @@ test.describe("Dohyo Duel のストーリー", () => {
 
     await page.getByTestId("dohyo-duel-restart").click();
     await expect(gameOver).toBeHidden();
-    expect(await readScore(page), "リスタートでスコアが0に戻る").toBe(0);
-    expect(await readRound(page), "リスタートでラウンドが1に戻る").toBe(1);
-    expect(await readLives(page), "リスタートでライフが満タンに戻る").toBe(EXPECTED_START_LIVES);
+    await expect.poll(() => readScore(page), { message: "リスタートでスコアが0に戻る" }).toBe(0);
+    await expect.poll(() => readRound(page), { message: "リスタートでラウンドが1に戻る" }).toBe(1);
+    await expect
+      .poll(() => readLives(page), { message: "リスタートでライフが満タンに戻る" })
+      .toBe(EXPECTED_START_LIVES);
 
     expect(errors, "ゲームオーバーまでの操作でエラーが出ていない").toEqual([]);
   });

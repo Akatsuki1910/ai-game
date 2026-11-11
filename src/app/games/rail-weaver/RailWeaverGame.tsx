@@ -72,16 +72,25 @@ export function RailWeaverGame() {
     setIsPaused(loopRef.current.togglePause());
   }, []);
 
+  const syncHud = useCallback((world: RailWeaverWorld) => {
+    setScore(world.score);
+    setCombo(world.combo);
+    setPlankStock(world.plankStock);
+    setDistanceMeters(Math.floor(world.distance * 10));
+  }, []);
+
   const handleRestart = useCallback(() => {
     const world = worldRef.current;
     if (!world) return;
     world.reset();
+    // 次フレームを待たずにHUDも戻す(オーバーレイだけ消えて前回のスコアが残る瞬間を作らない)。
+    syncHud(world);
     setIsOver(false);
     if (loopRef.current?.isPaused) {
       loopRef.current.resume();
       setIsPaused(false);
     }
-  }, []);
+  }, [syncHud]);
 
   useEffect(() => {
     const host = canvasHostRef.current;
@@ -148,10 +157,7 @@ export function RailWeaverGame() {
       const loop = new GameLoop((deltaSeconds) => {
         world.step(deltaSeconds);
 
-        setScore(world.score);
-        setCombo(world.combo);
-        setPlankStock(world.plankStock);
-        setDistanceMeters(Math.floor(world.distance * 10));
+        syncHud(world);
         if (world.isOver) setIsOver(true);
 
         const { width, height } = sizeRef.current;
@@ -259,6 +265,7 @@ export function RailWeaverGame() {
           }
           if (key === "r") {
             world.reset();
+            syncHud(world);
             setIsOver(false);
             return;
           }
@@ -283,7 +290,7 @@ export function RailWeaverGame() {
         appRef.current = null;
       }
     };
-  }, []);
+  }, [syncHud]);
 
   useEffect(() => {
     sizeRef.current = { width: size.width, height: size.height };

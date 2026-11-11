@@ -15,6 +15,16 @@ async function readLives(page: Page): Promise<number> {
   return Number(matched?.[1] ?? Number.NaN);
 }
 
+async function readMarkerCenter(
+  page: Page,
+  testId: string,
+): Promise<{ x: number; y: number } | null> {
+  const marker = page.getByTestId(testId);
+  if (!(await marker.isVisible())) return null;
+  const box = await marker.boundingBox();
+  return box ? { x: box.x + box.width / 2, y: box.y + box.height / 2 } : null;
+}
+
 async function readReachedCore(page: Page): Promise<number> {
   const text = await page.getByTestId("flail-ward-reached-core").innerText();
   const matched = text.match(/(\d+)/);
@@ -55,7 +65,9 @@ test.describe("Flail Ward のストーリー", () => {
     expect(errors, "起動直後にエラーが出ていない").toEqual([]);
   });
 
-  test("ドラッグでフレイルを振り回すとメテオを弾いてスコアが伸びる", async ({ page }) => {
+  test("迫るメテオの方へドラッグしてフレイルを振ると、メテオを弾いてスコアが伸びる", async ({
+    page,
+  }) => {
     const errors = collectPageErrors(page);
     await page.goto(GAME_PATH);
     const stage = page.getByTestId("game-shell-stage");
@@ -67,29 +79,32 @@ test.describe("Flail Ward のストーリー", () => {
 
     const center = { x: box.x + box.width / 2, y: box.y + box.height / 2 };
     const radius = Math.min(box.width, box.height) * 0.35;
-    const STEPS_PER_REVOLUTION = 24;
-    const MAX_REVOLUTIONS = 20;
 
-    // フレイルを一定速度で振り回し続け、四方から来るメテオを弾くチャンスを稼ぐ。
-    // 得点した時点、またはゲームオーバーになった時点で早めに切り上げる。
-    await page.mouse.move(center.x + radius, center.y);
+    // 闇雲に一定速度で振り回すと、実時間の操作間隔次第でメテオの通り道に鉄球が来ないまま
+    // ライフが尽きることがある。実際のプレイヤーと同じく、最も迫っているメテオの方向へ
+    // ドラッグしてフレイルを振り向け、その通り道で待ち受けて弾く。
+    await page.mouse.move(center.x, center.y - radius);
     await page.mouse.down();
-    let scored = false;
-    for (let revolution = 0; revolution < MAX_REVOLUTIONS && !scored; revolution++) {
-      for (let step = 0; step <= STEPS_PER_REVOLUTION; step++) {
-        const angle = (step / STEPS_PER_REVOLUTION) * Math.PI * 2;
-        await page.mouse.move(
-          center.x + Math.cos(angle) * radius,
-          center.y + Math.sin(angle) * radius,
-        );
-        await waitForFrames(page, 2);
-      }
-      if ((await readScore(page)) > 0) scored = true;
-      if (await page.getByTestId("flail-ward-gameover").isVisible()) break;
-    }
+    await expect
+      .poll(
+        async () => {
+          const meteor = await readMarkerCenter(page, "flail-ward-next-meteor-marker");
+          if (meteor) {
+            const angle = Math.atan2(meteor.y - center.y, meteor.x - center.x);
+            await page.mouse.move(
+              center.x + Math.cos(angle) * radius,
+              center.y + Math.sin(angle) * radius,
+              { steps: 3 },
+            );
+          }
+          await waitForFrames(page, 3);
+          return readScore(page);
+        },
+        { message: "メテオの方へフレイルを振ると弾いて得点する", timeout: 20_000 },
+      )
+      .toBeGreaterThan(0);
     await page.mouse.up();
 
-    expect(await readScore(page), "振り回しているうちにメテオを弾いて得点する").toBeGreaterThan(0);
     await expect(stage.locator("canvas"), "操作後もキャンバスが生きている").toBeVisible();
     expect(errors, "振り回し中にエラーが出ていない").toEqual([]);
   });
@@ -178,15 +193,21 @@ test.describe("Flail Ward のストーリー", () => {
     // ボタンでリスタート
     await page.getByTestId("flail-ward-restart").click();
     await expect(page.getByTestId("flail-ward-gameover")).toBeHidden();
-    expect(await readScore(page), "リスタートでスコアが0に戻る").toBe(0);
-    expect(await readLives(page), "リスタートでライフが満タンに戻る").toBeGreaterThan(0);
+    await expect.poll(() => readScore(page), { message: "リスタートでスコアが0に戻る" }).toBe(0);
+    await expect
+      .poll(() => readLives(page), { message: "リスタートでライフが満タンに戻る" })
+      .toBeGreaterThan(0);
 
     // Rキーでもいつでもやり直せる(ゲームオーバーまで待たず、プレイ中にリセットできることを確認する)
     await stage.click({ position: { x: 10, y: 10 } });
     await page.keyboard.press("r");
     await expect(page.getByTestId("flail-ward-gameover")).toBeHidden();
-    expect(await readScore(page), "Rキーのリスタートでもスコアが0に戻る").toBe(0);
-    expect(await readLives(page), "Rキーのリスタートでもライフが満タンに戻る").toBeGreaterThan(0);
+    await expect
+      .poll(() => readScore(page), { message: "Rキーのリスタートでもスコアが0に戻る" })
+      .toBe(0);
+    await expect
+      .poll(() => readLives(page), { message: "Rキーのリスタートでもライフが満タンに戻る" })
+      .toBeGreaterThan(0);
 
     expect(errors, "ゲームオーバー/リスタート中にエラーが出ていない").toEqual([]);
   });

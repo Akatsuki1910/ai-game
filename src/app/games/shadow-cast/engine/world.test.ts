@@ -17,6 +17,21 @@ import {
 
 const FRAME = 1 / 60;
 
+/** テストを決定的にするための固定乱数(常に同じ値を返す)。 */
+function fixedRandom(value: number): () => number {
+  return () => value;
+}
+
+/** 渡した値を順番に繰り返し返す乱数。引き直しの挙動を決定的に再現するのに使う。 */
+function sequenceRandom(values: readonly number[]): () => number {
+  let index = 0;
+  return () => {
+    const value = values[index % values.length];
+    index += 1;
+    return value;
+  };
+}
+
 /** 現在のお題にぴったり重なる人形位置(奥行き・左右)を逆算する。 */
 function puppetPositionForTarget(world: ShadowCastWorld): { xRatio: number; depthRatio: number } {
   const depthRatio = 1 / world.target.scale;
@@ -116,7 +131,9 @@ test("お題から大きく外れた位置では保持メーターが進まな�
 });
 
 test("一度マッチしたあと外れると、保持メーターは時間経過で減っていく(すぐには0に戻らない)", () => {
-  const world = new ShadowCastWorld();
+  // お題は乱数で決まり、左端・大きめに出ると「外す」ために動かした先でもマッチしてしまうため、
+  // 乱数を固定してお題を中央(外した先から十分遠い位置)に出す。
+  const world = new ShadowCastWorld(fixedRandom(0.5));
   const { xRatio, depthRatio } = puppetPositionForTarget(world);
   world.setPointer(xRatio, depthRatio * (0.88 - 0.1) + 0.1);
   world.step(FRAME);
@@ -128,6 +145,15 @@ test("一度マッチしたあと外れると、保持メーターは時間経�
 
   assert.ok(world.holdSeconds < holdWhileMatched, "外れると保持メーターは減り始める");
   assert.ok(world.holdSeconds >= 0, "保持メーターは負にならない");
+});
+
+test("開始直後の人形の位置で既に重なってしまうお題は引き直され、操作せずに得点できない", () => {
+  // 1回目の(0.5, 0.17)は初期位置の影(中央・拡大率約1.89)とほぼ同じお題になる。
+  const world = new ShadowCastWorld(sequenceRandom([0.5, 0.17, 0.5, 0.9]));
+
+  assert.equal(world.isMatched, false, "初期位置のままではお題に重なっていない");
+  for (let i = 0; i < 120; i++) world.step(FRAME);
+  assert.equal(world.combo, 0, "何も操作しなければ得点しない");
 });
 
 test("moveBy はキーボード操作相当の相対移動で、可動範囲外に出ない", () => {

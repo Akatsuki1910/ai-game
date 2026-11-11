@@ -149,7 +149,9 @@ test.describe("Blackout Ferry のストーリー", () => {
       await expect(page.getByTestId("blackout-ferry-restart")).toBeVisible();
       await page.getByTestId("blackout-ferry-restart").click();
       await expect(gameOver).toBeHidden();
-      expect(await readCrossings(page), "リスタート後は渡航数が0に戻る").toBe(0);
+      await expect
+        .poll(() => readCrossings(page), { message: "リスタート後は渡航数が0に戻る" })
+        .toBe(0);
     } else {
       await expect(livesLabel).toBeVisible();
     }

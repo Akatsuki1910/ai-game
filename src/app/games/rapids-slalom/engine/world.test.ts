@@ -255,6 +255,38 @@ test("操舵目標とカヤックの位置は画面端でクランプされ、�
   assertFinite(world, "端へ寄せ続けた後");
 });
 
+test("逆側に操舵目標が残っていても、キー操舵(nudgeSteerTarget)すると即座にその向きへ切り返す", () => {
+  const world = new RapidsSlalomWorld(WIDTH, HEIGHT);
+  const stepClean = () => {
+    world.step(FRAME);
+    world.gates = [];
+    world.rocks = [];
+  };
+
+  // 左端をタップした直後のように、目標を左端に置いてカヤックを左へ流す。
+  world.setSteerTarget(0);
+  for (let i = 0; i < 20; i++) stepClean();
+  assert.ok(world.kayak.vx < 0, "左へ流れている");
+  const xBeforeRight = world.kayak.x;
+
+  world.nudgeSteerTarget(10);
+  assert.ok(world.targetX > xBeforeRight, "目標は左端からではなくカヤックの位置から右へずれる");
+  const vxBeforeRight = world.kayak.vx;
+  stepClean();
+  assert.ok(world.kayak.vx > vxBeforeRight, "次のフレームから右向きに減速し始める");
+
+  for (let i = 0; i < 60 && world.kayak.x <= xBeforeRight; i++) {
+    world.nudgeSteerTarget(640 * FRAME);
+    stepClean();
+  }
+  assert.ok(world.kayak.x > xBeforeRight, "押し続けると慣性を打ち消して右へ戻ってくる");
+
+  world.setSteerTarget(world.kayak.x + 100);
+  const targetBefore = world.targetX;
+  world.nudgeSteerTarget(10);
+  assert.equal(world.targetX, targetBefore + 10, "同じ向きに押し続けると目標はそのまま先へ進む");
+});
+
 test("画面サイズが変わってもカヤック・ゲート・岩が画面内に収まる", () => {
   const world = new RapidsSlalomWorld(WIDTH, HEIGHT);
   runUntilNextGate(world);

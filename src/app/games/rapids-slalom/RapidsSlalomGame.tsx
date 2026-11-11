@@ -46,14 +46,26 @@ export function RapidsSlalomGame() {
     setIsPaused(loopRef.current.togglePause());
   }, []);
 
+  const syncHud = useCallback((world: RapidsSlalomWorld) => {
+    setScore(Math.floor(world.score));
+    setCombo(world.combo);
+    setLives(world.lives);
+    setIsBracing(world.isBracing);
+    setNextGateColor(world.nextGate?.color ?? null);
+  }, []);
+
   const handleRestart = useCallback(() => {
-    worldRef.current?.reset();
+    const world = worldRef.current;
+    if (!world) return;
+    world.reset();
+    // 次フレームを待たずにHUDも戻す(オーバーレイだけ消えて前回のスコアが残る瞬間を作らない)。
+    syncHud(world);
     setIsOver(false);
     if (loopRef.current?.isPaused) {
       loopRef.current.resume();
       setIsPaused(false);
     }
-  }, []);
+  }, [syncHud]);
 
   useEffect(() => {
     const host = canvasHostRef.current;
@@ -100,17 +112,11 @@ export function RapidsSlalomGame() {
           let kx = 0;
           if (input.isKeyDown("arrowleft") || input.isKeyDown("a")) kx -= 1;
           if (input.isKeyDown("arrowright") || input.isKeyDown("d")) kx += 1;
-          if (kx !== 0) {
-            world.setSteerTarget(world.targetX + kx * KEY_STEER_SPEED * deltaSeconds);
-          }
+          if (kx !== 0) world.nudgeSteerTarget(kx * KEY_STEER_SPEED * deltaSeconds);
         }
 
         world.step(deltaSeconds);
-        setScore(Math.floor(world.score));
-        setCombo(world.combo);
-        setLives(world.lives);
-        setIsBracing(world.isBracing);
-        setNextGateColor(world.nextGate?.color ?? null);
+        syncHud(world);
         if (world.isOver) setIsOver(true);
 
         const kayakY = world.kayakY;
@@ -214,6 +220,7 @@ export function RapidsSlalomGame() {
             setIsPaused(loop.togglePause());
           } else if (key === "r") {
             world.reset();
+            syncHud(world);
             setIsOver(false);
           } else if (key === "enter") {
             world.brace();
@@ -236,7 +243,7 @@ export function RapidsSlalomGame() {
         appRef.current = null;
       }
     };
-  }, []);
+  }, [syncHud]);
 
   useEffect(() => {
     if (size.width === 0 || size.height === 0) return;

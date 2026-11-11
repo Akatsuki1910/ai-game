@@ -156,6 +156,17 @@ export class RapidsSlalomWorld {
     this.targetX = Math.min(Math.max(x, KAYAK_RADIUS), this.width - KAYAK_RADIUS);
   }
 
+  /**
+   * 操作: 操舵目標を dx(px) だけずらす。キー入力から毎フレーム呼ぶ。
+   * 目標が押した向きと逆側(直前のタップ位置など)に残っていると、目標がカヤックを
+   * 追い越すまで逆向きに流され続けて反応しないように見えるため、その場合はカヤックの位置を起点にする。
+   */
+  nudgeSteerTarget(dx: number): void {
+    const baseX =
+      dx > 0 ? Math.max(this.targetX, this.kayak.x) : Math.min(this.targetX, this.kayak.x);
+    this.setSteerTarget(baseX + dx);
+  }
+
   /** 操作: パドルブレースを発動する。一定時間だけ有効で、赤ゲート通過に必要。 */
   brace(): void {
     this.braceUntil = this.elapsedSeconds + BRACE_WINDOW_SECONDS;

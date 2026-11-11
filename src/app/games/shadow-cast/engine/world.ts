@@ -44,6 +44,7 @@ const FLOOR_HOLD_SECONDS = 0.6;
 const STEP_HOLD_SECONDS = 0.045;
 
 const UNMATCHED_DECAY_MULTIPLIER = 1.6;
+const TARGET_REROLL_ATTEMPTS = 8;
 const BASE_POINTS = 180;
 const COMBO_POINTS = 55;
 
@@ -51,8 +52,8 @@ function clamp(value: number, min: number, max: number): number {
   return Math.min(max, Math.max(min, value));
 }
 
-function randomBetween(min: number, max: number): number {
-  return min + Math.random() * (max - min);
+function randomBetween(min: number, max: number, randomFn: () => number): number {
+  return min + randomFn() * (max - min);
 }
 
 /** ポインタの縦位置(比率)を、光源〜壁の間の奥行き比率[DEPTH_MIN, DEPTH_MAX]へ写す。 */
@@ -83,10 +84,11 @@ export function projectShadow(puppetXRatio: number, depthRatio: number): ShadowP
   return { shadowXRatio, scale };
 }
 
-export function generateTarget(): TargetShadow {
+/** randomFn を差し替えられるのはテストで決定的なお題を再現するため(本番は Math.random)。 */
+export function generateTarget(randomFn: () => number = Math.random): TargetShadow {
   return {
-    shadowXRatio: randomBetween(SHADOW_MARGIN_RATIO, 1 - SHADOW_MARGIN_RATIO),
-    scale: randomBetween(SCALE_MIN, SCALE_MAX),
+    shadowXRatio: randomBetween(SHADOW_MARGIN_RATIO, 1 - SHADOW_MARGIN_RATIO, randomFn),
+    scale: randomBetween(SCALE_MIN, SCALE_MAX, randomFn),
   };
 }
 
@@ -110,7 +112,10 @@ export class ShadowCastWorld {
 
   onMatchCompleted: ((event: MatchCompletedEvent) => void) | null = null;
 
-  constructor() {
+  private readonly randomFn: () => number;
+
+  constructor(randomFn: () => number = Math.random) {
+    this.randomFn = randomFn;
     this.reset();
   }
 
@@ -123,7 +128,7 @@ export class ShadowCastWorld {
     this.isOver = false;
     this.holdSeconds = 0;
     this.updateDifficulty();
-    this.target = generateTarget();
+    this.target = this.pickTargetAwayFromPuppet();
   }
 
   /** ドラッグ/タップ中の絶対位置で人形を動かす(比率座標)。 */
@@ -143,11 +148,27 @@ export class ShadowCastWorld {
   }
 
   get isMatched(): boolean {
+    return this.matches(this.target);
+  }
+
+  private matches(target: TargetShadow): boolean {
     const { shadowXRatio, scale } = this.projected;
     return (
-      Math.abs(shadowXRatio - this.target.shadowXRatio) <= this.toleranceXRatio &&
-      Math.abs(scale - this.target.scale) <= this.toleranceScale
+      Math.abs(shadowXRatio - target.shadowXRatio) <= this.toleranceXRatio &&
+      Math.abs(scale - target.scale) <= this.toleranceScale
     );
+  }
+
+  /**
+   * 人形を今の位置から動かさなくても既に重なっているお題だと、操作せずに得点できてしまう
+   * (開始直後の初期位置や、直前のお題を重ねた位置のまま次のお題が湧いた場合)ため引き直す。
+   */
+  private pickTargetAwayFromPuppet(): TargetShadow {
+    let target = generateTarget(this.randomFn);
+    for (let attempt = 0; attempt < TARGET_REROLL_ATTEMPTS && this.matches(target); attempt++) {
+      target = generateTarget(this.randomFn);
+    }
+    return target;
   }
 
   get holdProgress(): number {
@@ -180,7 +201,7 @@ export class ShadowCastWorld {
     this.combo += 1;
     this.holdSeconds = 0;
     this.updateDifficulty();
-    this.target = generateTarget();
+    this.target = this.pickTargetAwayFromPuppet();
   }
 
   private updateDifficulty(): void {

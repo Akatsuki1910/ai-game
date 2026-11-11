@@ -189,8 +189,8 @@ test.describe("Nigiri Rush のストーリー", () => {
     // リスタートすると最初の状態に戻る。
     await page.getByTestId("nigiri-rush-restart").click();
     await expect(page.getByTestId("nigiri-rush-gameover")).toBeHidden();
-    expect(await readLives(page), "リスタートでライフが全回復する").toBe(3);
-    expect(await readScore(page), "リスタートでスコアが0に戻る").toBe(0);
+    await expect.poll(() => readLives(page), { message: "リスタートでライフが全回復する" }).toBe(3);
+    await expect.poll(() => readScore(page), { message: "リスタートでスコアが0に戻る" }).toBe(0);
 
     expect(errors, "ライフ減少・リスタート中にエラーが出ていない").toEqual([]);
   });

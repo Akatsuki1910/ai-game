@@ -19,6 +19,18 @@
   }
 }
 
+// 最もコアに迫っているメテオの位置を示す不可視の目印(ストーリーテストが狙いを付けるのに使う)。
+.meteorMarker {
+  position: absolute;
+  display: none;
+  width: 6px;
+  height: 6px;
+  margin: -3px 0 0 -3px;
+  border-radius: 50%;
+  pointer-events: none;
+  background: transparent;
+}
+
 .hud {
   position: absolute;
   top: v.$space-3;

@@ -52,10 +52,15 @@ async function jigTowardNearestFishOnce(page: Page, toggle: { value: boolean }):
     const distCandidate = Math.hypot(candidate.x - lure.x, candidate.y - lure.y);
     return distCandidate < distClosest ? candidate : closest;
   });
-  const offset = toggle.value ? 18 : -18;
-  toggle.value = !toggle.value;
-  await page.mouse.move(nearest.x + offset, nearest.y);
-  await waitForFrames(page, 3);
+  // ルアーは一定以上の速さ(毎秒55px)で動き続けていないと「誘い」とみなされない。揺するたびに
+  // 位置を読み直すと、遅い環境では読み取りの往復の間ルアーが止まってしまい誘いにならないため、
+  // 狙いを決めたら数回続けて揺する。
+  for (let i = 0; i < 4; i++) {
+    const offset = toggle.value ? 18 : -18;
+    toggle.value = !toggle.value;
+    await page.mouse.move(nearest.x + offset, nearest.y);
+    await waitForFrames(page, 1);
+  }
 }
 
 /** 2枚のスクリーンショットが同じかどうかを返す(一時停止で本当に止まっているかの確認に使う)。 */
@@ -130,10 +135,10 @@ test.describe("Auger Drop のストーリー", () => {
           if (await page.getByTestId("auger-drop-gameover").isVisible()) {
             return true; // 粘り続けた結果あたたかさが尽きた場合も、テンション超過の帰結として許容する
           }
-          const message = page.getByTestId("auger-drop-message");
-          if ((await message.isVisible()) && (await message.innerText()).includes("逃げられた")) {
-            return true;
-          }
+          // 「逃げられた…」の表示は1.2秒で消え、次の食いつきの表示にすぐ置き換わるため見逃しやすい。
+          // 逃がした回数(HUDのdata-losses)で判定する。
+          const losses = await page.getByTestId("auger-drop-catches").getAttribute("data-losses");
+          if (Number(losses) > 0) return true;
           await jigTowardNearestFishOnce(page, toggle);
           return false;
         },
@@ -156,6 +161,10 @@ test.describe("Auger Drop のストーリー", () => {
   });
 
   test("一時停止で画面が完全に止まり、連打しても状態がずれない", async ({ page }) => {
+    // 画面が止まっているかの確認は、スクリーンショット2枚とフレーム待ちを伴う。GPUの無いCI
+    // (ソフトウェア描画で10fps前後)では1回6〜7秒かかるため、テスト全体と最初の確認の
+    // 待ち時間をその分確保する。
+    test.setTimeout(120_000);
     const errors = collectPageErrors(page);
     await page.goto(GAME_PATH);
     const stage = page.getByTestId("game-shell-stage");
@@ -164,6 +173,7 @@ test.describe("Auger Drop のストーリー", () => {
     await expect
       .poll(async () => isFrozen(page, stage, 20), {
         message: "無操作でも魚が動くため画面は変化する",
+        timeout: 30_000,
       })
       .toBe(false);
 

@@ -68,6 +68,7 @@ export class SwitchboardWorld {
   private _destinationJacks: DestinationJack[] = [];
   private spawnTimer = 0;
   private successCount = 0;
+  private _heldSourceIndex: number | null = null;
 
   score = 0;
   lives = LIVES_MAX;
@@ -86,6 +87,11 @@ export class SwitchboardWorld {
 
   get destinationJacks(): readonly DestinationJack[] {
     return this._destinationJacks;
+  }
+
+  /** キーボード操作で持っている発信ジャック。持っていなければ null。 */
+  get heldSourceIndex(): number | null {
+    return this._heldSourceIndex;
   }
 
   get liveDuration(): number {
@@ -123,6 +129,7 @@ export class SwitchboardWorld {
     this.score = 0;
     this.lives = LIVES_MAX;
     this.isOver = false;
+    this._heldSourceIndex = null;
   }
 
   step(deltaSeconds: number): void {
@@ -179,6 +186,25 @@ export class SwitchboardWorld {
     this.onConnect?.({ result: "wrong", sourceIndex, destinationIndex, points: 0 });
     if (this.lives <= 0) this.isOver = true;
     return "wrong";
+  }
+
+  /**
+   * キーボード操作。1回目で光っている発信ジャックを持ち、2回目で押した番号の受信ジャックへ繋ぐ。
+   * 発信側と受信側は同じ1〜5の数字を使うため、2回目に同じ番号を押したときも取り消しではなく
+   * 同じ段の受信ジャックへの接続として扱う(そうしないと同じ段に正解がある呼出は繋げない)。
+   */
+  pressSlotKey(index: number): void {
+    const heldSourceIndex = this._heldSourceIndex;
+    if (heldSourceIndex === null) {
+      if (this._sourceJacks[index]?.state === "live") this._heldSourceIndex = index;
+      return;
+    }
+    this._heldSourceIndex = null;
+    this.attemptConnect(heldSourceIndex, index);
+  }
+
+  releaseHeldSource(): void {
+    this._heldSourceIndex = null;
   }
 
   private handleTimeout(jack: SourceJack): void {

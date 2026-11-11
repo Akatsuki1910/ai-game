@@ -49,8 +49,8 @@ const PIECE_COMPLETE_BONUS = 40;
 
 const START_TEMPERATURE = 15;
 
-function randRange(min: number, max: number): number {
-  return min + Math.random() * (max - min);
+function randRange(min: number, max: number, randomFn: () => number): number {
+  return min + randomFn() * (max - min);
 }
 
 function clamp(value: number, min: number, max: number): number {
@@ -83,8 +83,11 @@ export class BellowsForgeWorld {
   onGameOver: ((event: GameOverEvent) => void) | null = null;
 
   private wasAtOverheatCap = false;
+  private readonly randomFn: () => number;
 
-  constructor() {
+  /** randomFn を差し替えられるのはテストで決定的な目標帯を再現するため(本番は Math.random)。 */
+  constructor(randomFn: () => number = Math.random) {
+    this.randomFn = randomFn;
     this.reset();
   }
 
@@ -207,7 +210,7 @@ export class BellowsForgeWorld {
       MIN_BAND_WIDTH,
       BASE_BAND_WIDTH - (this.round - 1) * BAND_SHRINK_PER_ROUND,
     );
-    const bandCenter = randRange(BAND_CENTER_MIN, BAND_CENTER_MAX);
+    const bandCenter = randRange(BAND_CENTER_MIN, BAND_CENTER_MAX, this.randomFn);
     this.targetMin = clamp(bandCenter - bandWidth / 2, TEMPERATURE_MIN, TEMPERATURE_MAX);
     this.targetMax = clamp(bandCenter + bandWidth / 2, TEMPERATURE_MIN, TEMPERATURE_MAX);
     this.hitsLanded = 0;

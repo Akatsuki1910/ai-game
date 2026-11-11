@@ -107,6 +107,10 @@ test.describe("Kendama Swing のストーリー", () => {
 
     // カップを対角線上の両端(高い位置⇔床際)へ振り回し続け、受け口を大きく外させ続ける。
     // 床際まで振ると紐がたるんだ玉が床に届いてしまうため、確実にミスを重ねられる。
+    // ただし切り返しがゲーム内時間で約0.2秒より速いと、紐に引かれた玉が振り回されて
+    // 宙に浮いたままになり床に届かない。描画が遅い環境では実時間の間隔が短く効いてしまうため、
+    // 切り返しの間隔は実時間ではなくフレーム数で刻む。
+    const SWEEP_HOLD_FRAMES = 45;
     let sweepToLowCorner = true;
     await expect
       .poll(
@@ -122,12 +126,13 @@ test.describe("Kendama Swing のストーリー", () => {
               { steps: 2 },
             );
           }
+          await waitForFrames(page, SWEEP_HOLD_FRAMES);
           return page.getByTestId("kendama-swing-gameover").isVisible();
         },
         {
           message: "受け口を大きく外し続けるとライフが尽きてゲームオーバーになる",
-          timeout: 20_000,
-          intervals: [150],
+          timeout: 40_000,
+          intervals: [0],
         },
       )
       .toBe(true);

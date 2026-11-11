@@ -162,7 +162,9 @@ test.describe("Gold Seam のストーリー", () => {
 
     await page.getByTestId("gold-seam-restart").click();
     await expect(page.getByTestId("gold-seam-gameover")).toBeHidden();
-    expect(await readGoldPercent(page), "やり直すと金粉が満タンに戻る").toBe(100);
+    await expect
+      .poll(() => readGoldPercent(page), { message: "やり直すと金粉が満タンに戻る" })
+      .toBe(100);
     await expect(page.getByTestId("gold-seam-bowls")).toHaveText("継いだ器 0個");
     await expect(page.getByTestId("gold-seam-progress")).toHaveText("継ぎ目 0%");
 

@@ -64,6 +64,11 @@ const MIN_SPAWN_INTERVAL = 1.3;
 const SPAWN_INTERVAL_DECAY_PER_SUCCESS = 0.15;
 const SPAWN_EDGE_MARGIN = 24;
 const SPAWN_HEADING_SPREAD = 0.5;
+// 誘導されないまままっすぐ飛んで、出現からこの秒数以内に滑走路へ入ってしまう出現は引き直す
+// (プレイヤーが触る前に勝手に着陸して得点が入るため)。それより後に偶然向きが揃って
+// 着陸するのはゲームの一部として残す。
+const UNGUIDED_LANDING_GRACE_SECONDS = 3;
+const SPAWN_REROLL_ATTEMPTS = 8;
 
 /**
  * 進入方位は往復どちらの向きでもよい(滑走路の軸と機体の向きが揃っていればよい)ため、
@@ -113,8 +118,8 @@ function headingAxisOffset(heading: number, runwayHeading: number): number {
   return Math.abs(diff);
 }
 
-function randRange(min: number, max: number): number {
-  return min + Math.random() * (max - min);
+function randRange(min: number, max: number, randomFn: () => number): number {
+  return min + randomFn() * (max - min);
 }
 
 interface EdgeSpawn {
@@ -123,26 +128,26 @@ interface EdgeSpawn {
   heading: number;
 }
 
-function randomEdgeSpawn(width: number, height: number): EdgeSpawn {
-  const edge = Math.floor(randRange(0, 4));
+function randomEdgeSpawn(width: number, height: number, randomFn: () => number): EdgeSpawn {
+  const edge = Math.floor(randRange(0, 4, randomFn));
   let x: number;
   let y: number;
   if (edge === 0) {
-    x = randRange(0, width);
+    x = randRange(0, width, randomFn);
     y = -SPAWN_EDGE_MARGIN;
   } else if (edge === 1) {
     x = width + SPAWN_EDGE_MARGIN;
-    y = randRange(0, height);
+    y = randRange(0, height, randomFn);
   } else if (edge === 2) {
-    x = randRange(0, width);
+    x = randRange(0, width, randomFn);
     y = height + SPAWN_EDGE_MARGIN;
   } else {
     x = -SPAWN_EDGE_MARGIN;
-    y = randRange(0, height);
+    y = randRange(0, height, randomFn);
   }
   const towardCenter = Math.atan2(height / 2 - y, width / 2 - x);
   const heading = normalizeAngle(
-    towardCenter + randRange(-SPAWN_HEADING_SPREAD, SPAWN_HEADING_SPREAD),
+    towardCenter + randRange(-SPAWN_HEADING_SPREAD, SPAWN_HEADING_SPREAD, randomFn),
   );
   return { x, y, heading };
 }
@@ -171,8 +176,11 @@ export class HoldingPatternWorld {
   private spawnTimer = 0;
   private successCount = 0;
   private nextId = 0;
+  private readonly randomFn: () => number;
 
-  constructor(width: number, height: number) {
+  /** randomFn を差し替えられるのはテストで決定的な出現位置を再現するため(本番は Math.random)。 */
+  constructor(width: number, height: number, randomFn: () => number = Math.random) {
+    this.randomFn = randomFn;
     this.resize(width, height);
     this.reset();
   }
@@ -298,15 +306,19 @@ export class HoldingPatternWorld {
     if (this.strikes >= MAX_STRIKES) this.isOver = true;
   }
 
+  private findLandingRunway(x: number, y: number, heading: number): Runway | undefined {
+    return this.runways.find(
+      (r) =>
+        Math.abs(x - r.x) <= r.width / 2 &&
+        Math.abs(y - r.y) <= r.height / 2 &&
+        headingAxisOffset(heading, r.heading) <= RUNWAY_HEADING_TOLERANCE,
+    );
+  }
+
   private resolveLandings(): void {
     for (let i = this._planes.length - 1; i >= 0; i--) {
       const plane = this._planes[i];
-      const runway = this.runways.find(
-        (r) =>
-          Math.abs(plane.x - r.x) <= r.width / 2 &&
-          Math.abs(plane.y - r.y) <= r.height / 2 &&
-          headingAxisOffset(plane.heading, r.heading) <= RUNWAY_HEADING_TOLERANCE,
-      );
+      const runway = this.findLandingRunway(plane.x, plane.y, plane.heading);
       if (!runway) continue;
 
       const { x, y } = plane;
@@ -343,9 +355,26 @@ export class HoldingPatternWorld {
     }
   }
 
+  private landsSoonWithoutGuidance(spawn: EdgeSpawn): boolean {
+    const reach = PLANE_SPEED * UNGUIDED_LANDING_GRACE_SECONDS;
+    for (let distance = 0; distance <= reach; distance += PLANE_RADIUS) {
+      const x = spawn.x + Math.cos(spawn.heading) * distance;
+      const y = spawn.y + Math.sin(spawn.heading) * distance;
+      if (this.findLandingRunway(x, y, spawn.heading)) return true;
+    }
+    return false;
+  }
+
   private trySpawn(): void {
     if (this._planes.length >= MAX_PLANES) return;
-    const spawn = randomEdgeSpawn(this.width, this.height);
+    let spawn = randomEdgeSpawn(this.width, this.height, this.randomFn);
+    for (
+      let attempt = 0;
+      attempt < SPAWN_REROLL_ATTEMPTS && this.landsSoonWithoutGuidance(spawn);
+      attempt++
+    ) {
+      spawn = randomEdgeSpawn(this.width, this.height, this.randomFn);
+    }
     this._planes.push({
       id: this.nextId++,
       x: spawn.x,
