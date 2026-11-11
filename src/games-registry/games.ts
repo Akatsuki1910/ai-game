@@ -1391,4 +1391,20 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "umbra-turn",
+    title: "Umbra Turn",
+    description:
+      "宙に浮く水晶を回転させ、床に落ちるお題のシルエットへ自分の影をぴったり重ねるリアルタイム3D姿勢パズル。ドラッグで姿勢を合わせて集中ゲージを満たせばロック成功。時間切れが続くとライフが減り、ラウンドが進むほど判定は厳しく時間は短くなる。",
+    tags: ["arcade", "puzzle", "precision", "3d", "realtime"],
+    dimension: "3d",
+    engine: "three",
+    createdAt: "2026-11-11",
+    controls: {
+      mouse: "ドラッグで水晶を回転(左右=ヨー、上下=ピッチ)",
+      touch: "ドラッグで水晶を回転(左右=ヨー、上下=ピッチ)",
+      keyboard: "矢印キー/WASD: 回転(左右=ヨー、上下=ピッチ) / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
