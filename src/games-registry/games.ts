@@ -1407,4 +1407,21 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "mirror-garden",
+    title: "Mirror Garden",
+    description:
+      "左右(縦長では上下)に並んだ2つの日本庭園を見比べて違いを探すリアルタイム観察パズル。石・灯籠・池の鯉などに紛れ込んだ色・大きさ・位置・消失の差分をクリック/タップで見つけ出せ。見つけるたびに庭は元の姿に戻り、ラウンドが進むほど要素は増え差分は小さく、制限時間は短くなる。",
+    tags: ["puzzle", "observation", "realtime", "calm"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-11-12",
+    controls: {
+      mouse: "左右(または上下)の庭を見比べて、違う部分をクリック",
+      touch: "左右(または上下)の庭を見比べて、違う部分をタップ",
+      keyboard:
+        "矢印キー/WASD: カーソル移動 / Enter: その場所を確定 / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
