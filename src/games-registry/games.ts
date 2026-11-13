@@ -1424,4 +1424,21 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "mobile-poise",
+    title: "Mobile Poise",
+    description:
+      "天井から吊るしたモビールのおもりを配置して棒を水平に保つリアルタイム・バランスパズル。おもりをドラッグしてフックに掛け、ゲージ中央の帯に針が収まったまま持ちこたえれば次のラウンドへ。レベルが進むほどフックとおもりは増え、許容帯は狭く、そよ風(トルクの揺れ)は強くなる。",
+    tags: ["puzzle", "balance", "realtime", "calm"],
+    dimension: "2d",
+    engine: "dom",
+    createdAt: "2026-11-13",
+    controls: {
+      mouse: "おもりをドラッグしてフックに掛ける/外す",
+      touch: "おもりをドラッグしてフックに掛ける/外す",
+      keyboard:
+        "矢印キー: フックを選択 / 数字キー: トレイのおもりを選択中のフックに掛ける / Backspace: 外す / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
