@@ -1,0 +1,168 @@
+@use "../../../shared/styles/variables" as v;
+@use "../../../shared/styles/mixins" as m;
+
+.stageInner {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: radial-gradient(circle at 50% 0%, #161a24 0%, #0b0c10 70%);
+  @include m.touch-safe;
+}
+
+.hud {
+  position: absolute;
+  top: v.$space-3;
+  right: v.$space-3;
+  display: flex;
+  gap: v.$space-2;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.badge {
+  font-family: v.$font-family-mono;
+  font-size: 0.9rem;
+  padding: v.$space-1 v.$space-3;
+  border-radius: v.$radius-sm;
+  background: rgb(0 0 0 / 40%);
+  color: v.$color-text;
+  letter-spacing: 0.05em;
+}
+
+.holdBarTrack {
+  position: absolute;
+  left: 50%;
+  top: v.$space-3;
+  transform: translateX(-50%);
+  width: min(240px, 60vw);
+  height: 10px;
+  border-radius: v.$radius-sm;
+  background: rgb(0 0 0 / 40%);
+  overflow: visible;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.holdBand {
+  position: absolute;
+  left: 42%;
+  right: 42%;
+  top: 0;
+  bottom: 0;
+  background: rgb(124 245 196 / 25%);
+  border-radius: v.$radius-sm;
+}
+
+.holdBarFill {
+  position: absolute;
+  inset: 0;
+  border-radius: v.$radius-sm;
+  background: rgb(124 245 196 / 15%);
+  transition: width 0.1s linear;
+}
+
+.holdNeedle {
+  position: absolute;
+  top: -4px;
+  bottom: -4px;
+  width: 4px;
+  border-radius: 2px;
+  background: v.$color-warning;
+  transform: translateX(-50%);
+}
+
+.rod {
+  position: absolute;
+  height: 6px;
+  border-radius: 3px;
+  background: #4b5160;
+  z-index: 1;
+}
+
+.hook {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  margin-left: -10px;
+  margin-top: -10px;
+  border-radius: 50%;
+  background: v.$color-accent;
+  opacity: 0.55;
+  border: 2px solid rgb(255 255 255 / 60%);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.hookSelected {
+  opacity: 1;
+  background: v.$color-warning;
+  box-shadow: 0 0 0 4px rgb(255 180 84 / 35%);
+}
+
+.charm {
+  position: absolute;
+  border-radius: 50%;
+  background: v.$color-accent-strong;
+  border: 2px solid rgb(255 255 255 / 70%);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.hint {
+  position: absolute;
+  left: v.$space-3;
+  bottom: v.$space-3;
+  font-size: 0.75rem;
+  color: v.$color-text-muted;
+  background: rgb(0 0 0 / 40%);
+  padding: v.$space-1 v.$space-2;
+  border-radius: v.$radius-sm;
+  pointer-events: none;
+  max-width: min(360px, 70vw);
+  line-height: 1.5;
+  z-index: 2;
+
+  @include m.mobile {
+    font-size: 0.7rem;
+  }
+}
+
+.gameOver {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: v.$space-3;
+  background: rgb(5 6 10 / 85%);
+  z-index: 5;
+}
+
+.gameOverTitle {
+  font-size: 1.6rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+}
+
+.gameOverScore {
+  font-family: v.$font-family-mono;
+  color: v.$color-accent;
+  font-size: 1.1rem;
+}
+
+.restartButton {
+  margin-top: v.$space-3;
+  padding: v.$space-2 v.$space-5;
+  border-radius: v.$radius-md;
+  border: 1px solid v.$color-accent;
+  background: transparent;
+  color: v.$color-text;
+  font-size: 0.95rem;
+  cursor: pointer;
+
+  &:hover {
+    background: v.$color-accent;
+    color: #05060a;
+  }
+}

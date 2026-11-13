@@ -42,7 +42,11 @@ for (const game of games) {
     await expect(page.getByTestId("game-shell-title")).toHaveText(game.title);
     const stage = page.getByTestId("game-shell-stage");
     await expect(stage).toBeVisible();
-    await expect(stage.locator("canvas"), "描画キャンバスが生成される").toBeVisible();
+    // pixi/three (canvas描画) とdom(DOM/CSSのみ)の両方をサポートする。
+    // dom のゲームは canvas を持たないので、ステージ自体の表示だけを確認する。
+    if (game.engine !== "dom") {
+      await expect(stage.locator("canvas"), "描画キャンバスが生成される").toBeVisible();
+    }
 
     // 3. 実際に動いている（止まった絵ではない）
     await expectStageToAnimate(page, stage);
@@ -50,7 +54,11 @@ for (const game of games) {
     // 4. 触っても壊れない（PC のドラッグ / スマホのスワイプ相当）
     await dragOnStage(page, stage, { xRatio: 0.3, yRatio: 0.5 }, { xRatio: 0.6, yRatio: 0.35 });
     await waitForFrames(page, 20);
-    await expect(stage.locator("canvas"), "操作後もキャンバスが生きている").toBeVisible();
+    if (game.engine !== "dom") {
+      await expect(stage.locator("canvas"), "操作後もキャンバスが生きている").toBeVisible();
+    } else {
+      await expect(stage, "操作後もステージが生きている").toBeVisible();
+    }
 
     // 5. 一覧に戻れる
     await page.getByTestId("game-shell-back").click();
