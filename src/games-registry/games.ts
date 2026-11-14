@@ -1441,4 +1441,23 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "lantern-cipher",
+    title: "Lantern Cipher",
+    description:
+      "ロウソクが尽きる前に提灯の色の並びを解読するリアルタイム推理パズル。色を選んで並べ「点灯して試す」と、位置も色も合っている数(🔥)と色だけ合っている数が返るので、手がかりを頼りに絞り込め。解けないまま試行回数か時間が尽きるとライフが減り、解くたびに桁・色数は増えて制限時間は短くなる。",
+    tags: ["puzzle", "logic", "deduction", "realtime"],
+    dimension: "2d",
+    engine: "dom",
+    createdAt: "2026-11-14",
+    controls: {
+      mouse:
+        "色をクリックして選択中のスロットに置く、スロットをクリックして選択を切替、「点灯して試す」で判定",
+      touch:
+        "色をタップして選択中のスロットに置く、スロットをタップして選択を切替、「点灯して試す」で判定",
+      keyboard:
+        "矢印キー/AD: スロット選択を移動 / 数字キー: 色を置く / Enter: 点灯して試す / Backspace: 1マス消去 / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
