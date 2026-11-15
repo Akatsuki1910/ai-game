@@ -1460,4 +1460,23 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "skipping-stones",
+    title: "Skipping Stones",
+    description:
+      "水面を切るように石を投げ、跳ね続けさせるリアルタイム水切り3D物理パズル。手前へ引いて離すと投げ、飛んでいる間はドラッグで左右に逸らして浮き草や岩を避けつつ、着水の瞬間にタップすると「はじき」が決まって跳ねが伸びる。8個の石を使い切ったら終了。",
+    tags: ["arcade", "physics", "3d", "realtime"],
+    dimension: "3d",
+    engine: "three",
+    createdAt: "2026-11-15",
+    controls: {
+      mouse:
+        "手前へドラッグして引き、離すと投げる。飛行中はドラッグで左右に操作、クリックで着水直前にはじく",
+      touch:
+        "手前へドラッグして引き、離すと投げる。飛行中はドラッグで左右に操作、タップで着水直前にはじく",
+      keyboard:
+        "矢印キー/WASD: 狙いのパワー・左右(ねらう中)/左右操作(飛行中) / Enter: 投げる・はじく / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
