@@ -1496,4 +1496,21 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "cairn-balance",
+    title: "Cairn Balance",
+    description:
+      "歪んだ石を積み上げ続けるリアルタイム・ロックバランシング。ドラッグで位置を決め、回転ボタンで向きを調整し、黄色い重心マーカーが支持帯に収まるように離して落とそう。風で持っている石は揺れ、積むほど揺れは強く支持帯は狭くなる。重心が外れたら崩壊して終了。",
+    tags: ["arcade", "balance", "physics", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-11-17",
+    controls: {
+      mouse: "ドラッグで石を移動、回転ボタン（↺↻）をクリックで向きを調整、離すと落とす",
+      touch: "ドラッグで石を移動、回転ボタン（↺↻）をタップで向きを調整、指を離すと落とす",
+      keyboard:
+        "←→・A/D: 石を移動 / Q・E: 向きを回転 / Enter: 落とす / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
