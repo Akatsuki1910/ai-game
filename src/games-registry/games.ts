@@ -1479,4 +1479,21 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "longbow-breeze",
+    title: "Longbow Breeze",
+    description:
+      "風に揺れる旗を読んで的を狙うリアルタイム弓矢の的あてパズル。ドラッグして引っ張り離すと逆方向へ矢を放ち、風と重力で曲がる弾道を読んで的の中心を狙え。外すか届かないとライフが減り、命中を重ねるほど的は小さく遠く、風は強くなる。",
+    tags: ["arcade", "precision", "physics", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-11-16",
+    controls: {
+      mouse: "ドラッグして引っ張り、離すと逆方向へ矢を発射",
+      touch: "ドラッグして引っ張り、離すと逆方向へ矢を発射",
+      keyboard:
+        "←→・AD: 角度調整 / ↑↓・WS: パワー調整 / Enter: 発射 / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
