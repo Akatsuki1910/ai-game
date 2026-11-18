@@ -1513,4 +1513,21 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "silhouette-seven",
+    title: "Silhouette Seven",
+    description:
+      "7種類のピースを、盤面に空いた枠の形と向きへドラッグで合わせ続けるリアルタイム図形パズル。動かさずタップすると45度回転。枠の位置と向きがぴったり揃った時だけはまり、7つ全てはめ切ると次のラウンドへ。ラウンドが進むほど要求される向きは複雑になり、制限時間は短くなる。",
+    tags: ["arcade", "puzzle", "spatial", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-11-18",
+    controls: {
+      mouse: "ドラッグでピースを移動、動かさずクリックで45度回転。枠に合わせて離すとはまる",
+      touch: "ドラッグでピースを移動、動かさずタップで45度回転。枠に合わせて指を離すとはまる",
+      keyboard:
+        "1〜7: ピースを選択 / 矢印キー・WASD: 選択ピースを移動 / Q・E: 回転 / Enter: はめ込みを試す / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
