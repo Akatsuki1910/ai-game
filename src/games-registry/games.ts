@@ -1530,4 +1530,20 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "parfait-layer",
+    title: "Parfait Layer",
+    description:
+      "レシピの順番通りに材料を注いで重ねるリアルタイム・パルフェ職人パズル。長押しで選んだ材料を目安の帯へ注ぎ切り、違う材料やグラスのあふれでライフを減らさずに完成させ続けろ。完成するたびに層は増え、目安の帯は狭くなる。",
+    tags: ["arcade", "puzzle", "cooking", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-11-19",
+    controls: {
+      mouse: "材料ボタンをクリックで選択、キャンバスを長押しして注ぐ",
+      touch: "材料ボタンをタップで選択、キャンバスを長押しして注ぐ",
+      keyboard: "1〜4: 材料を選択 / Enter長押し: 注ぐ / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];

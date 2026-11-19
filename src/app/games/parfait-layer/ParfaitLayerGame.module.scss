@@ -1,0 +1,231 @@
+@use "../../../shared/styles/variables" as v;
+@use "../../../shared/styles/mixins" as m;
+
+.stageInner {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 20%, #2a1e30 0%, #1c1420 70%);
+  @include m.touch-safe;
+}
+
+.canvasHost {
+  position: absolute;
+  inset: 0;
+
+  canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.hud {
+  position: absolute;
+  top: v.$space-3;
+  right: v.$space-3;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: v.$space-1;
+  pointer-events: none;
+}
+
+.round {
+  font-family: v.$font-family-mono;
+  font-size: 0.85rem;
+  padding: v.$space-1 v.$space-3;
+  border-radius: v.$radius-sm;
+  background: rgb(0 0 0 / 40%);
+  color: v.$color-text;
+  letter-spacing: 0.05em;
+}
+
+.lives {
+  font-family: v.$font-family-mono;
+  font-size: 0.8rem;
+  padding: v.$space-1 v.$space-3;
+  border-radius: v.$radius-sm;
+  background: rgb(0 0 0 / 40%);
+  color: v.$color-danger;
+  letter-spacing: 0.05em;
+}
+
+.recipePanel {
+  position: absolute;
+  top: v.$space-3;
+  left: v.$space-3;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: v.$space-2;
+  max-width: min(420px, 70vw);
+  background: rgb(0 0 0 / 40%);
+  padding: v.$space-2 v.$space-3;
+  border-radius: v.$radius-md;
+  pointer-events: none;
+}
+
+.recipeLabel {
+  font-size: 0.7rem;
+  color: v.$color-text-muted;
+}
+
+.recipeChips {
+  display: flex;
+  gap: v.$space-1;
+  flex-wrap: wrap;
+}
+
+.recipeChip {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid rgb(255 255 255 / 25%);
+  opacity: 0.4;
+
+  &[data-status="current"] {
+    opacity: 1;
+    border-color: v.$color-accent;
+    box-shadow: 0 0 0 2px rgb(110 231 255 / 40%);
+  }
+
+  &[data-status="done"] {
+    opacity: 0.75;
+    border-color: v.$color-accent-strong;
+  }
+}
+
+.targetBand {
+  width: 100%;
+  font-family: v.$font-family-mono;
+  font-size: 0.72rem;
+  color: v.$color-accent;
+}
+
+.fillPanel {
+  position: absolute;
+  top: v.$space-3;
+  left: 50%;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.fillLabel {
+  font-family: v.$font-family-mono;
+  font-size: 0.8rem;
+  padding: v.$space-1 v.$space-3;
+  border-radius: v.$radius-sm;
+  background: rgb(0 0 0 / 40%);
+  color: v.$color-text-muted;
+}
+
+.feedback {
+  position: absolute;
+  top: 72px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: v.$color-accent-strong;
+  text-shadow: 0 2px 6px rgb(0 0 0 / 60%);
+  pointer-events: none;
+  text-align: center;
+
+  @include m.mobile {
+    top: 96px;
+    font-size: 0.85rem;
+  }
+}
+
+.hint {
+  position: absolute;
+  left: v.$space-3;
+  bottom: v.$space-3;
+  font-size: 0.72rem;
+  color: v.$color-text-muted;
+  background: rgb(0 0 0 / 40%);
+  padding: v.$space-1 v.$space-2;
+  border-radius: v.$radius-sm;
+  pointer-events: none;
+  max-width: min(420px, 60vw);
+  line-height: 1.5;
+
+  @include m.mobile {
+    display: none;
+  }
+}
+
+.ingredients {
+  position: absolute;
+  left: 50%;
+  bottom: v.$space-4;
+  transform: translateX(-50%);
+  display: flex;
+  gap: v.$space-2;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.ingredientButton {
+  padding: v.$space-2 v.$space-4;
+  border-radius: v.$radius-md;
+  border: 2px solid v.$color-border;
+  background: rgb(20 16 24 / 70%);
+  color: v.$color-text;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  text-shadow: 0 1px 3px rgb(0 0 0 / 70%);
+
+  &[data-selected="true"] {
+    color: #1c1420;
+    text-shadow: none;
+  }
+
+  @include m.mobile {
+    padding: v.$space-2 v.$space-3;
+    font-size: 0.75rem;
+  }
+}
+
+.gameOver {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: v.$space-2;
+  background: rgb(10 8 12 / 85%);
+  z-index: 5;
+  text-align: center;
+  padding: v.$space-4;
+}
+
+.gameOverTitle {
+  font-size: 1.4rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+}
+
+.gameOverScore {
+  font-family: v.$font-family-mono;
+  color: v.$color-accent;
+  font-size: 1.1rem;
+}
+
+.restartButton {
+  margin-top: v.$space-3;
+  padding: v.$space-2 v.$space-5;
+  border-radius: v.$radius-md;
+  border: 1px solid v.$color-accent;
+  background: transparent;
+  color: v.$color-text;
+  font-size: 0.95rem;
+  cursor: pointer;
+
+  &:hover {
+    background: v.$color-accent;
+    color: #1c1420;
+  }
+}
