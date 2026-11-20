@@ -1546,4 +1546,20 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "mochi-pound",
+    title: "Mochi Pound",
+    description:
+      "振り子状に揺れる杵(きね)を最下点でちょうど振り下ろすリアルタイム餅つきタイミングパズル。振り下ろした直後は合いの手が餅を返すので、その間に打つと手を叩いてライフが減る。もちもち度を目標まで満たすと1臼完成、次の臼は杵が速く振れてタイミング窓も狭くなる。",
+    tags: ["arcade", "timing", "craft", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-11-20",
+    controls: {
+      mouse: "クリックで杵を振り下ろす(最下点付近でPERFECT/GOOD)",
+      touch: "タップで杵を振り下ろす(最下点付近でPERFECT/GOOD)",
+      keyboard: "Enter: 杵を振り下ろす / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
