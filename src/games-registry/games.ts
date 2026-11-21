@@ -1562,4 +1562,20 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "shaft-dispatch",
+    title: "Shaft Dispatch",
+    description:
+      "1台のエレベーターを操って呼び出しを捌き続けるリアルタイム配車シミュレーター。ボタンで階を呼び、乗客を乗せて行き先まで届けよう。待たせすぎると乗客は見送られて減点、複数階からの呼び出しが重なるほど優先順位の判断が忙しくなる。",
+    tags: ["arcade", "simulation", "management", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-11-21",
+    controls: {
+      mouse: "右側のボタンをクリックしてエレベーターを各階へ呼ぶ",
+      touch: "右側のボタンをタップしてエレベーターを各階へ呼ぶ",
+      keyboard: "1〜6: 対応する階を呼ぶ / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
