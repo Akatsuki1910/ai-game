@@ -1578,4 +1578,20 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "stroke-rate",
+    title: "Stroke Rate",
+    description:
+      "左右のオールを交互に漕いで加速し続けるリアルタイム・レガッタ(漕艇)サバイバル。一定のテンポで交互に漕ぐほどリズムが上がって速くなるが、同じ側を連続で漕ぐと減速する代わりに艇を素早く操舵できる。流木を避けながらできるだけ遠くまで進め。進むほどテンポの許容は狭く、流木は多くなる。",
+    tags: ["arcade", "sports", "rhythm", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-11-22",
+    controls: {
+      mouse: "画面の左半分/右半分をクリック、または左右オールボタンをクリックして交互に漕ぐ",
+      touch: "画面の左半分/右半分をタップ、または左右オールボタンをタップして交互に漕ぐ",
+      keyboard: "←・A: 左オール / →・D: 右オール / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
