@@ -1594,4 +1594,21 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "kirigami-snow",
+    title: "Kirigami Snow",
+    description:
+      "8分割に折った紙を切って、開いたときに雪の結晶になるリアルタイム切り紙パズル。水色(残す)と赤(切る)のお手本に沿ってマスをカットし、制限時間内に一致率75%以上で仕上げよう。クリアするたびにマスは細かく、時間は短くなる。",
+    tags: ["puzzle", "precision", "craft", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-11-23",
+    controls: {
+      mouse: "ウェッジ内のマスをクリックしてカット/復元、「仕上げる」ボタンで判定",
+      touch: "ウェッジ内のマスをタップしてカット/復元、「仕上げる」ボタンで判定",
+      keyboard:
+        "矢印キー/WASD: 選択マスを移動 / Enter: カット/復元 / F: 仕上げる / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
