@@ -1611,4 +1611,20 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "sand-ripple",
+    title: "Sand Ripple",
+    description:
+      "枯山水の砂をレーキでかいて模様を描くリアルタイム庭園パズル。ドラッグで砂をかいて石のまわりに美しい波紋を描こう。石のすぐ外側(リングボーナス圏)を掃くと得点が2倍以上になるが、かいた砂は時間が経つと風で元の砂に戻るので、こまめに掃き直し続ける必要がある。",
+    tags: ["puzzle", "zen", "realtime", "creative"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-11-24",
+    controls: {
+      mouse: "ドラッグで砂をかく(レーキを引く)",
+      touch: "ドラッグで砂をかく(レーキを引く)",
+      keyboard: "Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
