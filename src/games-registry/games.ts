@@ -1627,4 +1627,21 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "bottle-flip",
+    title: "Bottle Flip",
+    description:
+      "テーブルの上でボトルを投げ上げ続けるリアルタイム・ボトルフリップ物理パズル。長押しでチャージして離すと投げ上がり、強く投げるほど滞空も回転も速くなる。ちょうど整数回転で立って着地できれば成功、外すとライフが減る。成功するたびに許容角度は狭くなっていく。",
+    tags: ["arcade", "timing", "physics", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-11-25",
+    controls: {
+      mouse: "ドラッグ/長押しでチャージし、離すとボトルを投げ上げる",
+      touch: "ドラッグ/長押しでチャージし、離すとボトルを投げ上げる",
+      keyboard:
+        "↑・W: 長押しでチャージ / ↓・S: チャージを戻す / Enter: 投げ上げる / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
