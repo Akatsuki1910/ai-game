@@ -1644,4 +1644,20 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "noise-null",
+    title: "Noise Null",
+    description:
+      "揺れ動く環境ノイズに自分のフェーザー(振幅・位相)を重ねて打ち消し続けるリアルタイム・ノイズキャンセリングパズル。リング(打ち消しポイント)に自分の点を合わせるほどCALMが回復しスコアが伸びるが、合わせきれないとCALMが尽きてしまう。時々来る突発ノイズは完全には打ち消せない。",
+    tags: ["arcade", "puzzle", "signal", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-11-26",
+    controls: {
+      mouse: "ドラッグで自分の点(振幅・位相)をリングに重ねる",
+      touch: "ドラッグで自分の点(振幅・位相)をリングに重ねる",
+      keyboard: "↑↓・W/S: 振幅を調整 / ←→・A/D: 位相を調整 / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
