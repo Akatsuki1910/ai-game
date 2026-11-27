@@ -1660,4 +1660,20 @@ export const games: GameMeta[] = [
     },
     status: "prototype",
   },
+  {
+    slug: "periscope-strike",
+    title: "Periscope Strike",
+    description:
+      "ペリスコープを上げて照準を定め、未来位置を見越して魚雷を放つリアルタイム潜水艦アクション。レーンが遠いほど魚雷の到達が遅れるのでより大きなリードが必要になる。構えっぱなしだと発見度が満ちてライフを失うので、のぞいて狙って素早く沈める駆け引きが鍵。",
+    tags: ["arcade", "timing", "precision", "realtime"],
+    dimension: "2d",
+    engine: "pixi",
+    createdAt: "2026-11-27",
+    controls: {
+      mouse: "ドラッグ/長押しでペリスコープを上げて照準を移動、離すと発射",
+      touch: "ドラッグ/長押しでペリスコープを上げて照準を移動、離すと発射",
+      keyboard: "Enter長押し: 構えて発射 / ←→・A/D: 照準を移動 / Space: 一時停止 / R: リセット",
+    },
+    status: "prototype",
+  },
 ];
